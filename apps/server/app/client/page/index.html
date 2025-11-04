@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dooto API – Documentation & Overview</title>
+  <link rel="stylesheet" href="/index.css" />
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">D</div>
+        <div>
+          <div class="title">Dooto API</div>
+          <div class="subtitle">REST API for the Dooto Todo App</div>
+        </div>
+      </div>
+
+      <nav>
+        <a href="#overview">Overview</a>
+        <a href="#endpoints">Endpoints</a>
+        <a href="#future">Future</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="overview">
+        <div>
+          <h1>Welcome to the Dooto API</h1>
+          <p>
+            The Dooto API is the core backend service that powers the Dooto Todo App.
+            It provides a fast and reliable way to manage tasks, daily goals, and user profiles.
+          </p>
+          <a class="cta" href="#endpoints">View API Endpoints</a>
+        </div>
+        <aside class="card">
+          <h3>Base URL</h3>
+          <code>https://api.dooto.app</code>
+        </aside>
+      </section>
+
+      <section id="endpoints">
+        <h2>🧩 Current Endpoints</h2>
+        <p>These endpoints are available in the current version of the Dooto API.</p>
+
+        <div class="features">
+          <div class="feature">
+            <h3>GET /todos</h3>
+            <p>Retrieve all todos for the authenticated user.</p>
+          </div>
+          <div class="feature">
+            <h3>POST /todos</h3>
+            <p>Create a new todo item.</p>
+          </div>
+          <div class="feature">
+            <h3>PUT /todos/:id</h3>
+            <p>Update a specific todo item.</p>
+          </div>
+          <div class="feature">
+            <h3>DELETE /todos/:id</h3>
+            <p>Remove a todo item.</p>
+          </div>
+          <div class="feature">
+            <h3>GET /daily-todo</h3>
+            <p>Retrieve the user’s daily todo list.</p>
+          </div>
+          <div class="feature">
+            <h3>POST /daily-todo</h3>
+            <p>Add a new daily todo item.</p>
+          </div>
+          <div class="feature">
+            <h3>GET /profile</h3>
+            <p>Fetch the user’s profile details.</p>
+          </div>
+          <div class="feature">
+            <h3>PUT /profile</h3>
+            <p>Update profile information such as name, bio, or preferences.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="future">
+        <h2>🚀 Future Plans</h2>
+        <p>The Dooto API will continue to grow with new features and modules, including:</p>
+        <ul>
+          <li>✅ Notifications & reminders</li>
+          <li>✅ Shared projects and team collaboration</li>
+          <li>✅ Insights and productivity analytics</li>
+          <li>✅ Integration with external services (Google Calendar, Notion, etc.)</li>
+        </ul>
+      </section>
+
+      <section id="contact">
+        <h2>📬 Contact</h2>
+        <p>
+          For support, collaboration, or bug reports, reach out at:<br />
+          <a href="mailto:support@dooto.app">support@dooto.app</a>
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2025 Dooto API — powering the Dooto Todo experience.</p>
+    </footer>
+  </div>
+</body>
+</html>
