@@ -28,7 +28,10 @@ const options = {
         },
         ],
     },
-    apis: ["./routes/*.js"],
+    apis: [
+        path.join(__dirname, "../routes/*.ts"),
+        path.join(__dirname, "../routes/*.js"),
+    ],
 };
   
 router.use(express.static(path.join(__dirname, '/public')));
@@ -39,10 +42,6 @@ router.use(
     swaggerUi.serve,
     swaggerUi.setup(specs, { explorer: true })
 );
-  
-router.use(
-    "/api-docs",
-    swaggerUi.serve,
-    swaggerUi.setup(specs, { explorer: true })
-);
+
+module.exports = router
   

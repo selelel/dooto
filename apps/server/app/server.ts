@@ -6,7 +6,10 @@ import path = require('path');
 const app = express();
 const port = process.env.PORT || 9090;
 const clientRoutes = require('./routes/client.routes');
+const swagger = require('./lib/swagger');
 
+
+app.use('/', swagger)
 app.use('/', clientRoutes)
 app.use(express.static(path.join(__dirname, '/public')));
 
