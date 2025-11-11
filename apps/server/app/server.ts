@@ -1,16 +1,21 @@
 require('dotenv-flow').config({
   node_env: process.argv[2] || ''
 });
+
+import 'dotenv/config';
+
 import express = require('express');
 import path = require('path');
 const app = express();
 const port = process.env.PORT || 9090;
 const clientRoutes = require('./routes/client.routes');
+const userRoutes = require('./routes/user.routes');
 const swagger = require('./lib/swagger');
 
 
 app.use('/', swagger)
 app.use('/', clientRoutes)
+app.use('/user', userRoutes)
 app.use(express.static(path.join(__dirname, '/public')));
 
 app.listen(port, () => {

@@ -8,8 +8,8 @@
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "commonjs",
-    "target": "es2016",
-    "types": [],
+    "target": "esnext",
+    "types": ["node", "@prisma/client"],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
@@ -35,10 +35,11 @@
     // Recommended Options
     "strict": true,
     // "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-  }
+  },
+  "exclude": ["prisma.config.ts"]
 }
