@@ -41,8 +41,21 @@ model User {
   provider  AuthProvider @default(EMAIL)
 
   createdAt DateTime @default(now())
+  refreshTokens RefreshToken[]
 
   @@map("users")
+}
+
+model RefreshToken {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @db.Uuid
+  tokenHash  String
+  revoked    Boolean @default(false)
+  expiresAt  DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
 }
 
 model TasksCollection {
@@ -75,7 +88,7 @@ model Task {
 
   subClassId String?      @db.Uuid
   parent     Task?       @relation("SubTasks", fields: [subClassId], references: [taskId])
-  subTasks   Task[]      @("SubTasks")
+  subTasks   Task[]      @relation("SubTasks")
 
   collection TasksCollection @relation(fields: [tasksId], references: [tasksId], onDelete: Cascade)
 
