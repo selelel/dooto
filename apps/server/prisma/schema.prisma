@@ -8,9 +8,76 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+// --------------------------------
+// Enums
+// --------------------------------
+
+enum TaskStatus {
+  DONE
+  IN_PROGRESS
+  PENDING
+}
+
+enum AuthProvider {
+  EMAIL
+  GOOGLE
+}
+
+// --------------------------------
+// Models
+// --------------------------------
+
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String
-  password String
-  age      Int?
+  id        String   @id @default(uuid()) @db.Uuid
+
+  name      String
+  username  String  @unique
+
+  email     String  @unique
+
+  password  String?   // NULL for Google-only users
+
+  provider  AuthProvider @default(EMAIL)
+
+  createdAt DateTime @default(now())
+
+  @@map("users")
+}
+
+model TasksCollection {
+  tasksId   String   @id @default(uuid()) @db.Uuid
+  tasksName String
+  details   String
+
+  created   DateTime @default(now())
+  due       DateTime
+  updated   DateTime @updatedAt
+
+  tasks     Task[]
+
+  @@map("tasks_collection")
+}
+
+model Task {
+  taskId     String       @id @default(uuid()) @db.Uuid
+  tasksId    String       @db.Uuid
+  taskName   String
+
+  created    DateTime     @default(now())
+  due        DateTime
+  updated    DateTime     @updatedAt
+
+  status     TaskStatus   @default(PENDING)
+  tags       String[]     @db.Text
+
+  details    String?
+
+  subClassId String?      @db.Uuid
+  parent     Task?       @relation("SubTasks", fields: [subClassId], references: [taskId])
+  subTasks   Task[]      @("SubTasks")
+
+  collection TasksCollection @relation(fields: [tasksId], references: [tasksId], onDelete: Cascade)
+
+  @@map("task")
 }

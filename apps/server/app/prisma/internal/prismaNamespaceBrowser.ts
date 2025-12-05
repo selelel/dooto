@@ -49,7 +49,9 @@ export const AnyNull = runtime.objectEnumValues.instances.AnyNull
 
 
 export const ModelName = {
-  User: 'User'
+  User: 'User',
+  TasksCollection: 'TasksCollection',
+  Task: 'Task'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -70,12 +72,43 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UserScalarFieldEnum = {
   id: 'id',
+  name: 'name',
+  username: 'username',
   email: 'email',
   password: 'password',
-  age: 'age'
+  provider: 'provider',
+  createdAt: 'createdAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const TasksCollectionScalarFieldEnum = {
+  tasksId: 'tasksId',
+  tasksName: 'tasksName',
+  details: 'details',
+  created: 'created',
+  due: 'due',
+  updated: 'updated'
+} as const
+
+export type TasksCollectionScalarFieldEnum = (typeof TasksCollectionScalarFieldEnum)[keyof typeof TasksCollectionScalarFieldEnum]
+
+
+export const TaskScalarFieldEnum = {
+  taskId: 'taskId',
+  tasksId: 'tasksId',
+  taskName: 'taskName',
+  created: 'created',
+  due: 'due',
+  updated: 'updated',
+  status: 'status',
+  tags: 'tags',
+  details: 'details',
+  subClassId: 'subClassId'
+} as const
+
+export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
 
 
 export const SortOrder = {
