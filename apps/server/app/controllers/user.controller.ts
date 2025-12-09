@@ -11,7 +11,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     res.status(201).json({ user, token });
   } catch (error: any) {
     const message = error?.message || "Internal Server Error";
-    logger.info(`Error: ${message}`);
+    logger.error(`Error: ${message}`);
     res.status(500).json({ error: message });
   }
 }

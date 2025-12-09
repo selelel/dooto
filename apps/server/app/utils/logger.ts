@@ -1,6 +1,6 @@
 import winston = require('winston');
 
-const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+const LOG_LEVEL = process.env.LOG_LEVEL || 'error';
 
 const customLevels = {
   levels: {
@@ -8,16 +8,18 @@ const customLevels = {
     debug: 1,
     info: 2,
     warn: 3,
-    crit: 4,
-    fatal: 5
+    error: 4,
+    crit: 5,
+    fatal: 6
   },
   colors: {
-    trace: 'white',
-    debug: 'green',
-    info: 'green',
-    warn: 'yellow',
-    crit: 'red',
-    fatal: 'red'
+    TRACE: 'white',
+    DEBUG: 'green',
+    INFO: 'green',
+    WARN: 'yellow',
+    ERROR: 'red',
+    CRIT: 'red',
+    FATAL: 'red'
   }
 };
 
