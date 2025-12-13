@@ -10,8 +10,17 @@ router.get('/', (_, res) => {
 res.send(indexPage)
 })
 
+router.get('/success', (_, res) => {
+  res.send('success')
+})
+
+router.get('/failure', (_, res) => {
+  res.send('failure')
+})
+
+
 router.get('/hello-world', (_, res) => {
-res.send('Hello World!')
+  res.send('Hello World!')
 })
 
 module.exports = router

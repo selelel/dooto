@@ -8,3 +8,10 @@ export const registerDTO = z.object({
     password: z.string().min(6),
   }),
 })
+
+export const signinDTO = z.object({
+  body: z.object({
+    email: z.email(),
+    password: z.string(),
+  }),
+})
