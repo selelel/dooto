@@ -60,6 +60,7 @@ app.use(expressSession({
     resave: false,
     saveUninitialized: false
 }));
+
 app.use(passportLocal.initialize());
 app.use(passportLocal.session());
 /**

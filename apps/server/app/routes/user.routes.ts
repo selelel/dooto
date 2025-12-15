@@ -96,7 +96,7 @@ import { register } from '../controllers/user.controller';
 import { validate } from '../middleware/validate.dto';
 import { registerDTO } from '../dtos';
 import { signinDTO } from '../dtos/user.controller.dto';
-import { ensureSessionAuth } from '../lib/ensure-auth';
+import { isAuth } from '../lib/auth';
 const router = express.Router()
 const passportLocal = require('../config/passport-local').passportLocal;
 /**
@@ -167,7 +167,7 @@ router.post('/signin/password', validate(signinDTO), passportLocal.authenticate(
  *       500:
  *         description: Logout failed
  */
-router.post('/logout', function(req, res, next) {
+router.post('/logout', isAuth, function(req, res, next) {
   req.logout(function(err) {
     if (err) { return next(err); }
     res.redirect('/');
@@ -175,7 +175,7 @@ router.post('/logout', function(req, res, next) {
 });
 
 
-router.get("/me", ensureSessionAuth, (req: Request, res) => {
+router.get("/me", isAuth, (req: Request, res) => {
   res.status(200).json({ user: req.user })
 });
 
