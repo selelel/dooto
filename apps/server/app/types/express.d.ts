@@ -1,4 +1,4 @@
-import {Request as ExpressRequest} from 'express'
+import {Request as ExpressRequest, Response as ExpressResponse} from 'express'
 import { User } from '../generated/prisma/client';
 
 export type Request = ExpressRequest & {
@@ -10,3 +10,5 @@ export type Request = ExpressRequest & {
     };
   };
 };
+
+export type Response = ExpressResponse
