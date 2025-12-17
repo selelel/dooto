@@ -9,7 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
-export type * from './models/RefreshToken'
 export type * from './models/TasksCollection'
 export type * from './models/Task'
+export type * from './models/session'
 export type * from './commonInputTypes'

@@ -31,6 +31,7 @@ export type TasksCollectionMinAggregateOutputType = {
   created: Date | null
   due: Date | null
   updated: Date | null
+  userId: string | null
 }
 
 export type TasksCollectionMaxAggregateOutputType = {
@@ -40,6 +41,7 @@ export type TasksCollectionMaxAggregateOutputType = {
   created: Date | null
   due: Date | null
   updated: Date | null
+  userId: string | null
 }
 
 export type TasksCollectionCountAggregateOutputType = {
@@ -49,6 +51,7 @@ export type TasksCollectionCountAggregateOutputType = {
   created: number
   due: number
   updated: number
+  userId: number
   _all: number
 }
 
@@ -60,6 +63,7 @@ export type TasksCollectionMinAggregateInputType = {
   created?: true
   due?: true
   updated?: true
+  userId?: true
 }
 
 export type TasksCollectionMaxAggregateInputType = {
@@ -69,6 +73,7 @@ export type TasksCollectionMaxAggregateInputType = {
   created?: true
   due?: true
   updated?: true
+  userId?: true
 }
 
 export type TasksCollectionCountAggregateInputType = {
@@ -78,6 +83,7 @@ export type TasksCollectionCountAggregateInputType = {
   created?: true
   due?: true
   updated?: true
+  userId?: true
   _all?: true
 }
 
@@ -160,6 +166,7 @@ export type TasksCollectionGroupByOutputType = {
   created: Date
   due: Date
   updated: Date
+  userId: string
   _count: TasksCollectionCountAggregateOutputType | null
   _min: TasksCollectionMinAggregateOutputType | null
   _max: TasksCollectionMaxAggregateOutputType | null
@@ -190,6 +197,8 @@ export type TasksCollectionWhereInput = {
   created?: Prisma.DateTimeFilter<"TasksCollection"> | Date | string
   due?: Prisma.DateTimeFilter<"TasksCollection"> | Date | string
   updated?: Prisma.DateTimeFilter<"TasksCollection"> | Date | string
+  userId?: Prisma.UuidFilter<"TasksCollection"> | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   tasks?: Prisma.TaskListRelationFilter
 }
 
@@ -200,6 +209,8 @@ export type TasksCollectionOrderByWithRelationInput = {
   created?: Prisma.SortOrder
   due?: Prisma.SortOrder
   updated?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  user?: Prisma.UserOrderByWithRelationInput
   tasks?: Prisma.TaskOrderByRelationAggregateInput
 }
 
@@ -213,6 +224,8 @@ export type TasksCollectionWhereUniqueInput = Prisma.AtLeast<{
   created?: Prisma.DateTimeFilter<"TasksCollection"> | Date | string
   due?: Prisma.DateTimeFilter<"TasksCollection"> | Date | string
   updated?: Prisma.DateTimeFilter<"TasksCollection"> | Date | string
+  userId?: Prisma.UuidFilter<"TasksCollection"> | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   tasks?: Prisma.TaskListRelationFilter
 }, "tasksId">
 
@@ -223,6 +236,7 @@ export type TasksCollectionOrderByWithAggregationInput = {
   created?: Prisma.SortOrder
   due?: Prisma.SortOrder
   updated?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   _count?: Prisma.TasksCollectionCountOrderByAggregateInput
   _max?: Prisma.TasksCollectionMaxOrderByAggregateInput
   _min?: Prisma.TasksCollectionMinOrderByAggregateInput
@@ -238,6 +252,7 @@ export type TasksCollectionScalarWhereWithAggregatesInput = {
   created?: Prisma.DateTimeWithAggregatesFilter<"TasksCollection"> | Date | string
   due?: Prisma.DateTimeWithAggregatesFilter<"TasksCollection"> | Date | string
   updated?: Prisma.DateTimeWithAggregatesFilter<"TasksCollection"> | Date | string
+  userId?: Prisma.UuidWithAggregatesFilter<"TasksCollection"> | string
 }
 
 export type TasksCollectionCreateInput = {
@@ -247,6 +262,7 @@ export type TasksCollectionCreateInput = {
   created?: Date | string
   due: Date | string
   updated?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTasksCollectionsInput
   tasks?: Prisma.TaskCreateNestedManyWithoutCollectionInput
 }
 
@@ -257,6 +273,7 @@ export type TasksCollectionUncheckedCreateInput = {
   created?: Date | string
   due: Date | string
   updated?: Date | string
+  userId: string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCollectionInput
 }
 
@@ -267,6 +284,7 @@ export type TasksCollectionUpdateInput = {
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTasksCollectionsNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutCollectionNestedInput
 }
 
@@ -277,6 +295,7 @@ export type TasksCollectionUncheckedUpdateInput = {
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutCollectionNestedInput
 }
 
@@ -287,6 +306,7 @@ export type TasksCollectionCreateManyInput = {
   created?: Date | string
   due: Date | string
   updated?: Date | string
+  userId: string
 }
 
 export type TasksCollectionUpdateManyMutationInput = {
@@ -305,6 +325,17 @@ export type TasksCollectionUncheckedUpdateManyInput = {
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type TasksCollectionListRelationFilter = {
+  every?: Prisma.TasksCollectionWhereInput
+  some?: Prisma.TasksCollectionWhereInput
+  none?: Prisma.TasksCollectionWhereInput
+}
+
+export type TasksCollectionOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type TasksCollectionCountOrderByAggregateInput = {
@@ -314,6 +345,7 @@ export type TasksCollectionCountOrderByAggregateInput = {
   created?: Prisma.SortOrder
   due?: Prisma.SortOrder
   updated?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type TasksCollectionMaxOrderByAggregateInput = {
@@ -323,6 +355,7 @@ export type TasksCollectionMaxOrderByAggregateInput = {
   created?: Prisma.SortOrder
   due?: Prisma.SortOrder
   updated?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type TasksCollectionMinOrderByAggregateInput = {
@@ -332,11 +365,54 @@ export type TasksCollectionMinOrderByAggregateInput = {
   created?: Prisma.SortOrder
   due?: Prisma.SortOrder
   updated?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type TasksCollectionScalarRelationFilter = {
   is?: Prisma.TasksCollectionWhereInput
   isNot?: Prisma.TasksCollectionWhereInput
+}
+
+export type TasksCollectionCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.TasksCollectionCreateWithoutUserInput, Prisma.TasksCollectionUncheckedCreateWithoutUserInput> | Prisma.TasksCollectionCreateWithoutUserInput[] | Prisma.TasksCollectionUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.TasksCollectionCreateOrConnectWithoutUserInput | Prisma.TasksCollectionCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.TasksCollectionCreateManyUserInputEnvelope
+  connect?: Prisma.TasksCollectionWhereUniqueInput | Prisma.TasksCollectionWhereUniqueInput[]
+}
+
+export type TasksCollectionUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.TasksCollectionCreateWithoutUserInput, Prisma.TasksCollectionUncheckedCreateWithoutUserInput> | Prisma.TasksCollectionCreateWithoutUserInput[] | Prisma.TasksCollectionUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.TasksCollectionCreateOrConnectWithoutUserInput | Prisma.TasksCollectionCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.TasksCollectionCreateManyUserInputEnvelope
+  connect?: Prisma.TasksCollectionWhereUniqueInput | Prisma.TasksCollectionWhereUniqueInput[]
+}
+
+export type TasksCollectionUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.TasksCollectionCreateWithoutUserInput, Prisma.TasksCollectionUncheckedCreateWithoutUserInput> | Prisma.TasksCollectionCreateWithoutUserInput[] | Prisma.TasksCollectionUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.TasksCollectionCreateOrConnectWithoutUserInput | Prisma.TasksCollectionCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.TasksCollectionUpsertWithWhereUniqueWithoutUserInput | Prisma.TasksCollectionUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.TasksCollectionCreateManyUserInputEnvelope
+  set?: Prisma.TasksCollectionWhereUniqueInput | Prisma.TasksCollectionWhereUniqueInput[]
+  disconnect?: Prisma.TasksCollectionWhereUniqueInput | Prisma.TasksCollectionWhereUniqueInput[]
+  delete?: Prisma.TasksCollectionWhereUniqueInput | Prisma.TasksCollectionWhereUniqueInput[]
+  connect?: Prisma.TasksCollectionWhereUniqueInput | Prisma.TasksCollectionWhereUniqueInput[]
+  update?: Prisma.TasksCollectionUpdateWithWhereUniqueWithoutUserInput | Prisma.TasksCollectionUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.TasksCollectionUpdateManyWithWhereWithoutUserInput | Prisma.TasksCollectionUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.TasksCollectionScalarWhereInput | Prisma.TasksCollectionScalarWhereInput[]
+}
+
+export type TasksCollectionUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.TasksCollectionCreateWithoutUserInput, Prisma.TasksCollectionUncheckedCreateWithoutUserInput> | Prisma.TasksCollectionCreateWithoutUserInput[] | Prisma.TasksCollectionUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.TasksCollectionCreateOrConnectWithoutUserInput | Prisma.TasksCollectionCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.TasksCollectionUpsertWithWhereUniqueWithoutUserInput | Prisma.TasksCollectionUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.TasksCollectionCreateManyUserInputEnvelope
+  set?: Prisma.TasksCollectionWhereUniqueInput | Prisma.TasksCollectionWhereUniqueInput[]
+  disconnect?: Prisma.TasksCollectionWhereUniqueInput | Prisma.TasksCollectionWhereUniqueInput[]
+  delete?: Prisma.TasksCollectionWhereUniqueInput | Prisma.TasksCollectionWhereUniqueInput[]
+  connect?: Prisma.TasksCollectionWhereUniqueInput | Prisma.TasksCollectionWhereUniqueInput[]
+  update?: Prisma.TasksCollectionUpdateWithWhereUniqueWithoutUserInput | Prisma.TasksCollectionUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.TasksCollectionUpdateManyWithWhereWithoutUserInput | Prisma.TasksCollectionUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.TasksCollectionScalarWhereInput | Prisma.TasksCollectionScalarWhereInput[]
 }
 
 export type TasksCollectionCreateNestedOneWithoutTasksInput = {
@@ -353,6 +429,65 @@ export type TasksCollectionUpdateOneRequiredWithoutTasksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TasksCollectionUpdateToOneWithWhereWithoutTasksInput, Prisma.TasksCollectionUpdateWithoutTasksInput>, Prisma.TasksCollectionUncheckedUpdateWithoutTasksInput>
 }
 
+export type TasksCollectionCreateWithoutUserInput = {
+  tasksId?: string
+  tasksName: string
+  details: string
+  created?: Date | string
+  due: Date | string
+  updated?: Date | string
+  tasks?: Prisma.TaskCreateNestedManyWithoutCollectionInput
+}
+
+export type TasksCollectionUncheckedCreateWithoutUserInput = {
+  tasksId?: string
+  tasksName: string
+  details: string
+  created?: Date | string
+  due: Date | string
+  updated?: Date | string
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCollectionInput
+}
+
+export type TasksCollectionCreateOrConnectWithoutUserInput = {
+  where: Prisma.TasksCollectionWhereUniqueInput
+  create: Prisma.XOR<Prisma.TasksCollectionCreateWithoutUserInput, Prisma.TasksCollectionUncheckedCreateWithoutUserInput>
+}
+
+export type TasksCollectionCreateManyUserInputEnvelope = {
+  data: Prisma.TasksCollectionCreateManyUserInput | Prisma.TasksCollectionCreateManyUserInput[]
+  skipDuplicates?: boolean
+}
+
+export type TasksCollectionUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.TasksCollectionWhereUniqueInput
+  update: Prisma.XOR<Prisma.TasksCollectionUpdateWithoutUserInput, Prisma.TasksCollectionUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.TasksCollectionCreateWithoutUserInput, Prisma.TasksCollectionUncheckedCreateWithoutUserInput>
+}
+
+export type TasksCollectionUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.TasksCollectionWhereUniqueInput
+  data: Prisma.XOR<Prisma.TasksCollectionUpdateWithoutUserInput, Prisma.TasksCollectionUncheckedUpdateWithoutUserInput>
+}
+
+export type TasksCollectionUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.TasksCollectionScalarWhereInput
+  data: Prisma.XOR<Prisma.TasksCollectionUpdateManyMutationInput, Prisma.TasksCollectionUncheckedUpdateManyWithoutUserInput>
+}
+
+export type TasksCollectionScalarWhereInput = {
+  AND?: Prisma.TasksCollectionScalarWhereInput | Prisma.TasksCollectionScalarWhereInput[]
+  OR?: Prisma.TasksCollectionScalarWhereInput[]
+  NOT?: Prisma.TasksCollectionScalarWhereInput | Prisma.TasksCollectionScalarWhereInput[]
+  tasksId?: Prisma.UuidFilter<"TasksCollection"> | string
+  tasksName?: Prisma.StringFilter<"TasksCollection"> | string
+  details?: Prisma.StringFilter<"TasksCollection"> | string
+  created?: Prisma.DateTimeFilter<"TasksCollection"> | Date | string
+  due?: Prisma.DateTimeFilter<"TasksCollection"> | Date | string
+  updated?: Prisma.DateTimeFilter<"TasksCollection"> | Date | string
+  userId?: Prisma.UuidFilter<"TasksCollection"> | string
+}
+
 export type TasksCollectionCreateWithoutTasksInput = {
   tasksId?: string
   tasksName: string
@@ -360,6 +495,7 @@ export type TasksCollectionCreateWithoutTasksInput = {
   created?: Date | string
   due: Date | string
   updated?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTasksCollectionsInput
 }
 
 export type TasksCollectionUncheckedCreateWithoutTasksInput = {
@@ -369,6 +505,7 @@ export type TasksCollectionUncheckedCreateWithoutTasksInput = {
   created?: Date | string
   due: Date | string
   updated?: Date | string
+  userId: string
 }
 
 export type TasksCollectionCreateOrConnectWithoutTasksInput = {
@@ -394,9 +531,49 @@ export type TasksCollectionUpdateWithoutTasksInput = {
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTasksCollectionsNestedInput
 }
 
 export type TasksCollectionUncheckedUpdateWithoutTasksInput = {
+  tasksId?: Prisma.StringFieldUpdateOperationsInput | string
+  tasksName?: Prisma.StringFieldUpdateOperationsInput | string
+  details?: Prisma.StringFieldUpdateOperationsInput | string
+  created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type TasksCollectionCreateManyUserInput = {
+  tasksId?: string
+  tasksName: string
+  details: string
+  created?: Date | string
+  due: Date | string
+  updated?: Date | string
+}
+
+export type TasksCollectionUpdateWithoutUserInput = {
+  tasksId?: Prisma.StringFieldUpdateOperationsInput | string
+  tasksName?: Prisma.StringFieldUpdateOperationsInput | string
+  details?: Prisma.StringFieldUpdateOperationsInput | string
+  created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUpdateManyWithoutCollectionNestedInput
+}
+
+export type TasksCollectionUncheckedUpdateWithoutUserInput = {
+  tasksId?: Prisma.StringFieldUpdateOperationsInput | string
+  tasksName?: Prisma.StringFieldUpdateOperationsInput | string
+  details?: Prisma.StringFieldUpdateOperationsInput | string
+  created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutCollectionNestedInput
+}
+
+export type TasksCollectionUncheckedUpdateManyWithoutUserInput = {
   tasksId?: Prisma.StringFieldUpdateOperationsInput | string
   tasksName?: Prisma.StringFieldUpdateOperationsInput | string
   details?: Prisma.StringFieldUpdateOperationsInput | string
@@ -443,6 +620,8 @@ export type TasksCollectionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   created?: boolean
   due?: boolean
   updated?: boolean
+  userId?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tasks?: boolean | Prisma.TasksCollection$tasksArgs<ExtArgs>
   _count?: boolean | Prisma.TasksCollectionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tasksCollection"]>
@@ -454,6 +633,8 @@ export type TasksCollectionSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   created?: boolean
   due?: boolean
   updated?: boolean
+  userId?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tasksCollection"]>
 
 export type TasksCollectionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -463,6 +644,8 @@ export type TasksCollectionSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   created?: boolean
   due?: boolean
   updated?: boolean
+  userId?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tasksCollection"]>
 
 export type TasksCollectionSelectScalar = {
@@ -472,19 +655,26 @@ export type TasksCollectionSelectScalar = {
   created?: boolean
   due?: boolean
   updated?: boolean
+  userId?: boolean
 }
 
-export type TasksCollectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"tasksId" | "tasksName" | "details" | "created" | "due" | "updated", ExtArgs["result"]["tasksCollection"]>
+export type TasksCollectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"tasksId" | "tasksName" | "details" | "created" | "due" | "updated" | "userId", ExtArgs["result"]["tasksCollection"]>
 export type TasksCollectionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tasks?: boolean | Prisma.TasksCollection$tasksArgs<ExtArgs>
   _count?: boolean | Prisma.TasksCollectionCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type TasksCollectionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type TasksCollectionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type TasksCollectionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type TasksCollectionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
 
 export type $TasksCollectionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TasksCollection"
   objects: {
+    user: Prisma.$UserPayload<ExtArgs>
     tasks: Prisma.$TaskPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -494,6 +684,7 @@ export type $TasksCollectionPayload<ExtArgs extends runtime.Types.Extensions.Int
     created: Date
     due: Date
     updated: Date
+    userId: string
   }, ExtArgs["result"]["tasksCollection"]>
   composites: {}
 }
@@ -888,6 +1079,7 @@ readonly fields: TasksCollectionFieldRefs;
  */
 export interface Prisma__TasksCollectionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   tasks<T extends Prisma.TasksCollection$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TasksCollection$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -924,6 +1116,7 @@ export interface TasksCollectionFieldRefs {
   readonly created: Prisma.FieldRef<"TasksCollection", 'DateTime'>
   readonly due: Prisma.FieldRef<"TasksCollection", 'DateTime'>
   readonly updated: Prisma.FieldRef<"TasksCollection", 'DateTime'>
+  readonly userId: Prisma.FieldRef<"TasksCollection", 'String'>
 }
     
 
@@ -1173,6 +1366,10 @@ export type TasksCollectionCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    */
   data: Prisma.TasksCollectionCreateManyInput | Prisma.TasksCollectionCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TasksCollectionIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1243,6 +1440,10 @@ export type TasksCollectionUpdateManyAndReturnArgs<ExtArgs extends runtime.Types
    * Limit how many TasksCollections to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TasksCollectionIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

@@ -1,8 +1,9 @@
-import { Request } from "../types/express";
-import { NextFunction, Response } from "express";
+import { Request as CustomRequest } from "../types/express";
+import { NextFunction, Response, Request } from "express";
 
 export const isAuth = (req: Request, res: Response, next: NextFunction) => {
-    if (req.isAuthenticated()) {
+    const customReq = req as unknown as CustomRequest;
+    if (customReq.isAuthenticated?.()) {
       return next();
     }
     return res.status(401).json({ message: "Not authenticated" });
@@ -10,7 +11,8 @@ export const isAuth = (req: Request, res: Response, next: NextFunction) => {
 
   // Todo: isn't yet integrated
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
-    if (req.isAuthenticated()) {
+    const customReq = req as unknown as CustomRequest;
+    if (customReq.isAuthenticated?.()) {
       return next();
     }
     return res.status(401).json({ message: "Not authenticated" });

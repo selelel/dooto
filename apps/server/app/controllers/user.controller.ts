@@ -28,3 +28,14 @@ export const update = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ error: message });
   }
 }
+
+export const logout = (req: Request, res: Response, next: any) =>  {
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/');
+  });
+}
+
+export const profile = (req: Request, res: Response) => {
+  res.status(200).json({ user: req.user })
+}

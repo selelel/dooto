@@ -43,11 +43,6 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
- * Model RefreshToken
- * 
- */
-export type RefreshToken = Prisma.RefreshTokenModel
-/**
  * Model TasksCollection
  * 
  */
@@ -57,3 +52,8 @@ export type TasksCollection = Prisma.TasksCollectionModel
  * 
  */
 export type Task = Prisma.TaskModel
+/**
+ * Model session
+ * 
+ */
+export type session = Prisma.sessionModel

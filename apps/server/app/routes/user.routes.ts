@@ -89,16 +89,42 @@
  *       401:
  *         description: Invalid credentials
  */
-
-import { Request } from '../types/express';
 import express = require('express')
-import { register } from '../controllers/user.controller';
+import { logout, register } from '../controllers/user.controller';
 import { validate } from '../middleware/validate.dto';
 import { registerDTO } from '../dtos';
 import { signinDTO } from '../dtos/user.controller.dto';
 import { isAuth } from '../lib/auth';
+import { profile } from 'console';
 const router = express.Router()
 const passportLocal = require('../config/passport-local').passportLocal;
+
+/**
+ * @swagger
+ * /users/authenticated:
+ *   get:
+ *     summary: Check if user is authenticated
+ *     description: Returns a success message if the user is authenticated
+ *     tags: [Users]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: User is authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Authenticated
+ *       401:
+ *         description: User is not authenticated
+ */
+router.get('/authenticated', isAuth, (_, res) => {
+  res.status(200).json({ message: 'Authenticated' }); 
+});
 /**
  * @swagger
  * /users/register:
@@ -167,16 +193,8 @@ router.post('/signin/password', validate(signinDTO), passportLocal.authenticate(
  *       500:
  *         description: Logout failed
  */
-router.post('/logout', isAuth, function(req, res, next) {
-  req.logout(function(err) {
-    if (err) { return next(err); }
-    res.redirect('/');
-  });
-});
+router.post('/logout', isAuth, logout);
 
-
-router.get("/me", isAuth, (req: Request, res) => {
-  res.status(200).json({ user: req.user })
-});
+router.get("/me", isAuth, profile);
 
 module.exports = router
