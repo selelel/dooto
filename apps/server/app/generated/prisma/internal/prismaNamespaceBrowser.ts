@@ -54,7 +54,10 @@ export const ModelName = {
   User: 'User',
   TasksCollection: 'TasksCollection',
   Task: 'Task',
-  session: 'session'
+  session: 'session',
+  Category: 'Category',
+  Habit: 'Habit',
+  HabitContribution: 'HabitContribution'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -122,6 +125,38 @@ export const SessionScalarFieldEnum = {
 } as const
 
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
+
+
+export const CategoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  createdAt: 'createdAt'
+} as const
+
+export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
+
+
+export const HabitScalarFieldEnum = {
+  id: 'id',
+  habitName: 'habitName',
+  details: 'details',
+  categoryId: 'categoryId',
+  createdAt: 'createdAt',
+  userId: 'userId'
+} as const
+
+export type HabitScalarFieldEnum = (typeof HabitScalarFieldEnum)[keyof typeof HabitScalarFieldEnum]
+
+
+export const HabitContributionScalarFieldEnum = {
+  habitId: 'habitId',
+  date: 'date',
+  completed: 'completed',
+  createdAt: 'createdAt'
+} as const
+
+export type HabitContributionScalarFieldEnum = (typeof HabitContributionScalarFieldEnum)[keyof typeof HabitContributionScalarFieldEnum]
 
 
 export const SortOrder = {

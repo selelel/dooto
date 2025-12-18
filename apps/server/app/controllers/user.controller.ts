@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { UserService } from '../services/user.services';
+import { Request as CustomRequest} from '../types/express';
 import { logger } from '../utils/logger';
 
 export const register = async (req: Request, res: Response): Promise<void> => {
@@ -38,4 +39,35 @@ export const logout = (req: Request, res: Response, next: any) =>  {
 
 export const profile = (req: Request, res: Response) => {
   res.status(200).json({ user: req.user })
+}
+
+export const CreateCategory = async (_req: Request, res: Response) => {
+  try {
+    const req = _req as CustomRequest;
+    const payload = {
+      ...req.body,
+      userId: req.user?.id,
+    }
+    console.log(payload)
+    const user = await UserService.createCategory(payload);
+
+    res.status(201).json({ user });
+  } catch (error: any) {
+    const message = error?.message || "Internal Server Error";
+    logger.error(`Error: ${message}`);
+    res.status(500).json({ error: message });
+  }
+}
+
+export const GetCategory = async (_req: Request, res: Response) => {
+  try {
+    const req = _req as CustomRequest;
+    const categories = await UserService.getAllCategory(req.user?.id!);
+
+    res.status(201).json({ categories });
+  } catch (error: any) {
+    const message = error?.message || "Internal Server Error";
+    logger.error(`Error: ${message}`);
+    res.status(500).json({ error: message });
+  }
 }

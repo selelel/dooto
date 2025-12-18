@@ -2,6 +2,15 @@
  * @swagger
  * components:
  *   schemas:
+ *     POSTCreateCategoryDTO:
+ *       type: object
+ *       required:
+ *         - category
+ *       properties:
+ *         category:
+ *           type: string
+ *           description: Category name
+ *           example: Electronics
  *     RegisterDTO:
  *       type: object
  *       required:
@@ -42,60 +51,14 @@
  *           type: string
  *           description: User password
  *           example: strongPassword123
- *
- * /users/register:
- *   post:
- *     summary: Register a new user
- *     tags:
- *       - Users
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/RegisterDTO'
- *     responses:
- *       201:
- *         description: User created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               additionalProperties: true
- *       400:
- *         description: Validation error
- *
- * /users/signin/password:
- *   post:
- *     summary: Sign in a user with username/email and password
- *     tags:
- *       - Users
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/SigninDTO'
- *     responses:
- *       200:
- *         description: User signed in successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               additionalProperties: true
- *       400:
- *         description: Validation error
- *       401:
- *         description: Invalid credentials
  */
 import express = require('express')
-import { logout, register } from '../controllers/user.controller';
+import { GetCategory, CreateCategory, logout, register } from '../controllers/user.controller';
 import { validate } from '../middleware/validate.dto';
 import { registerDTO } from '../dtos';
-import { signinDTO } from '../dtos/user.controller.dto';
+import { POSTCreateCategoryDTO, signinDTO } from '../dtos/user.controller.dto';
 import { isAuth } from '../lib/auth';
-import { profile } from 'console';
+
 const router = express.Router()
 const passportLocal = require('../config/passport-local').passportLocal;
 
@@ -195,6 +158,56 @@ router.post('/signin/password', validate(signinDTO), passportLocal.authenticate(
  */
 router.post('/logout', isAuth, logout);
 
-router.get("/me", isAuth, profile);
+/**
+ * @swagger
+ * /users/category:
+ *   post:
+ *     summary: Create a new category
+ *     tags: [Users]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/POSTCreateCategoryDTO'
+ *     responses:
+ *       201:
+ *         description: Category created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               additionalProperties: true
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ */
+router.post("/category", isAuth, validate(POSTCreateCategoryDTO), CreateCategory);
+
+/**
+ * @swagger
+ * /users/category:
+ *   get:
+ *     summary: Get all categories for the authenticated user
+ *     tags: [Users]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: List of categories
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 additionalProperties: true
+ *       401:
+ *         description: Unauthorized
+ */
+router.get("/category", isAuth, GetCategory);
 
 module.exports = router

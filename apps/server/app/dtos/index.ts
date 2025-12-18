@@ -1,9 +1,4 @@
-import { POSTtasksDTO } from './tasks.controller.dto';
-import { registerDTO, signinDTO, updateUserDTO } from './user.controller.dto';
-
-export {
-  registerDTO,
-  signinDTO,
-  updateUserDTO,
-  POSTtasksDTO
-};
+export * from './user.controller.dto';
+export * from './tasks.controller.dto';
+export * from './habit.controller.dto';
+export type { POSTHabitT } from './habit.controller.dto';

@@ -57,3 +57,18 @@ export type Task = Prisma.TaskModel
  * 
  */
 export type session = Prisma.sessionModel
+/**
+ * Model Category
+ * 
+ */
+export type Category = Prisma.CategoryModel
+/**
+ * Model Habit
+ * 
+ */
+export type Habit = Prisma.HabitModel
+/**
+ * Model HabitContribution
+ * 
+ */
+export type HabitContribution = Prisma.HabitContributionModel

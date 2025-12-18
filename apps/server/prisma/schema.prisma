@@ -7,6 +7,17 @@ datasource db {
   provider = "postgresql"
 }
 
+enum TaskStatus {
+  DONE
+  IN_PROGRESS
+  PENDING
+}
+
+enum AuthProvider {
+  EMAIL
+  GOOGLE
+}
+
 model User {
   id             String           @id @default(uuid()) @db.Uuid
   name           String
@@ -16,6 +27,8 @@ model User {
   provider       AuthProvider     @default(EMAIL)
   createdAt      DateTime         @default(now())
   tasksCollections TasksCollection[]
+  habits         Habit[]
+  categories     Category[]
 
   @@map("users")
 }
@@ -61,13 +74,45 @@ model session {
   @@index([expire], map: "IDX_session_expire")
 }
 
-enum TaskStatus {
-  DONE
-  IN_PROGRESS
-  PENDING
+model Category {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  name      String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  habits    Habit[]
+
+  @@unique([userId, name])  // Unique category name per user
+  @@index([userId])
 }
 
-enum AuthProvider {
-  EMAIL
-  GOOGLE
+model Habit {
+  id          String    @id @default(uuid()) @db.Uuid
+  habitName   String
+  details     String?
+  categoryId  String?   @db.Uuid          // <-- foreign key field for relation
+  createdAt   DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String    @db.Uuid
+
+  category  Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  contributions HabitContribution[]
+
+  @@unique([userId, habitName])
+  @@index([userId])
+  @@index([categoryId])
 }
+model HabitContribution {
+  habitId   String   @db.Uuid
+  date      DateTime
+  completed Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  habit Habit @relation(fields: [habitId], references: [id], onDelete: Cascade)
+
+  @@id([habitId, date])
+}
+

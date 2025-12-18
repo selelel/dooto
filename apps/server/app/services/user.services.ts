@@ -1,6 +1,7 @@
 import jwt = require("jsonwebtoken");
 import bcrypt = require("bcrypt");
 import { prisma } from "../lib/prisma";
+import { POSTCreateCategoryT } from "../dtos";
 
 export const UserService = {
 
@@ -14,6 +15,37 @@ export const UserService = {
         email: data.email,
         password: hashed,
         provider: "EMAIL",
+      },
+    });
+  },
+
+  async createCategory(data:POSTCreateCategoryT & {userId : string}) {
+    const { category, userId } = data;
+
+    // Check if user already has this category
+    const existing = await prisma.category.findFirst({
+      where: {
+        userId,
+        name: category,
+      },
+    });
+
+    if (existing) {
+      throw new Error(`Category '${category}' already exists for this user.`);
+    }
+
+    return prisma.category.create({
+      data: {
+        name: category,
+        userId,
+      },
+    });
+  },
+  
+  async getAllCategory(userId : string) {
+    return prisma.category.findMany({
+      where: {
+        userId,
       },
     });
   },

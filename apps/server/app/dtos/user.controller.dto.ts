@@ -23,3 +23,9 @@ export const updateUserDTO = z.object({
     email: z.email(),
   }),
 })
+
+export const POSTCreateCategoryDTO = z.object({
+  category: z.string(),
+})
+
+export type POSTCreateCategoryT = z.infer<typeof POSTCreateCategoryDTO>
