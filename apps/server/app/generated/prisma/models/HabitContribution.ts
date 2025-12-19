@@ -221,11 +221,11 @@ export type HabitContributionCreateInput = {
   date: Date | string
   completed?: boolean
   createdAt?: Date | string
-  habit: Prisma.HabitCreateNestedOneWithoutContributionsInput | undefined
+  habit: Prisma.HabitCreateNestedOneWithoutContributionsInput
 }
 
 export type HabitContributionUncheckedCreateInput = {
-  habitId: string | undefined
+  habitId: string
   date: Date | string
   completed?: boolean
   createdAt?: Date | string

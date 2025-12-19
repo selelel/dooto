@@ -57,7 +57,8 @@ export const ModelName = {
   session: 'session',
   Category: 'Category',
   Habit: 'Habit',
-  HabitContribution: 'HabitContribution'
+  HabitContribution: 'HabitContribution',
+  BadHabitTimer: 'BadHabitTimer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -157,6 +158,20 @@ export const HabitContributionScalarFieldEnum = {
 } as const
 
 export type HabitContributionScalarFieldEnum = (typeof HabitContributionScalarFieldEnum)[keyof typeof HabitContributionScalarFieldEnum]
+
+
+export const BadHabitTimerScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  habitName: 'habitName',
+  details: 'details',
+  createdAt: 'createdAt',
+  lastRelapseAt: 'lastRelapseAt',
+  longestStreakSeconds: 'longestStreakSeconds',
+  relapsesCount: 'relapsesCount'
+} as const
+
+export type BadHabitTimerScalarFieldEnum = (typeof BadHabitTimerScalarFieldEnum)[keyof typeof BadHabitTimerScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -390,7 +390,8 @@ export const ModelName = {
   session: 'session',
   Category: 'Category',
   Habit: 'Habit',
-  HabitContribution: 'HabitContribution'
+  HabitContribution: 'HabitContribution',
+  BadHabitTimer: 'BadHabitTimer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -406,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "tasksCollection" | "task" | "session" | "category" | "habit" | "habitContribution"
+    modelProps: "user" | "tasksCollection" | "task" | "session" | "category" | "habit" | "habitContribution" | "badHabitTimer"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -928,6 +929,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BadHabitTimer: {
+      payload: Prisma.$BadHabitTimerPayload<ExtArgs>
+      fields: Prisma.BadHabitTimerFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BadHabitTimerFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadHabitTimerPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BadHabitTimerFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadHabitTimerPayload>
+        }
+        findFirst: {
+          args: Prisma.BadHabitTimerFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadHabitTimerPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BadHabitTimerFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadHabitTimerPayload>
+        }
+        findMany: {
+          args: Prisma.BadHabitTimerFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadHabitTimerPayload>[]
+        }
+        create: {
+          args: Prisma.BadHabitTimerCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadHabitTimerPayload>
+        }
+        createMany: {
+          args: Prisma.BadHabitTimerCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BadHabitTimerCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadHabitTimerPayload>[]
+        }
+        delete: {
+          args: Prisma.BadHabitTimerDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadHabitTimerPayload>
+        }
+        update: {
+          args: Prisma.BadHabitTimerUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadHabitTimerPayload>
+        }
+        deleteMany: {
+          args: Prisma.BadHabitTimerDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BadHabitTimerUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BadHabitTimerUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadHabitTimerPayload>[]
+        }
+        upsert: {
+          args: Prisma.BadHabitTimerUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadHabitTimerPayload>
+        }
+        aggregate: {
+          args: Prisma.BadHabitTimerAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBadHabitTimer>
+        }
+        groupBy: {
+          args: Prisma.BadHabitTimerGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BadHabitTimerGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BadHabitTimerCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BadHabitTimerCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1048,6 +1123,20 @@ export const HabitContributionScalarFieldEnum = {
 } as const
 
 export type HabitContributionScalarFieldEnum = (typeof HabitContributionScalarFieldEnum)[keyof typeof HabitContributionScalarFieldEnum]
+
+
+export const BadHabitTimerScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  habitName: 'habitName',
+  details: 'details',
+  createdAt: 'createdAt',
+  lastRelapseAt: 'lastRelapseAt',
+  longestStreakSeconds: 'longestStreakSeconds',
+  relapsesCount: 'relapsesCount'
+} as const
+
+export type BadHabitTimerScalarFieldEnum = (typeof BadHabitTimerScalarFieldEnum)[keyof typeof BadHabitTimerScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1186,6 +1275,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -1288,6 +1391,7 @@ export type GlobalOmitConfig = {
   category?: Prisma.CategoryOmit
   habit?: Prisma.HabitOmit
   habitContribution?: Prisma.HabitContributionOmit
+  badHabitTimer?: Prisma.BadHabitTimerOmit
 }
 
 /* Types for Logging */

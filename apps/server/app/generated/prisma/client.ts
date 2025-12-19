@@ -72,3 +72,8 @@ export type Habit = Prisma.HabitModel
  * 
  */
 export type HabitContribution = Prisma.HabitContributionModel
+/**
+ * Model BadHabitTimer
+ * 
+ */
+export type BadHabitTimer = Prisma.BadHabitTimerModel

@@ -28,6 +28,7 @@ model User {
   createdAt      DateTime         @default(now())
   tasksCollections TasksCollection[]
   habits         Habit[]
+  badHabits      BadHabitTimer[]
   categories     Category[]
 
   @@map("users")
@@ -114,5 +115,23 @@ model HabitContribution {
   habit Habit @relation(fields: [habitId], references: [id], onDelete: Cascade)
 
   @@id([habitId, date])
+}
+
+model BadHabitTimer {
+  id                     String   @id @default(uuid())
+  userId                 String   @db.Uuid
+  habitName              String
+  details                String?
+
+  createdAt              DateTime @default(now())
+
+  lastRelapseAt          DateTime?
+  longestStreakSeconds   Int
+  relapsesCount          Int
+
+  user                   User     @relation(fields: [userId], references: [id])
+
+  @@unique([habitName])
+  @@index([userId])
 }
 

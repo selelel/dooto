@@ -200,6 +200,7 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   tasksCollections?: Prisma.TasksCollectionListRelationFilter
   habits?: Prisma.HabitListRelationFilter
+  badHabits?: Prisma.BadHabitTimerListRelationFilter
   categories?: Prisma.CategoryListRelationFilter
 }
 
@@ -213,6 +214,7 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   tasksCollections?: Prisma.TasksCollectionOrderByRelationAggregateInput
   habits?: Prisma.HabitOrderByRelationAggregateInput
+  badHabits?: Prisma.BadHabitTimerOrderByRelationAggregateInput
   categories?: Prisma.CategoryOrderByRelationAggregateInput
 }
 
@@ -229,6 +231,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   tasksCollections?: Prisma.TasksCollectionListRelationFilter
   habits?: Prisma.HabitListRelationFilter
+  badHabits?: Prisma.BadHabitTimerListRelationFilter
   categories?: Prisma.CategoryListRelationFilter
 }, "id" | "username" | "email">
 
@@ -268,6 +271,7 @@ export type UserCreateInput = {
   createdAt?: Date | string
   tasksCollections?: Prisma.TasksCollectionCreateNestedManyWithoutUserInput
   habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  badHabits?: Prisma.BadHabitTimerCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
 }
 
@@ -281,6 +285,7 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   tasksCollections?: Prisma.TasksCollectionUncheckedCreateNestedManyWithoutUserInput
   habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  badHabits?: Prisma.BadHabitTimerUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -294,6 +299,7 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasksCollections?: Prisma.TasksCollectionUpdateManyWithoutUserNestedInput
   habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  badHabits?: Prisma.BadHabitTimerUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
 }
 
@@ -307,6 +313,7 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasksCollections?: Prisma.TasksCollectionUncheckedUpdateManyWithoutUserNestedInput
   habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  badHabits?: Prisma.BadHabitTimerUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -433,6 +440,20 @@ export type UserUpdateOneRequiredWithoutHabitsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutHabitsInput, Prisma.UserUpdateWithoutHabitsInput>, Prisma.UserUncheckedUpdateWithoutHabitsInput>
 }
 
+export type UserCreateNestedOneWithoutBadHabitsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBadHabitsInput, Prisma.UserUncheckedCreateWithoutBadHabitsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBadHabitsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutBadHabitsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBadHabitsInput, Prisma.UserUncheckedCreateWithoutBadHabitsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBadHabitsInput
+  upsert?: Prisma.UserUpsertWithoutBadHabitsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBadHabitsInput, Prisma.UserUpdateWithoutBadHabitsInput>, Prisma.UserUncheckedUpdateWithoutBadHabitsInput>
+}
+
 export type UserCreateWithoutTasksCollectionsInput = {
   id?: string
   name: string
@@ -442,6 +463,7 @@ export type UserCreateWithoutTasksCollectionsInput = {
   provider?: $Enums.AuthProvider
   createdAt?: Date | string
   habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  badHabits?: Prisma.BadHabitTimerCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
 }
 
@@ -454,6 +476,7 @@ export type UserUncheckedCreateWithoutTasksCollectionsInput = {
   provider?: $Enums.AuthProvider
   createdAt?: Date | string
   habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  badHabits?: Prisma.BadHabitTimerUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -482,6 +505,7 @@ export type UserUpdateWithoutTasksCollectionsInput = {
   provider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  badHabits?: Prisma.BadHabitTimerUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
 }
 
@@ -494,6 +518,7 @@ export type UserUncheckedUpdateWithoutTasksCollectionsInput = {
   provider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  badHabits?: Prisma.BadHabitTimerUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -507,6 +532,7 @@ export type UserCreateWithoutCategoriesInput = {
   createdAt?: Date | string
   tasksCollections?: Prisma.TasksCollectionCreateNestedManyWithoutUserInput
   habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  badHabits?: Prisma.BadHabitTimerCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCategoriesInput = {
@@ -519,6 +545,7 @@ export type UserUncheckedCreateWithoutCategoriesInput = {
   createdAt?: Date | string
   tasksCollections?: Prisma.TasksCollectionUncheckedCreateNestedManyWithoutUserInput
   habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  badHabits?: Prisma.BadHabitTimerUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCategoriesInput = {
@@ -547,6 +574,7 @@ export type UserUpdateWithoutCategoriesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasksCollections?: Prisma.TasksCollectionUpdateManyWithoutUserNestedInput
   habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  badHabits?: Prisma.BadHabitTimerUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCategoriesInput = {
@@ -559,6 +587,7 @@ export type UserUncheckedUpdateWithoutCategoriesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasksCollections?: Prisma.TasksCollectionUncheckedUpdateManyWithoutUserNestedInput
   habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  badHabits?: Prisma.BadHabitTimerUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutHabitsInput = {
@@ -570,6 +599,7 @@ export type UserCreateWithoutHabitsInput = {
   provider?: $Enums.AuthProvider
   createdAt?: Date | string
   tasksCollections?: Prisma.TasksCollectionCreateNestedManyWithoutUserInput
+  badHabits?: Prisma.BadHabitTimerCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
 }
 
@@ -582,6 +612,7 @@ export type UserUncheckedCreateWithoutHabitsInput = {
   provider?: $Enums.AuthProvider
   createdAt?: Date | string
   tasksCollections?: Prisma.TasksCollectionUncheckedCreateNestedManyWithoutUserInput
+  badHabits?: Prisma.BadHabitTimerUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -610,6 +641,7 @@ export type UserUpdateWithoutHabitsInput = {
   provider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasksCollections?: Prisma.TasksCollectionUpdateManyWithoutUserNestedInput
+  badHabits?: Prisma.BadHabitTimerUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
 }
 
@@ -622,6 +654,75 @@ export type UserUncheckedUpdateWithoutHabitsInput = {
   provider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasksCollections?: Prisma.TasksCollectionUncheckedUpdateManyWithoutUserNestedInput
+  badHabits?: Prisma.BadHabitTimerUncheckedUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutBadHabitsInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  password?: string | null
+  provider?: $Enums.AuthProvider
+  createdAt?: Date | string
+  tasksCollections?: Prisma.TasksCollectionCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutBadHabitsInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  password?: string | null
+  provider?: $Enums.AuthProvider
+  createdAt?: Date | string
+  tasksCollections?: Prisma.TasksCollectionUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutBadHabitsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBadHabitsInput, Prisma.UserUncheckedCreateWithoutBadHabitsInput>
+}
+
+export type UserUpsertWithoutBadHabitsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBadHabitsInput, Prisma.UserUncheckedUpdateWithoutBadHabitsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBadHabitsInput, Prisma.UserUncheckedCreateWithoutBadHabitsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBadHabitsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBadHabitsInput, Prisma.UserUncheckedUpdateWithoutBadHabitsInput>
+}
+
+export type UserUpdateWithoutBadHabitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasksCollections?: Prisma.TasksCollectionUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBadHabitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasksCollections?: Prisma.TasksCollectionUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -633,12 +734,14 @@ export type UserUncheckedUpdateWithoutHabitsInput = {
 export type UserCountOutputType = {
   tasksCollections: number
   habits: number
+  badHabits: number
   categories: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tasksCollections?: boolean | UserCountOutputTypeCountTasksCollectionsArgs
   habits?: boolean | UserCountOutputTypeCountHabitsArgs
+  badHabits?: boolean | UserCountOutputTypeCountBadHabitsArgs
   categories?: boolean | UserCountOutputTypeCountCategoriesArgs
 }
 
@@ -669,6 +772,13 @@ export type UserCountOutputTypeCountHabitsArgs<ExtArgs extends runtime.Types.Ext
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountBadHabitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BadHabitTimerWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountCategoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CategoryWhereInput
 }
@@ -684,6 +794,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   tasksCollections?: boolean | Prisma.User$tasksCollectionsArgs<ExtArgs>
   habits?: boolean | Prisma.User$habitsArgs<ExtArgs>
+  badHabits?: boolean | Prisma.User$badHabitsArgs<ExtArgs>
   categories?: boolean | Prisma.User$categoriesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -722,6 +833,7 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tasksCollections?: boolean | Prisma.User$tasksCollectionsArgs<ExtArgs>
   habits?: boolean | Prisma.User$habitsArgs<ExtArgs>
+  badHabits?: boolean | Prisma.User$badHabitsArgs<ExtArgs>
   categories?: boolean | Prisma.User$categoriesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -733,6 +845,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     tasksCollections: Prisma.$TasksCollectionPayload<ExtArgs>[]
     habits: Prisma.$HabitPayload<ExtArgs>[]
+    badHabits: Prisma.$BadHabitTimerPayload<ExtArgs>[]
     categories: Prisma.$CategoryPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1139,6 +1252,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tasksCollections<T extends Prisma.User$tasksCollectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tasksCollectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TasksCollectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   habits<T extends Prisma.User$habitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$habitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HabitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  badHabits<T extends Prisma.User$badHabitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$badHabitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BadHabitTimerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   categories<T extends Prisma.User$categoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1609,6 +1723,30 @@ export type User$habitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.HabitScalarFieldEnum | Prisma.HabitScalarFieldEnum[]
+}
+
+/**
+ * User.badHabits
+ */
+export type User$badHabitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BadHabitTimer
+   */
+  select?: Prisma.BadHabitTimerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BadHabitTimer
+   */
+  omit?: Prisma.BadHabitTimerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BadHabitTimerInclude<ExtArgs> | null
+  where?: Prisma.BadHabitTimerWhereInput
+  orderBy?: Prisma.BadHabitTimerOrderByWithRelationInput | Prisma.BadHabitTimerOrderByWithRelationInput[]
+  cursor?: Prisma.BadHabitTimerWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BadHabitTimerScalarFieldEnum | Prisma.BadHabitTimerScalarFieldEnum[]
 }
 
 /**
