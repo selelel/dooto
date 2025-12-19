@@ -48,10 +48,6 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Habit created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Habit'
  *       400:
  *         description: Invalid input
  *       401:
@@ -96,6 +92,27 @@ router.get('/:id', isAuth, GEThabit);
  *       - Habit
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: from
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: false
+ *         description: Start date for filtering habits
+ *       - in: query
+ *         name: to
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: false
+ *         description: End date for filtering habits
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Category ID for filtering habits
  *     responses:
  *       200:
  *         description: List of habits retrieved successfully

@@ -2,6 +2,7 @@ import { prisma } from "../lib/prisma";
 import { logger } from "../utils/logger";
 import { POSTAddContributionT, POSTHabitT } from "../dtos";
 import { Habit, HabitContribution } from "../generated/prisma/client";
+import { HabitContributionWhereInput } from "../generated/prisma/models";
 
 async function createHabit(data: POSTHabitT & { userId: string }): Promise<Habit> {
   const { userId, habitName, details, categoryId } = data;
@@ -43,7 +44,6 @@ async function createHabit(data: POSTHabitT & { userId: string }): Promise<Habit
 
     return habit;
   } catch (error) {
-    logger.error("Error creating habit:", error);
     throw error;
   }
 }
@@ -69,14 +69,39 @@ async function getHabitById(id:string): Promise<Habit | null> {
   }
 }
 
-async function getHabits(userId:string): Promise<Habit[] | null> {
+async function getHabits(
+  userId: string,
+  dateRange?: { from?: string; to?: string },
+  categoryId? : string
+): Promise<Habit[]> {
+  const contributionDateWhere: HabitContributionWhereInput | undefined =
+    dateRange?.from || dateRange?.to
+      ? {
+          date: {
+            ...(dateRange?.from && { gte: new Date(dateRange.from) }),
+            ...(dateRange?.to && { lte: new Date(dateRange.to) }),
+          },
+        }
+      : undefined;
+
   try {
     const habit = await prisma.habit.findMany({
       where: {
-        userId: userId
+        userId,
+        ...(contributionDateWhere && {
+          contributions: {
+            some: contributionDateWhere,
+          },
+        }),
+        ...(categoryId && {
+          categoryId,
+        }),
       },
       include: {
         contributions: {
+          ...(contributionDateWhere && {
+            where: contributionDateWhere,
+          }),
           orderBy: { date: 'asc' },
         },
         category: true,
@@ -85,10 +110,11 @@ async function getHabits(userId:string): Promise<Habit[] | null> {
 
     return habit;
   } catch (error) {
-    logger.error("Error getting habit by id:", error);
+    logger.error("Error getting habits:", error);
     throw error;
   }
 }
+
 
 async function addContribution(data: POSTAddContributionT & { date?: string; habitId: string }): Promise<HabitContribution | null> {
   const { habitId, completed = true } = data;
