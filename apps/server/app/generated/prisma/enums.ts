@@ -24,3 +24,15 @@ export const AuthProvider = {
 } as const
 
 export type AuthProvider = (typeof AuthProvider)[keyof typeof AuthProvider]
+
+
+export const Mood = {
+  HAPPY: 'HAPPY',
+  SAD: 'SAD',
+  ANXIOUS: 'ANXIOUS',
+  EXCITED: 'EXCITED',
+  CALM: 'CALM',
+  ANGRY: 'ANGRY'
+} as const
+
+export type Mood = (typeof Mood)[keyof typeof Mood]

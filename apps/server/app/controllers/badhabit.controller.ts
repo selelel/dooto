@@ -60,3 +60,19 @@ export const GetBadHabitTimerById = async (_req: Request, res: Response): Promis
     res.status(500).json({ message: error instanceof Error ? error.message : 'Failed to fetch bad habit timer' });
   }
 };
+
+export const DeleteBadHabitTimerById = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const req = _req as CustomRequest;
+    const { id } = req.params;
+    const userId = req.user!.id;
+
+    await BadHabitTimerService.deleteBadHabitTimer(id!, userId);
+
+    res.status(204).json({ message: 'Bad habit timer deleted successfully' });
+  } catch (error) {
+    logger.error('Error deleting bad habit timer:', error);
+    res.status(500).json({ message: error instanceof Error ? error.message : 'Failed to delete bad habit timer' });
+  }
+};
+

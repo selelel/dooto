@@ -202,6 +202,7 @@ export type UserWhereInput = {
   habits?: Prisma.HabitListRelationFilter
   badHabits?: Prisma.BadHabitTimerListRelationFilter
   categories?: Prisma.CategoryListRelationFilter
+  moodJournal?: Prisma.MoodJournalListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -216,6 +217,7 @@ export type UserOrderByWithRelationInput = {
   habits?: Prisma.HabitOrderByRelationAggregateInput
   badHabits?: Prisma.BadHabitTimerOrderByRelationAggregateInput
   categories?: Prisma.CategoryOrderByRelationAggregateInput
+  moodJournal?: Prisma.MoodJournalOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -233,6 +235,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   habits?: Prisma.HabitListRelationFilter
   badHabits?: Prisma.BadHabitTimerListRelationFilter
   categories?: Prisma.CategoryListRelationFilter
+  moodJournal?: Prisma.MoodJournalListRelationFilter
 }, "id" | "username" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -273,6 +276,7 @@ export type UserCreateInput = {
   habits?: Prisma.HabitCreateNestedManyWithoutUserInput
   badHabits?: Prisma.BadHabitTimerCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  moodJournal?: Prisma.MoodJournalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -287,6 +291,7 @@ export type UserUncheckedCreateInput = {
   habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
   badHabits?: Prisma.BadHabitTimerUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  moodJournal?: Prisma.MoodJournalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -301,6 +306,7 @@ export type UserUpdateInput = {
   habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
   badHabits?: Prisma.BadHabitTimerUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  moodJournal?: Prisma.MoodJournalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -315,6 +321,7 @@ export type UserUncheckedUpdateInput = {
   habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
   badHabits?: Prisma.BadHabitTimerUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  moodJournal?: Prisma.MoodJournalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -454,6 +461,20 @@ export type UserUpdateOneRequiredWithoutBadHabitsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBadHabitsInput, Prisma.UserUpdateWithoutBadHabitsInput>, Prisma.UserUncheckedUpdateWithoutBadHabitsInput>
 }
 
+export type UserCreateNestedOneWithoutMoodJournalInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMoodJournalInput, Prisma.UserUncheckedCreateWithoutMoodJournalInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMoodJournalInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutMoodJournalNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMoodJournalInput, Prisma.UserUncheckedCreateWithoutMoodJournalInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMoodJournalInput
+  upsert?: Prisma.UserUpsertWithoutMoodJournalInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMoodJournalInput, Prisma.UserUpdateWithoutMoodJournalInput>, Prisma.UserUncheckedUpdateWithoutMoodJournalInput>
+}
+
 export type UserCreateWithoutTasksCollectionsInput = {
   id?: string
   name: string
@@ -465,6 +486,7 @@ export type UserCreateWithoutTasksCollectionsInput = {
   habits?: Prisma.HabitCreateNestedManyWithoutUserInput
   badHabits?: Prisma.BadHabitTimerCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  moodJournal?: Prisma.MoodJournalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTasksCollectionsInput = {
@@ -478,6 +500,7 @@ export type UserUncheckedCreateWithoutTasksCollectionsInput = {
   habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
   badHabits?: Prisma.BadHabitTimerUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  moodJournal?: Prisma.MoodJournalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTasksCollectionsInput = {
@@ -507,6 +530,7 @@ export type UserUpdateWithoutTasksCollectionsInput = {
   habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
   badHabits?: Prisma.BadHabitTimerUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  moodJournal?: Prisma.MoodJournalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTasksCollectionsInput = {
@@ -520,6 +544,7 @@ export type UserUncheckedUpdateWithoutTasksCollectionsInput = {
   habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
   badHabits?: Prisma.BadHabitTimerUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  moodJournal?: Prisma.MoodJournalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCategoriesInput = {
@@ -533,6 +558,7 @@ export type UserCreateWithoutCategoriesInput = {
   tasksCollections?: Prisma.TasksCollectionCreateNestedManyWithoutUserInput
   habits?: Prisma.HabitCreateNestedManyWithoutUserInput
   badHabits?: Prisma.BadHabitTimerCreateNestedManyWithoutUserInput
+  moodJournal?: Prisma.MoodJournalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCategoriesInput = {
@@ -546,6 +572,7 @@ export type UserUncheckedCreateWithoutCategoriesInput = {
   tasksCollections?: Prisma.TasksCollectionUncheckedCreateNestedManyWithoutUserInput
   habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
   badHabits?: Prisma.BadHabitTimerUncheckedCreateNestedManyWithoutUserInput
+  moodJournal?: Prisma.MoodJournalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCategoriesInput = {
@@ -575,6 +602,7 @@ export type UserUpdateWithoutCategoriesInput = {
   tasksCollections?: Prisma.TasksCollectionUpdateManyWithoutUserNestedInput
   habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
   badHabits?: Prisma.BadHabitTimerUpdateManyWithoutUserNestedInput
+  moodJournal?: Prisma.MoodJournalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCategoriesInput = {
@@ -588,6 +616,7 @@ export type UserUncheckedUpdateWithoutCategoriesInput = {
   tasksCollections?: Prisma.TasksCollectionUncheckedUpdateManyWithoutUserNestedInput
   habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
   badHabits?: Prisma.BadHabitTimerUncheckedUpdateManyWithoutUserNestedInput
+  moodJournal?: Prisma.MoodJournalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutHabitsInput = {
@@ -601,6 +630,7 @@ export type UserCreateWithoutHabitsInput = {
   tasksCollections?: Prisma.TasksCollectionCreateNestedManyWithoutUserInput
   badHabits?: Prisma.BadHabitTimerCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  moodJournal?: Prisma.MoodJournalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutHabitsInput = {
@@ -614,6 +644,7 @@ export type UserUncheckedCreateWithoutHabitsInput = {
   tasksCollections?: Prisma.TasksCollectionUncheckedCreateNestedManyWithoutUserInput
   badHabits?: Prisma.BadHabitTimerUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  moodJournal?: Prisma.MoodJournalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutHabitsInput = {
@@ -643,6 +674,7 @@ export type UserUpdateWithoutHabitsInput = {
   tasksCollections?: Prisma.TasksCollectionUpdateManyWithoutUserNestedInput
   badHabits?: Prisma.BadHabitTimerUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  moodJournal?: Prisma.MoodJournalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutHabitsInput = {
@@ -656,6 +688,7 @@ export type UserUncheckedUpdateWithoutHabitsInput = {
   tasksCollections?: Prisma.TasksCollectionUncheckedUpdateManyWithoutUserNestedInput
   badHabits?: Prisma.BadHabitTimerUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  moodJournal?: Prisma.MoodJournalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBadHabitsInput = {
@@ -669,6 +702,7 @@ export type UserCreateWithoutBadHabitsInput = {
   tasksCollections?: Prisma.TasksCollectionCreateNestedManyWithoutUserInput
   habits?: Prisma.HabitCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  moodJournal?: Prisma.MoodJournalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBadHabitsInput = {
@@ -682,6 +716,7 @@ export type UserUncheckedCreateWithoutBadHabitsInput = {
   tasksCollections?: Prisma.TasksCollectionUncheckedCreateNestedManyWithoutUserInput
   habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  moodJournal?: Prisma.MoodJournalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBadHabitsInput = {
@@ -711,6 +746,7 @@ export type UserUpdateWithoutBadHabitsInput = {
   tasksCollections?: Prisma.TasksCollectionUpdateManyWithoutUserNestedInput
   habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  moodJournal?: Prisma.MoodJournalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBadHabitsInput = {
@@ -724,6 +760,79 @@ export type UserUncheckedUpdateWithoutBadHabitsInput = {
   tasksCollections?: Prisma.TasksCollectionUncheckedUpdateManyWithoutUserNestedInput
   habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  moodJournal?: Prisma.MoodJournalUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutMoodJournalInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  password?: string | null
+  provider?: $Enums.AuthProvider
+  createdAt?: Date | string
+  tasksCollections?: Prisma.TasksCollectionCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitCreateNestedManyWithoutUserInput
+  badHabits?: Prisma.BadHabitTimerCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutMoodJournalInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  password?: string | null
+  provider?: $Enums.AuthProvider
+  createdAt?: Date | string
+  tasksCollections?: Prisma.TasksCollectionUncheckedCreateNestedManyWithoutUserInput
+  habits?: Prisma.HabitUncheckedCreateNestedManyWithoutUserInput
+  badHabits?: Prisma.BadHabitTimerUncheckedCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutMoodJournalInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMoodJournalInput, Prisma.UserUncheckedCreateWithoutMoodJournalInput>
+}
+
+export type UserUpsertWithoutMoodJournalInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMoodJournalInput, Prisma.UserUncheckedUpdateWithoutMoodJournalInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMoodJournalInput, Prisma.UserUncheckedCreateWithoutMoodJournalInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMoodJournalInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMoodJournalInput, Prisma.UserUncheckedUpdateWithoutMoodJournalInput>
+}
+
+export type UserUpdateWithoutMoodJournalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasksCollections?: Prisma.TasksCollectionUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUpdateManyWithoutUserNestedInput
+  badHabits?: Prisma.BadHabitTimerUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMoodJournalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasksCollections?: Prisma.TasksCollectionUncheckedUpdateManyWithoutUserNestedInput
+  habits?: Prisma.HabitUncheckedUpdateManyWithoutUserNestedInput
+  badHabits?: Prisma.BadHabitTimerUncheckedUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -736,6 +845,7 @@ export type UserCountOutputType = {
   habits: number
   badHabits: number
   categories: number
+  moodJournal: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -743,6 +853,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   habits?: boolean | UserCountOutputTypeCountHabitsArgs
   badHabits?: boolean | UserCountOutputTypeCountBadHabitsArgs
   categories?: boolean | UserCountOutputTypeCountCategoriesArgs
+  moodJournal?: boolean | UserCountOutputTypeCountMoodJournalArgs
 }
 
 /**
@@ -783,6 +894,13 @@ export type UserCountOutputTypeCountCategoriesArgs<ExtArgs extends runtime.Types
   where?: Prisma.CategoryWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMoodJournalArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MoodJournalWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -796,6 +914,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   habits?: boolean | Prisma.User$habitsArgs<ExtArgs>
   badHabits?: boolean | Prisma.User$badHabitsArgs<ExtArgs>
   categories?: boolean | Prisma.User$categoriesArgs<ExtArgs>
+  moodJournal?: boolean | Prisma.User$moodJournalArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -835,6 +954,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   habits?: boolean | Prisma.User$habitsArgs<ExtArgs>
   badHabits?: boolean | Prisma.User$badHabitsArgs<ExtArgs>
   categories?: boolean | Prisma.User$categoriesArgs<ExtArgs>
+  moodJournal?: boolean | Prisma.User$moodJournalArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -847,6 +967,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     habits: Prisma.$HabitPayload<ExtArgs>[]
     badHabits: Prisma.$BadHabitTimerPayload<ExtArgs>[]
     categories: Prisma.$CategoryPayload<ExtArgs>[]
+    moodJournal: Prisma.$MoodJournalPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1254,6 +1375,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   habits<T extends Prisma.User$habitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$habitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HabitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   badHabits<T extends Prisma.User$badHabitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$badHabitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BadHabitTimerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   categories<T extends Prisma.User$categoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  moodJournal<T extends Prisma.User$moodJournalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$moodJournalArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MoodJournalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1771,6 +1893,30 @@ export type User$categoriesArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.CategoryScalarFieldEnum | Prisma.CategoryScalarFieldEnum[]
+}
+
+/**
+ * User.moodJournal
+ */
+export type User$moodJournalArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MoodJournal
+   */
+  select?: Prisma.MoodJournalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MoodJournal
+   */
+  omit?: Prisma.MoodJournalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MoodJournalInclude<ExtArgs> | null
+  where?: Prisma.MoodJournalWhereInput
+  orderBy?: Prisma.MoodJournalOrderByWithRelationInput | Prisma.MoodJournalOrderByWithRelationInput[]
+  cursor?: Prisma.MoodJournalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MoodJournalScalarFieldEnum | Prisma.MoodJournalScalarFieldEnum[]
 }
 
 /**

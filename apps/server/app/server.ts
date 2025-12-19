@@ -83,7 +83,8 @@ app.use('/tasks', require('./routes/tasks.routes'));
 app.use('/task', require('./routes/task.routes'));
 app.use('/habit', require('./routes/habit.routes'));
 app.use('/badhabit-timer', require('./routes/badhabit.routes'));
-
+app.use('/mood-journal', require('./routes/moodjournal.routes'));
+  
 
 // app.use((req: Request, res: any, next:any) => {
 //   if(req.session?.passport?.user !== null) {

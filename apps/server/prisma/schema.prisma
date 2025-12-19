@@ -18,6 +18,15 @@ enum AuthProvider {
   GOOGLE
 }
 
+enum Mood {
+  HAPPY
+  SAD
+  ANXIOUS
+  EXCITED
+  CALM
+  ANGRY
+}
+
 model User {
   id             String           @id @default(uuid()) @db.Uuid
   name           String
@@ -30,6 +39,7 @@ model User {
   habits         Habit[]
   badHabits      BadHabitTimer[]
   categories     Category[]
+  moodJournal    MoodJournal[]
 
   @@map("users")
 }
@@ -135,3 +145,21 @@ model BadHabitTimer {
   @@index([userId])
 }
 
+model MoodJournal {
+  id        String   @id @default(uuid())
+  userId    String   @db.Uuid
+  note      String
+  mood      Mood
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  date      DateTime
+
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([date])
+  @@index([userId])
+}
+
+
+ 

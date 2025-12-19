@@ -391,7 +391,8 @@ export const ModelName = {
   Category: 'Category',
   Habit: 'Habit',
   HabitContribution: 'HabitContribution',
-  BadHabitTimer: 'BadHabitTimer'
+  BadHabitTimer: 'BadHabitTimer',
+  MoodJournal: 'MoodJournal'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "tasksCollection" | "task" | "session" | "category" | "habit" | "habitContribution" | "badHabitTimer"
+    modelProps: "user" | "tasksCollection" | "task" | "session" | "category" | "habit" | "habitContribution" | "badHabitTimer" | "moodJournal"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1003,6 +1004,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MoodJournal: {
+      payload: Prisma.$MoodJournalPayload<ExtArgs>
+      fields: Prisma.MoodJournalFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MoodJournalFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MoodJournalPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MoodJournalFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MoodJournalPayload>
+        }
+        findFirst: {
+          args: Prisma.MoodJournalFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MoodJournalPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MoodJournalFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MoodJournalPayload>
+        }
+        findMany: {
+          args: Prisma.MoodJournalFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MoodJournalPayload>[]
+        }
+        create: {
+          args: Prisma.MoodJournalCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MoodJournalPayload>
+        }
+        createMany: {
+          args: Prisma.MoodJournalCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MoodJournalCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MoodJournalPayload>[]
+        }
+        delete: {
+          args: Prisma.MoodJournalDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MoodJournalPayload>
+        }
+        update: {
+          args: Prisma.MoodJournalUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MoodJournalPayload>
+        }
+        deleteMany: {
+          args: Prisma.MoodJournalDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MoodJournalUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MoodJournalUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MoodJournalPayload>[]
+        }
+        upsert: {
+          args: Prisma.MoodJournalUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MoodJournalPayload>
+        }
+        aggregate: {
+          args: Prisma.MoodJournalAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMoodJournal>
+        }
+        groupBy: {
+          args: Prisma.MoodJournalGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MoodJournalGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MoodJournalCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MoodJournalCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1137,6 +1212,19 @@ export const BadHabitTimerScalarFieldEnum = {
 } as const
 
 export type BadHabitTimerScalarFieldEnum = (typeof BadHabitTimerScalarFieldEnum)[keyof typeof BadHabitTimerScalarFieldEnum]
+
+
+export const MoodJournalScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  note: 'note',
+  mood: 'mood',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  date: 'date'
+} as const
+
+export type MoodJournalScalarFieldEnum = (typeof MoodJournalScalarFieldEnum)[keyof typeof MoodJournalScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1277,6 +1365,20 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'Mood'
+ */
+export type EnumMoodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Mood'>
+    
+
+
+/**
+ * Reference to a field of type 'Mood[]'
+ */
+export type ListEnumMoodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Mood[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1392,6 +1494,7 @@ export type GlobalOmitConfig = {
   habit?: Prisma.HabitOmit
   habitContribution?: Prisma.HabitContributionOmit
   badHabitTimer?: Prisma.BadHabitTimerOmit
+  moodJournal?: Prisma.MoodJournalOmit
 }
 
 /* Types for Logging */

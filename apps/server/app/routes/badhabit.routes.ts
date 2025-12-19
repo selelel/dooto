@@ -23,7 +23,8 @@ import {
   CreateBadHabitTimer, 
   ToggleBadHabitTimerRelapse, 
   GetAllBadHabitTimers, 
-  GetBadHabitTimerById 
+  GetBadHabitTimerById, 
+  DeleteBadHabitTimerById
 } from '../controllers/badhabit.controller';
 
 const router = express.Router();
@@ -121,5 +122,31 @@ router.get('/', isAuth, GetAllBadHabitTimers);
  *         description: Bad habit timer not found
  */
 router.get('/:id', isAuth, GetBadHabitTimerById);
+
+/**
+ * @swagger
+ * /badhabit-timer/{id}:
+ *   delete:
+ *     summary: Delete a bad habit timer by ID
+ *     tags:
+ *       - Bad Habit Timer
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the bad habit timer
+ *     responses:
+ *       204:
+ *         description: Bad habit timer deleted successfully (No Content)
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Bad habit timer not found
+ */
+router.delete('/:id', isAuth, DeleteBadHabitTimerById);
 
 module.exports = router;

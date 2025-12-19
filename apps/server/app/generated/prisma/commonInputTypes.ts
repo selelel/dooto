@@ -314,6 +314,23 @@ export type IntWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedIntFilter<$PrismaModel>
 }
 
+export type EnumMoodFilter<$PrismaModel = never> = {
+  equals?: $Enums.Mood | Prisma.EnumMoodFieldRefInput<$PrismaModel>
+  in?: $Enums.Mood[] | Prisma.ListEnumMoodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.Mood[] | Prisma.ListEnumMoodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMoodFilter<$PrismaModel> | $Enums.Mood
+}
+
+export type EnumMoodWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.Mood | Prisma.EnumMoodFieldRefInput<$PrismaModel>
+  in?: $Enums.Mood[] | Prisma.ListEnumMoodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.Mood[] | Prisma.ListEnumMoodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMoodWithAggregatesFilter<$PrismaModel> | $Enums.Mood
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMoodFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMoodFilter<$PrismaModel>
+}
+
 export type NestedUuidFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -594,6 +611,23 @@ export type NestedFloatFilter<$PrismaModel = never> = {
   gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   not?: Prisma.NestedFloatFilter<$PrismaModel> | number
+}
+
+export type NestedEnumMoodFilter<$PrismaModel = never> = {
+  equals?: $Enums.Mood | Prisma.EnumMoodFieldRefInput<$PrismaModel>
+  in?: $Enums.Mood[] | Prisma.ListEnumMoodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.Mood[] | Prisma.ListEnumMoodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMoodFilter<$PrismaModel> | $Enums.Mood
+}
+
+export type NestedEnumMoodWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.Mood | Prisma.EnumMoodFieldRefInput<$PrismaModel>
+  in?: $Enums.Mood[] | Prisma.ListEnumMoodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.Mood[] | Prisma.ListEnumMoodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMoodWithAggregatesFilter<$PrismaModel> | $Enums.Mood
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMoodFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMoodFilter<$PrismaModel>
 }
 
 
