@@ -26,6 +26,8 @@ import {
   GetBadHabitTimerById, 
   DeleteBadHabitTimerById
 } from '../controllers/badhabit.controller';
+import { validate } from '../middleware/validate.dto';
+import { IdParams, POSTCreateBadHabitDTO } from '../dtos';
 
 const router = express.Router();
 
@@ -52,7 +54,7 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized
  */
-router.post('/', isAuth, CreateBadHabitTimer);
+router.post('/', isAuth, validate(POSTCreateBadHabitDTO), CreateBadHabitTimer);
 
 /**
  * @swagger
@@ -78,7 +80,7 @@ router.post('/', isAuth, CreateBadHabitTimer);
  *       404:
  *         description: Bad habit timer not found
  */
-router.post('/:id/relapse/toggle', isAuth, ToggleBadHabitTimerRelapse);
+router.post('/:id/relapse/toggle', isAuth, validate(IdParams), ToggleBadHabitTimerRelapse);
 
 /**
  * @swagger
@@ -121,7 +123,7 @@ router.get('/', isAuth, GetAllBadHabitTimers);
  *       404:
  *         description: Bad habit timer not found
  */
-router.get('/:id', isAuth, GetBadHabitTimerById);
+router.get('/:id', isAuth, validate(IdParams), GetBadHabitTimerById);
 
 /**
  * @swagger
@@ -147,6 +149,6 @@ router.get('/:id', isAuth, GetBadHabitTimerById);
  *       404:
  *         description: Bad habit timer not found
  */
-router.delete('/:id', isAuth, DeleteBadHabitTimerById);
+router.delete('/:id', isAuth, validate(IdParams), DeleteBadHabitTimerById);
 
 module.exports = router;

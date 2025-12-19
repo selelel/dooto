@@ -5,9 +5,7 @@ import { logger } from '../utils/logger';
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    logger.info(`User registering with data: ${JSON.stringify(req.body)}`);
     const user = await UserService.register(req.body);
-    logger.info(`User registered: ${user.id}`);
     const token = UserService.generateToken(user);
     res.status(201).json({ user, token });
   } catch (error: any) {

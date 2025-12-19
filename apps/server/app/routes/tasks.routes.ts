@@ -3,7 +3,7 @@ import { isAuth } from '../lib/auth';
 import { validate } from '../middleware/validate.dto';
 import { POSTtasksDTO } from '../dtos';
 import { DELETEallTasks, DELETEtasksCollection, GETtasksCollections, POSTtasks, UPDATEtasksCollection } from '../controllers/tasks.controller';
-import { PATCHtasksDTO } from '../dtos/tasks.controller.dto';
+import { DELETEtasksDTO, GETtasksDTO, PATCHtasksDTO } from '../dtos/tasks.controller.dto';
 const router = express.Router()
 
 /**
@@ -127,7 +127,7 @@ router.post('/', isAuth, validate(POSTtasksDTO), POSTtasks);
  *       404:
  *         description: Tasks collection not found
  */
-router.get('/', isAuth, GETtasksCollections);
+router.get('/', isAuth, validate(GETtasksDTO), GETtasksCollections);
 
 /**
  * @swagger
@@ -162,7 +162,7 @@ router.get('/', isAuth, GETtasksCollections);
  *       500:
  *         description: Failed to delete tasks collection
  */
-router.delete('/:id', isAuth, DELETEtasksCollection);
+router.delete('/:id', isAuth, validate(DELETEtasksDTO), DELETEtasksCollection);
 
 /**
  * @swagger
@@ -245,7 +245,7 @@ router.patch('/:id', isAuth,validate(PATCHtasksDTO), UPDATEtasksCollection);
  *       500:
  *         description: Server error
  */
-router.delete('/delete-tasks/:id', isAuth, DELETEallTasks);
+router.delete('/delete-tasks/:id', isAuth, validate(DELETEtasksDTO), DELETEallTasks);
 
 
 

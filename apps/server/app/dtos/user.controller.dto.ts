@@ -25,7 +25,9 @@ export const updateUserDTO = z.object({
 })
 
 export const POSTCreateCategoryDTO = z.object({
-  category: z.string(),
+  body: z.object({
+     category: z.string()
+  }),
 })
 
 export type POSTCreateCategoryT = z.infer<typeof POSTCreateCategoryDTO>

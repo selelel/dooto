@@ -35,7 +35,7 @@ import express = require('express');
 import { isAuth } from '../lib/auth';
 import { CreateMoodJournal, DeleteMoodJournal, GetAllMoodJournals, GetMoodJournal, UpdateMoodJournal } from '../controllers/moodjournal.controller';
 import { validate } from '../middleware/validate.dto';
-import { POSTCreateMoodJournalDTO } from '../dtos/moodjournal.controller.dto';
+import { DateRangeDTO, IdParams, POSTCreateMoodJournalDTO } from '../dtos/moodjournal.controller.dto';
 
 const router = express.Router();
 
@@ -110,7 +110,7 @@ router.post('/', isAuth, validate(POSTCreateMoodJournalDTO), CreateMoodJournal);
  *       500:
  *         description: Failed to fetch mood journals
  */
-router.get('/', isAuth, GetAllMoodJournals);
+router.get('/', isAuth, validate(DateRangeDTO), GetAllMoodJournals);
 
 /**
  * @swagger
@@ -157,7 +157,7 @@ router.get('/', isAuth, GetAllMoodJournals);
  *       500:
  *         description: Failed to fetch mood journals
  */
-router.get('/:id', isAuth, GetMoodJournal);
+router.get('/:id', isAuth, validate(IdParams), GetMoodJournal);
 
 /**
  * @swagger
@@ -191,7 +191,7 @@ router.get('/:id', isAuth, GetMoodJournal);
  *       500:
  *         description: Failed to update mood journal
  */
-router.patch('/:id', isAuth, UpdateMoodJournal);
+router.patch('/:id', isAuth, validate(IdParams), UpdateMoodJournal);
 
 /**
  * @swagger
@@ -227,6 +227,6 @@ router.patch('/:id', isAuth, UpdateMoodJournal);
  *       500:
  *         description: Failed to delete mood journal
  */
-router.delete('/:id', isAuth, DeleteMoodJournal);
+router.delete('/:id', isAuth, validate(IdParams), DeleteMoodJournal);
 
 module.exports = router;

@@ -6,7 +6,7 @@ export const validate =
   (schema: ZodType) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.safeParse({
+      schema.parse({
         body: req.body,
         params: req.params,
         query: req.query,
@@ -15,7 +15,7 @@ export const validate =
       next();
     } catch (err: any) {
       res.status(400).json({
-        message: "Validation failed",
+        message: `Validation failed: ${err.message}`,
         errors: err.errors,
       });
     }

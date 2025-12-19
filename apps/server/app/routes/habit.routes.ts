@@ -26,7 +26,7 @@
 import express = require('express');
 import { isAuth } from '../lib/auth';
 import { validate } from '../middleware/validate.dto';
-import { POSTAddContributionDTO, POSTHabitDTO } from '../dtos';
+import { GEThabitDTO, IdParams, POSTAddContributionDTO, POSTHabitDTO } from '../dtos';
 import { GEThabit, GEThabits, POSThabit, ToggleContribution } from '../controllers/habit.controller';
 
 const router = express.Router();
@@ -81,7 +81,7 @@ router.post('/', isAuth, validate(POSTHabitDTO), POSThabit);
  *         description: Habit not found
  */
 
-router.get('/:id', isAuth, GEThabit);
+router.get('/:id', isAuth, validate(IdParams), GEThabit);
 
 /**
  * @swagger
@@ -108,7 +108,7 @@ router.get('/:id', isAuth, GEThabit);
  *         required: false
  *         description: End date for filtering habits
  *       - in: query
- *         name: category
+ *         name: categoryId
  *         schema:
  *           type: string
  *         required: false
@@ -119,7 +119,7 @@ router.get('/:id', isAuth, GEThabit);
  *       401:
  *         description: Unauthorized
  */
-router.get('/', isAuth, GEThabits);
+router.get('/', isAuth, validate(GEThabitDTO), GEThabits);
 
 /**
  * @swagger

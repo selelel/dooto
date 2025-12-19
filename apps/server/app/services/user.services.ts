@@ -19,7 +19,7 @@ export const UserService = {
     });
   },
 
-  async createCategory(data:POSTCreateCategoryT & {userId : string}) {
+  async createCategory(data:POSTCreateCategoryT['body'] & {userId : string}) {
     const { category, userId } = data;
 
     // Check if user already has this category

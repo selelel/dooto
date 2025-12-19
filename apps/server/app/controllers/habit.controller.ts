@@ -32,10 +32,10 @@ export const GEThabit = async (req: Request, res: any) => {
 
 export const GEThabits = async (req: Request, res: any) => {
   try {
-    const {from, to, category} = req.query;
+    const {from, to, categoryId} = req.query;
     const dateRange = !!from || !!to ? {from: from as string, to: to as string} : undefined;
-    const categoryId = category ? category as string : undefined;
-    const habit = await HabitService.getHabits(req.user?.id!, dateRange, categoryId);
+    const _categoryId = categoryId ? categoryId as string : undefined;
+    const habit = await HabitService.getHabits(req.user?.id!, dateRange, _categoryId);
     if (!habit) {
       return res.status(404).json({ message: "Habit not found" });
     }

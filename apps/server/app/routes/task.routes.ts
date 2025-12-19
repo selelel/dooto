@@ -67,7 +67,7 @@ import express = require('express');
 import { isAuth } from '../lib/auth';
 import { DELETEtask, PATCHtask, POSTtask } from '../controllers/task.controller';
 import { validate } from '../middleware/validate.dto';
-import { DELETEtaskDTO, PATCHtaskDTO, POSTtaskDTO } from '../dtos/tasks.controller.dto';
+import { DELETEtasksDTO, PATCHtaskDTO, POSTtaskDTO } from '../dtos/tasks.controller.dto';
 
 const router = express.Router();
 
@@ -152,6 +152,6 @@ router.patch('/', isAuth, validate(PATCHtaskDTO), PATCHtask);
  *       404:
  *         description: Task not found
  */
-router.delete('/', isAuth, validate(DELETEtaskDTO), DELETEtask);
+router.delete('/:id', isAuth, validate(DELETEtasksDTO), DELETEtask);
 
 module.exports = router;
