@@ -139,8 +139,8 @@ router.post("/register", validate(registerDTO), register);
  *         description: Invalid credentials
  */
 router.post('/signin/password', validate(signinDTO), passportLocal.authenticate('local', {
-    successReturnToOrRedirect: '/success',
-    failureRedirect: '/failure',
+    successReturnToOrRedirect: '/',
+    failureRedirect: '/failure',  
     failureMessage: true
 }));
 

@@ -19,8 +19,8 @@ router.get('/failure', (_, res) => {
 })
 
 
-router.get('/hello-world', (_, res) => {
-  res.send('Hello World!')
+router.get('/online', (_, res) => {
+  res.status(200).json({message: 'online'})
 })
 
 module.exports = router

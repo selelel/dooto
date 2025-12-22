@@ -1,8 +1,8 @@
-import { User } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 const passport = require("passport");
 import { Strategy as LocalStrategy } from "passport-local";
 import * as bcrypt from "bcrypt";
+import { User } from "../generated/prisma/client";
 
 passport.use(
   new LocalStrategy(

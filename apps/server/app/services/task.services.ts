@@ -1,9 +1,7 @@
-
-import { TasksCollection } from "@prisma/client";
 import { POSTtasksT } from "../dtos/tasks.controller.dto";
 import { prisma } from "../lib/prisma";
 import { logger } from "../utils/logger";
-import { Task } from "../generated/prisma/client";
+import { Task, TasksCollection } from "../generated/prisma/client";
 
 async function createTasksCollection(data: POSTtasksT): Promise<TasksCollection> {
   const { userId, tasksName, details, due } = data;
