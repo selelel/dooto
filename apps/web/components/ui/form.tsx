@@ -62,6 +62,8 @@ const useFormField = () => {
     formDescriptionId: `${id}-form-item-description`,
     formMessageId: `${id}-form-item-message`,
     ...fieldState,
+    ...formState,
+    getFieldState
   }
 }
 
@@ -155,6 +157,23 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
   )
 }
 
+function UncontrolledFormMessage({ className, ...props }: React.ComponentProps<"p">) {
+  const d = useFormContext();
+  const error = d?.formState?.errors?.root;
+  const body = error ? String(error.message ?? "") : props.children;
+
+  if (!body) {
+    return null;
+  }
+
+  return (
+    <p className={cn("font-semibold text-rose-600 text-sm bg-slate-50 p-2 rounded-lg", className)} {...props}>
+      {body}
+    </p>
+  );
+}
+
+
 export {
   useFormField,
   Form,
@@ -164,4 +183,5 @@ export {
   FormDescription,
   FormMessage,
   FormField,
+  UncontrolledFormMessage
 }

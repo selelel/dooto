@@ -13,10 +13,13 @@ import {
   FormField,
   FormItem,
   FormMessage,
+  UncontrolledFormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useSignInUser } from "@/modules/user/hooks";
+import { useRouter } from "next/navigation";
+import { logger } from "@/lib/logger";
 
 
 const formSchema = z.object({
@@ -28,7 +31,8 @@ const formSchema = z.object({
 type SignInFormValues = z.infer<typeof formSchema>;
 
 function SignInForm() {
-  const {mutate} = useSignInUser()
+  const router = useRouter();
+  const {mutate, data, error} = useSignInUser()
   const form = useForm<SignInFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,10 +42,29 @@ function SignInForm() {
     },
   });
 
-  const onSubmit = ({alwaysSignedIn, ...values}: SignInFormValues) => {
-    console.log("SIGN IN DATA:", values);
-    mutate(values)
-  };
+  const onSubmit = (values: SignInFormValues) => {
+  mutate(values, {
+    onSuccess: (data) => {
+      logger.trace("Success response:", data);
+      if (data.status === 200) {
+        router.push('/');
+      }
+    },
+    onError: (error: any) => {
+  let errorMessage = "Unknown error";
+  if (error?.response?.data?.message) {
+    errorMessage = error.response.data.message;
+  } else if (error?.message) {
+    errorMessage = error.message;
+  } else {
+    errorMessage = String(error);
+  }
+  form.setError("root", { type: "manual", message: errorMessage });
+},
+  });
+};
+
+  
 
   return (
     <Form {...form}>
@@ -49,6 +72,9 @@ function SignInForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-4"
       >
+        <FormControl>
+          <UncontrolledFormMessage />
+        </FormControl>
         <FormField
           control={form.control}
           name="email"
@@ -88,7 +114,7 @@ function SignInForm() {
             <FormItem className="">
                 <label
                     htmlFor="alwaysSignedIn"
-                    className="flex flex-row items-center gap-2 font-semibold text-sm text-muted-foreground cursor-pointer"
+                    className="flex flex-row items-center gap-2 font-semibold text-sm text-gray-400 cursor-pointer"
                 >
                     <Checkbox
                         id="alwaysSignedIn"

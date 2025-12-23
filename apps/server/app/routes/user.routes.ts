@@ -138,11 +138,29 @@ router.post("/register", validate(registerDTO), register);
  *       401:
  *         description: Invalid credentials
  */
-router.post('/signin/password', validate(signinDTO), passportLocal.authenticate('local', {
-    successReturnToOrRedirect: '/',
-    failureRedirect: '/failure',  
-    failureMessage: true
-}));
+router.post(
+  '/signin/password',
+  validate(signinDTO),
+  (req: any, res, next) => {
+    passportLocal.authenticate('local', (err: any, user: any, info: any): any => {
+      if (err) {
+        return res.status(500).json({ message: err.message });
+      }
+
+      if (!user) {
+        return res.status(401).json({ message: info?.message || 'Invalid credentials' });
+      }
+
+      req.logIn(user, (err: any) => {
+        if (err) {
+          return res.status(500).json({ message: err.message });
+        }
+
+        return res.status(200).json({ message: 'signed' });
+      });
+    })(req, res, next);
+  }
+);
 
 /**
  * @swagger

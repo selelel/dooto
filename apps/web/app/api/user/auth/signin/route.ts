@@ -1,6 +1,6 @@
 import { logger } from "@/lib/logger";
 import { ServerApiClient } from "@/lib/serverApiClient";
-import { POSTSigninRequestT } from "@/modules/user/types";
+import { Message, POSTSigninRequestT } from "@/modules/user/types";
 import { AxiosError } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -8,34 +8,24 @@ export async function POST(req: NextRequest) {
   const endpoint = "/users/signin/password";
 
   try {
-    const body = (await req.json()).body;
+    const body: POSTSigninRequestT = await req.json();
+    const response = await ServerApiClient.post<Message>(endpoint, body);
 
-    const response = await ServerApiClient.post<undefined, POSTSigninRequestT>(
-      endpoint,
-      body
-    );
-
-    return NextResponse.redirect('/home')
+    return NextResponse.json(response.data, { status: 200 });
   } catch (error) {
     if (error instanceof AxiosError) {
-        logger.info('Error: ', error)
-      return NextResponse.json(
-        {
-          message: error.response?.data?.message || error.message || "Request failed",
-        },
-        {
-          status: error.response?.status || 500,
-        }
-      );
+      const status = error.response?.status || 500;
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Request failed";
+
+      return NextResponse.json({ message }, { status });
     }
 
     return NextResponse.json(
-      {
-        message: "Internal Server Error",
-      },
-      {
-        status: 500,
-      }
+      { message: "Internal Server Error" },
+      { status: 500 }
     );
   }
 }

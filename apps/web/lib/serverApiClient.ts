@@ -63,6 +63,7 @@ const post = async <TResponse = unknown, TBody = unknown>(
   const url = `${APIUrl}${endpoint}`;
 
   logger.info("POST:", url);
+  // ! REMOVE WHEN DEPLOYED
   logger.info("Body:", body);
 
   return axios.post<TResponse>(url, body, {

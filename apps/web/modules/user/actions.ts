@@ -9,8 +9,7 @@ export const signIn = async (payload: POSTSigninRequestT) => {
     const response = await axios.post(endpoint, payload);
 
     return response;
-  } catch (e) {
-    logger.info("Error:", e);
+  } catch (e:any) {
     throw e;
   }
 };
