@@ -6,14 +6,17 @@ import { logger } from '../utils/logger';
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = await UserService.register(req.body);
-    const token = UserService.generateToken(user);
-    res.status(201).json({ user, token });
+    res.status(201).json({ user });
   } catch (error: any) {
-    const message = error?.message || "Internal Server Error";
-    logger.error(`Error: ${message}`);
-    res.status(500).json({ error: message });
+    let message = "Internal Server Error";
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    res.status(500).json({ message });
   }
-}
+};
 
 export const update = async (req: Request, res: Response): Promise<void> => {
   try {

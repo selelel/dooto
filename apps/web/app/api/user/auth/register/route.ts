@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { ServerApiClient } from "@/lib/serverApiClient";
 import { Message, POSTRegisterRequestT } from "@/modules/user/types";
 import { AxiosError } from "axios";
@@ -9,15 +10,12 @@ export async function POST(req: NextRequest) {
   try {
     const body: POSTRegisterRequestT = await req.json();
     const response = await ServerApiClient.post<Message>(endpoint, body);
-
     return NextResponse.json(response.data, { status: 201 });
   } catch (error) {
     if (error instanceof AxiosError) {
-      const status = error.response?.status ?? 400;
+      const status = error.response?.status ?? 500;
       const message =
-        error.response?.data?.message ??
-        error.message ??
-        "Request failed";
+        error.response?.data?.message ?? error.message ?? "Request failed";
 
       return NextResponse.json({ message }, { status });
     }

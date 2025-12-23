@@ -71,7 +71,6 @@ function RegisterForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-
         <UncontrolledFormMessage />
         <FormField
           control={form.control}
@@ -90,7 +89,6 @@ function RegisterForm() {
           )}
         />
 
-        {/* Username */}
         <FormField
           control={form.control}
           name="username"
@@ -108,7 +106,6 @@ function RegisterForm() {
           )}
         />
 
-        {/* Email */}
         <FormField
           control={form.control}
           name="email"
@@ -144,7 +141,6 @@ function RegisterForm() {
           )}
         />
 
-        {/* Submit */}
         <Button
           type="submit"
           className="w-full h-12 bg-linear-to-r from-teal-300 to-amber-300 hover:opacity-90 transition-opacity"

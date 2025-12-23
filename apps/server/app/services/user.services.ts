@@ -2,21 +2,33 @@ import jwt = require("jsonwebtoken");
 import bcrypt = require("bcrypt");
 import { prisma } from "../lib/prisma";
 import { POSTCreateCategoryT } from "../dtos";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 
 export const UserService = {
 
-  async register(data:any) {
-    const hashed = await bcrypt.hash(data.password, 10);
-    
-    return prisma.user.create({
-      data: {
-        name: data.name,
-        username: data.username,
-        email: data.email,
-        password: hashed,
-        provider: "EMAIL",
-      },
-    });
+  
+async register(data: any) {
+    try {
+      const hashed = await bcrypt.hash(data.password, 10);
+      
+      return await prisma.user.create({
+        data: {
+          name: data.name,
+          username: data.username,
+          email: data.email,
+          password: hashed,
+          provider: "EMAIL",
+        },
+      });
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          throw new Error('Unique constraint failed on the fields: email or username');
+        }
+      }
+
+      throw error;
+    }
   },
 
   async createCategory(data:POSTCreateCategoryT['body'] & {userId : string}) {

@@ -1,6 +1,7 @@
 import { ENDPOINT } from "@/constant/api";
 import axios from "axios";
 import { POSTRegisterRequestT, POSTSigninRequestT } from "./types";
+import { logger } from "@/lib/logger";
 
 export const signIn = async (payload: POSTSigninRequestT) => {
   try {
