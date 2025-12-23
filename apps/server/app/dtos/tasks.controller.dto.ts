@@ -4,9 +4,8 @@ export const POSTtasksDTO = z.object({
   body : z.object({
     tasksName: z.string(),
     details: z.string(),
-    due: z.date().optional(),
+    due: z.string().optional(),
     task: z.any().optional(),
-    userId: z.string(),
   })
 })
 
@@ -26,7 +25,7 @@ export const PATCHtasksDTO = z.object({
   body : z.object({
     tasksName: z.string().optional(),
     details: z.string().optional(),
-    due: z.date().optional().optional(),
+    due: z.string().optional().optional(),
   }),
   params : z.object({
     id: z.string(),
@@ -37,7 +36,7 @@ export const POSTtaskDTO = z.object({
   body : z.object({
     taskName: z.string(),
     details: z.string(),
-    due: z.date().optional(),
+    due: z.string().optional(),
     tasksId: z.string(),
     task: z.any().optional(),
     subclassId: z.string().optional(),
@@ -48,10 +47,10 @@ export const POSTtaskDTO = z.object({
 export const PATCHtaskDTO = z.object({
   body : z.object({
     taskId: z.string(),
-    tasksId: z.string(),
+    tasksId: z.string().optional(),
     tasksName: z.string().optional(),
     details: z.string().optional(),
-    due: z.date().optional(),
+    due: z.string().optional(),
     task: z.any().optional(),
     subclassId: z.string().optional(),
     status: z.enum(['DONE', 'IN_PROGRESS', 'PENDING']).optional(),

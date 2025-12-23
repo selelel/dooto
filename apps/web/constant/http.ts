@@ -5,6 +5,10 @@ export const ENDPOINT = {
         signin: '/api/user/auth/signin/',
         register: '/api/user/auth/register/',
         logout: '/api/user/auth/logout/'
+    },
+    TASKS : {
+      tasks_collection: '/api/tasks/tasks-collection/',
+      task: '/api/tasks/task/'
     }
 }
 

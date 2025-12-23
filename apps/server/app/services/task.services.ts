@@ -3,7 +3,7 @@ import { prisma } from "../lib/prisma";
 import { logger } from "../utils/logger";
 import { Task, TasksCollection } from "../generated/prisma/client";
 
-async function createTasksCollection(data: POSTtasksT): Promise<TasksCollection> {
+async function createTasksCollection(data: POSTtasksT & {userId: string}): Promise<TasksCollection> {
   const { userId, tasksName, details, due } = data;
   try {
     const tasks = await prisma.tasksCollection.create({
