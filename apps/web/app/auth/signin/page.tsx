@@ -8,15 +8,16 @@ import { useRouter } from "next/navigation";
 export default function Login() {
   const router = useRouter()
   return (
-    <div className="min-h-screen flex">
+     <div className="min-h-screen w-full flex">
+      {/* Left Side - Login Form */}
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md">
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-2">
-              <Sparkles color="var(--color-orange-300)" className="w-8 h-8 text-primary" />
-                <h1 className="font-semibold text-4xl bg-linear-to-r from-orange-300 via-violet-300 to-teal-300 bg-clip-text text-transparent">
-                  Dooto
-                </h1>
+              <Sparkles className="w-8 h-8 text-primary" />
+              <h1 className="text-4xl bg-linear-to-r from-primary via-secondary to-success bg-clip-text text-transparent">
+                Dooto
+              </h1>
             </div>
             <p className="text-muted-foreground">
               Welcome back! Let's make today amazing.
@@ -38,22 +39,22 @@ export default function Login() {
       </div>
 
       {/* Right Side - Illustration */}
-      <div className="hidden lg:flex flex-1 bg-linear-to-br from-rose-300/30 via-violet-300/10 to-teal-300/10 items-center justify-center p-8">
+      <div className="hidden lg:flex flex-1 bg-linear-to-br from-primary/10 via-secondary/10 to-success/50 items-center justify-center p-8">
         <div className="max-w-lg text-center space-y-6">
-          <div className="w-32 h-32 mx-auto bg-linear-to-br from-rose-300 to-violet-300 rounded-full flex items-center justify-center shadow-xl">
+          <div className="w-32 h-32 mx-auto bg-linear-to-br from-primary to-secondary rounded-full flex items-center justify-center shadow-xl">
             <Sparkles className="w-16 h-16 text-white" />
           </div>
-          <h2 className="text-4xl bg-linear-to-r from-rose-300 via-violet-300 to-teal-300 bg-clip-text text-transparent">
+          <h2 className="text-4xl bg-linear-to-r from-primary via-secondary to-success bg-clip-text text-transparent">
             Your daily companion for productivity & wellness
           </h2>
-          <p className="text-lg text-slate-400">
+          <p className="text-lg text-muted-foreground">
             Track your tasks, build habits, focus deeply, and celebrate your progress every day.
           </p>
           <div className="flex justify-center gap-2 mt-8">
-            <div className="w-2 h-2 rounded-full bg-rose-300"></div>
-            <div className="w-2 h-2 rounded-full bg-violet-300"></div>
-            <div className="w-2 h-2 rounded-full bg-teal-300"></div>
-            <div className="w-2 h-2 rounded-full bg-amber-200"></div>
+            <div className="w-2 h-2 rounded-full bg-primary"></div>
+            <div className="w-2 h-2 rounded-full bg-secondary"></div>
+            <div className="w-2 h-2 rounded-full bg-success"></div>
+            <div className="w-2 h-2 rounded-full bg-accent"></div>
           </div>
         </div>
       </div>

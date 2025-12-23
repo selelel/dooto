@@ -19,6 +19,9 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { useRegisterUser } from "@/modules/user/hooks";
 import { logger } from "@/lib/logger";
 import { useRouter } from "next/navigation";
+import { ROUTES_CLIENT } from "@/constant/http";
+import router from "next/router";
+import { toast } from "sonner";
 
 /* ---------------- Schema ---------------- */
 
@@ -50,7 +53,10 @@ function RegisterForm() {
         onSuccess: (data) => {
           logger.trace("Success response:", data);
           if (data.status === 201) {
-            router.push('/');
+            toast.success("User is register, you'll be redirected to signin")
+            setTimeout(() => {
+              router.push(ROUTES_CLIENT.PUBLIC.SIGNIN);
+            }, 3000);
           }
         },
         onError: (error: any) => {
@@ -143,7 +149,7 @@ function RegisterForm() {
 
         <Button
           type="submit"
-          className="w-full h-12 bg-linear-to-r from-teal-300 to-amber-300 hover:opacity-90 transition-opacity"
+          className="w-full h-12 bg-linear-to-r from-success to-accent hover:opacity-90 transition-opacity"
         >
           Sign up
         </Button>

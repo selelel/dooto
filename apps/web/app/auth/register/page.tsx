@@ -14,14 +14,14 @@ export default function Register() {
   });
 
   return (
-    <div className="min-h-screen flex">
+        <div className="min-h-screen w-full flex">
       {/* Left Side - Illustration */}
-      <div className="hidden lg:flex flex-1 bg-linear-to-br from-teal-300/20 via-amber-300/20 to-rose-300/20 items-center justify-center p-8">
+      <div className="hidden lg:flex flex-1 bg-linear-to-br from-success/10 via-accent/10 to-primary/10 items-center justify-center p-8">
         <div className="max-w-lg text-center space-y-6">
-          <div className="w-32 h-32 mx-auto bg-linear-to-br from-teal-300 to-amber-300 rounded-full flex items-center justify-center shadow-xl">
+          <div className="w-32 h-32 mx-auto bg-linear-to-br from-success to-accent rounded-full flex items-center justify-center shadow-xl">
             <Sparkles className="w-16 h-16 text-white" />
           </div>
-          <h2 className="text-4xl bg-linear-to-r from-teal-300 via-amber-300 to-violet-300 bg-clip-text text-transparent">
+          <h2 className="text-4xl bg-linear-to-r from-success via-accent to-secondary bg-clip-text text-transparent">
             Start your journey to better productivity
           </h2>
           <p className="text-lg text-muted-foreground">
@@ -53,8 +53,8 @@ export default function Register() {
         <div className="w-full max-w-md">
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="w-8 h-8 text-teal-300" />
-              <h1 className="text-4xl bg-linear-to-r from-teal-300 via-amber-300 to-violet-300 bg-clip-text text-transparent">
+              <Sparkles className="w-8 h-8 text-success" />
+              <h1 className="text-4xl bg-linear-to-r from-success via-accent to-secondary bg-clip-text text-transparent">
                 BrightSide
               </h1>
             </div>
@@ -69,13 +69,13 @@ export default function Register() {
             <p className="text-sm text-muted-foreground mb-2">
               Already have an account?
             </p>
-            <Button
-              onClick={() => router.push("/auth/signin")}
-              variant="outline"
-              className="bg-linear-to-r from-rose-300/10 to-violet-300/10 border-rose-300/20 hover:border-rose-300/40 transition-colors"
-            >
-              Log in
-            </Button>
+              <Button
+                onClick={() => router.push("/auth/signin")}
+                variant="outline"
+                className="bg-linear-to-r from-rose-300/10 to-violet-300/10 border-rose-300/20 hover:border-rose-300/40 transition-colors"
+              >
+                Log in
+              </Button>
           </div>
         </div>
       </div>
