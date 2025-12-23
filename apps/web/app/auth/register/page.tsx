@@ -54,8 +54,8 @@ export default function Register() {
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-2">
               <Sparkles className="w-8 h-8 text-success" />
-              <h1 className="text-4xl bg-linear-to-r from-success via-accent to-secondary bg-clip-text text-transparent">
-                BrightSide
+              <h1 className="font-semibold text-4xl bg-linear-to-r from-success via-accent to-secondary bg-clip-text text-transparent">
+                Dooto
               </h1>
             </div>
             <p className="text-muted-foreground">

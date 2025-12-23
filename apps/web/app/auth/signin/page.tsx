@@ -15,7 +15,7 @@ export default function Login() {
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-2">
               <Sparkles className="w-8 h-8 text-primary" />
-              <h1 className="text-4xl bg-linear-to-r from-primary via-secondary to-success bg-clip-text text-transparent">
+              <h1 className="font-semibold text-4xl bg-linear-to-r from-primary via-secondary to-success bg-clip-text text-transparent">
                 Dooto
               </h1>
             </div>

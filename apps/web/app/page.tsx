@@ -2,15 +2,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Button } from "../components/ui/button";
 import { CircleCheck, Circle, Flame, Smile, Timer } from "lucide-react";
 import { Progress } from "../components/ui/progress";
+import DashboardHeader from "./_component/dashboard-header";
+import StatusCard from "./_component/status-card";
 
 export default function Dashboard() {
-  const today = new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-
   const tasks = [
     { id: 1, text: "Morning meditation", completed: true },
     { id: 2, text: "Review project proposal", completed: false },
@@ -29,73 +24,51 @@ export default function Dashboard() {
 
   return (
     <div className="p-8 w-full max-w-9/12 mx-auto">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl mb-2">Good morning! ☀️</h1>
-        <p className="text-muted-foreground">{today}</p>
-      </div>
-
+      <DashboardHeader />
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <Card className="border-l-4 border-l-primary shadow-sm">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">Tasks Today</p>
-                <p className="text-3xl">{completedTasks}/{tasks.length}</p>
+        <StatusCard className="border-l-primary">
+            <div>
+                  <p className="text-sm text-muted-foreground mb-1">Tasks Today</p>
+                  <p className="text-3xl">{completedTasks}/{tasks.length}</p>
+                </div>
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <CircleCheck className="w-6 h-6 text-primary" />
               </div>
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <CircleCheck className="w-6 h-6 text-primary" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        </StatusCard>
 
-        <Card className="border-l-4 border-l-secondary shadow-sm">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
+        <StatusCard className="border-l-secondary">
+           <div>
                 <p className="text-sm text-muted-foreground mb-1">Focus Time</p>
                 <p className="text-3xl">2h 15m</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
                 <Timer className="w-6 h-6 text-secondary" />
               </div>
-            </div>
-          </CardContent>
-        </Card>
+        </StatusCard>
 
-        <Card className="border-l-4 border-l-success shadow-sm">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+        <StatusCard className="border-l-success">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Habit Streak</p>
-                <p className="text-3xl">12 days</p>
+                  <p className="text-sm text-muted-foreground mb-1">Habit Streak</p>
+                  <p className="text-3xl">12 days</p>
+                </div>
+                <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center">
+                  <Flame className="w-6 h-6 text-success" />
               </div>
-              <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center">
-                <Flame className="w-6 h-6 text-success" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        </StatusCard>
 
-        <Card className="border-l-4 border-l-accent shadow-sm">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
+        <StatusCard className="border-l-accent">
+            <div>
                 <p className="text-sm text-muted-foreground mb-1">Mood Today</p>
                 <p className="text-3xl">Great!</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center">
                 <Smile className="w-6 h-6 text-accent-foreground" />
               </div>
-            </div>
-          </CardContent>
-        </Card>
+        </StatusCard>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Today's Tasks */}
         <Card className="shadow-sm">
           <CardHeader>
             <CardTitle>Today's Tasks</CardTitle>

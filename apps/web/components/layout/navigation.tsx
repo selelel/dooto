@@ -26,8 +26,8 @@ logger.log(publicRoutes.includes(pathname))
       {/* Sidebar Navigation */}
       {!publicRoutes.includes(pathname) && <aside className="w-64 bg-sidebar border-r border-sidebar-border flex flex-col">
         <div className="p-6 border-b border-sidebar-border">
-          <h1 className="text-2xl bg-linear-to-r from-primary via-secondary to-success bg-clip-text text-transparent">
-            BrightSide
+          <h1 className="font-semibold text-2xl bg-linear-to-r from-primary via-secondary to-success bg-clip-text text-transparent">
+            Dooto
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             Your daily companion
