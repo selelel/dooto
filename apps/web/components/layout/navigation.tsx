@@ -18,8 +18,7 @@ const navigation = [
   { id: "settings", label: "Settings", icon: Settings, path: ROUTES_CLIENT.PRIVATE.SETTINGS },
 ];
 
-const publicRoutes = Object.values(ROUTES_CLIENT.PUBLIC)
-logger.log(publicRoutes.includes(pathname))
+  const publicRoutes = Object.values(ROUTES_CLIENT.PUBLIC)
 
   return (
      <div className="flex h-screen bg-background overflow-hidden">
@@ -60,9 +59,10 @@ logger.log(publicRoutes.includes(pathname))
           </div>
         </div>
       </aside>}
-      
-      {children}
 
+      <div className='p-8 w-full max-w-9/12 mx-auto overflow-y-auto scrollbar-hide'>
+        {children}
+      </div>
     </div>
   );
 }

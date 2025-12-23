@@ -4,6 +4,8 @@ import { CircleCheck, Circle, Flame, Smile, Timer } from "lucide-react";
 import { Progress } from "../components/ui/progress";
 import DashboardHeader from "./_component/dashboard-header";
 import StatusCard from "./_component/status-card";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import DashboardTodoCarousel from "./_component/dashboard-todo-carousel";
 
 export default function Dashboard() {
   const tasks = [
@@ -23,7 +25,7 @@ export default function Dashboard() {
   const progress = (completedTasks / tasks.length) * 100;
 
   return (
-    <div className="p-8 w-full max-w-9/12 mx-auto">
+    <div>
       <DashboardHeader />
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
@@ -69,52 +71,7 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="shadow-sm">
-          <CardHeader>
-            <CardTitle>Today's Tasks</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="mb-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-muted-foreground">Progress</span>
-                <span className="text-sm">{completedTasks} of {tasks.length} completed</span>
-              </div>
-              <Progress value={progress} className="h-2" />
-            </div>
-
-            {tasks.length > 0 ? (
-              tasks.map((task) => (
-                <div
-                  key={task.id}
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors"
-                >
-                  {task.completed ? (
-                    <CircleCheck className="w-5 h-5 text-success shrink-0" />
-                  ) : (
-                    <Circle className="w-5 h-5 text-muted-foreground shrink-0" />
-                  )}
-                  <span
-                    className={task.completed ? "line-through text-muted-foreground" : ""}
-                  >
-                    {task.text}
-                  </span>
-                </div>
-              ))
-            ) : (
-              <div className="text-center py-8">
-                <Circle className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
-                <p className="text-muted-foreground mb-2">No tasks yet</p>
-                <p className="text-sm text-muted-foreground">
-                  Add your first task to get started!
-                </p>
-              </div>
-            )}
-
-            <Button className="w-full mt-4 bg-primary hover:bg-primary/90">
-              View All Tasks
-            </Button>
-          </CardContent>
-        </Card>
+       <DashboardTodoCarousel />
 
         {/* Habit Tracker Preview */}
         <Card className="shadow-sm">
@@ -162,7 +119,6 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Motivational Message */}
       <Card className="mt-6 bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 border-0 shadow-sm">
         <CardContent className="p-6 text-center">
           <p className="text-lg mb-2">✨ You're doing amazing!</p>
