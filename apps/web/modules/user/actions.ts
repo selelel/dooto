@@ -1,4 +1,4 @@
-import { ENDPOINT } from "@/constant/api";
+import { ENDPOINT } from "@/constant/http";
 import axios from "axios";
 import { POSTRegisterRequestT, POSTSigninRequestT } from "./types";
 import { logger } from "@/lib/logger";

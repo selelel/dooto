@@ -7,3 +7,14 @@ export const ENDPOINT = {
         logout: '/api/user/auth/logout/'
     }
 }
+
+export const ROUTES_CLIENT = {
+  PUBLIC: {
+    REGISTER: "/auth/register",
+    SIGNIN: "/auth/signin",
+  },
+  PRIVATE: {
+    HOME: "/",
+    TODO: "/todo",
+  },
+};

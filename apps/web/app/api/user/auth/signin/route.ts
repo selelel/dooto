@@ -11,8 +11,20 @@ export async function POST(req: NextRequest) {
     const body: POSTSigninRequestT = await req.json();
 
     const response = await ServerApiClient.post<Message>(endpoint, body);
+    const setCookieHeader = response.headers["set-cookie"];
+    const headers = new Headers();
 
-    return NextResponse.json(response.data, { status: 200 }); // OK
+    if (setCookieHeader) {
+      if (Array.isArray(setCookieHeader)) {
+        setCookieHeader.forEach(cookie => headers.append("set-cookie", cookie));
+      } else {
+        headers.append("set-cookie", setCookieHeader);
+      }
+    }
+
+    logger.log("Log: ", response)
+
+    return NextResponse.json(response.data, { status: 200, headers }); // OK
   } catch (error) {
     if (error instanceof AxiosError) {
       const status = error.response?.status ?? 500;

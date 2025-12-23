@@ -2,7 +2,7 @@
 
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { NextRequest } from "next/server";
-import { PREFIX } from "@/constant/api";
+import { PREFIX } from "@/constant/http";
 import { logger } from "./logger";
 
 const APIUrl = `${process.env.API_URL}${PREFIX}`;
