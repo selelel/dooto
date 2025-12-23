@@ -1,18 +1,12 @@
 'use client';
 
-import { useState } from "react";
-import { Eye, EyeOff, Sparkles } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import SignInForm from "./_component/signin-form";
+import { useRouter } from "next/navigation";
 
-interface LoginProps {
-  onSwitchToRegister: () => void;
-  onLogin: () => void;
-}
-
-export default function Login({ onSwitchToRegister, onLogin }: LoginProps) {
+export default function Login() {
+  const router = useRouter()
   return (
     <div className="min-h-screen flex">
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
@@ -33,7 +27,7 @@ export default function Login({ onSwitchToRegister, onLogin }: LoginProps) {
 
           <div className="mt-8 pt-8 border-t border-border text-center">
             <Button
-              onClick={onSwitchToRegister}
+              onClick={() => {router.push('/auth/register')}}
               variant="outline"
               className="bg-linear-to-r from-teal-400/10 to-amber-200/10 border-success/20 hover:border-success/40 transition-colors"
             >

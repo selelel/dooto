@@ -6,3 +6,10 @@ export type POSTSigninRequestT = {
 export type Message = {
   message: string
 }
+
+export type POSTRegisterRequestT = {
+  name: string,
+  username: string,
+  email: string,
+  password: string
+}

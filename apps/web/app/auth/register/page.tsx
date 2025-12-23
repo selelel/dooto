@@ -1,35 +1,17 @@
 'use client';
 import { useState } from "react";
-import { Eye, EyeOff, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import RegisterForm from "./_component/register-form";
+import { useRouter } from "next/navigation";
 
-interface RegisterProps {
-  onSwitchToLogin: () => void;
-  onRegister: () => void;
-}
-
-export default function Register({ onSwitchToLogin, onRegister }: RegisterProps) {
-  const [showPassword, setShowPassword] = useState(false);
+export default function Register() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
   });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // For now, just proceed to the app
-    onRegister();
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   return (
     <div className="min-h-screen flex">
@@ -88,7 +70,7 @@ export default function Register({ onSwitchToLogin, onRegister }: RegisterProps)
               Already have an account?
             </p>
             <Button
-              onClick={onSwitchToLogin}
+              onClick={() => router.push("/auth/signin")}
               variant="outline"
               className="bg-linear-to-r from-rose-300/10 to-violet-300/10 border-rose-300/20 hover:border-rose-300/40 transition-colors"
             >

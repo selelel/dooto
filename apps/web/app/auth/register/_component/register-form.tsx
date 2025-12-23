@@ -12,24 +12,28 @@ import {
   FormField,
   FormItem,
   FormMessage,
+  UncontrolledFormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
+import { useRegisterUser } from "@/modules/user/hooks";
+import { logger } from "@/lib/logger";
+import { useRouter } from "next/navigation";
 
 /* ---------------- Schema ---------------- */
 
 const formSchema = z.object({
   name: z.string().min(2, "Name is required"),
   username: z.string().min(3, "Username must be at least 3 characters"),
-  email: z.string().email("Invalid email address"),
+  email: z.string("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 type RegisterFormValues = z.infer<typeof formSchema>;
 
-/* ---------------- Component ---------------- */
-
 function RegisterForm() {
+  const router = useRouter()
+  const {mutate} = useRegisterUser()
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,14 +46,33 @@ function RegisterForm() {
 
   const onSubmit = (values: RegisterFormValues) => {
     console.log("REGISTER DATA:", values);
-    // 👉 call your register API here
+    mutate(values, {
+        onSuccess: (data) => {
+          logger.trace("Success response:", data);
+          if (data.status === 201) {
+            router.push('/');
+          }
+        },
+        onError: (error: any) => {
+      let errorMessage = "Unknown error";
+      if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error?.message) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = String(error);
+      }
+      form.setError("root", { type: "manual", message: errorMessage });
+    },
+      })
+    
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
-        {/* Name */}
+        <UncontrolledFormMessage />
         <FormField
           control={form.control}
           name="name"

@@ -9,16 +9,15 @@ export async function POST(req: NextRequest) {
 
   try {
     const body: POSTSigninRequestT = await req.json();
+
     const response = await ServerApiClient.post<Message>(endpoint, body);
 
-    return NextResponse.json(response.data, { status: 200 });
+    return NextResponse.json(response.data, { status: 200 }); // OK
   } catch (error) {
     if (error instanceof AxiosError) {
-      const status = error.response?.status || 500;
+      const status = error.response?.status ?? 500;
       const message =
-        error.response?.data?.message ||
-        error.message ||
-        "Request failed";
+        error.response?.data?.message ?? error.message ?? "Request failed";
 
       return NextResponse.json({ message }, { status });
     }
