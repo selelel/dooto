@@ -1,29 +1,31 @@
+'use client';
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { CircleCheck, Circle, Flame, Smile, Timer } from "lucide-react";
-import { Progress } from "../components/ui/progress";
 import DashboardHeader from "./_component/dashboard-header";
 import StatusCard from "./_component/status-card";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import DashboardTodoCarousel from "./_component/dashboard-todo-carousel";
+import { useGetTaskCollection } from "@/modules/tasks/hooks";
+import { POSTTasksCollectionResponseT, TaskStatus } from "@/modules/tasks/types";
+import { logger } from "@/lib/logger";
 
 export default function Dashboard() {
-  const tasks = [
-    { id: 1, text: "Morning meditation", completed: true },
-    { id: 2, text: "Review project proposal", completed: false },
-    { id: 3, text: "Team meeting at 2pm", completed: false },
-    { id: 4, text: "Work on design mockups", completed: false },
-  ];
-
+  const query = useGetTaskCollection();
+  const taskCollection: POSTTasksCollectionResponseT[] = query.data?.data || [];
+  
   const habits = [
     { id: 1, name: "Drink water", streak: 12, completedToday: true, color: "bg-chart-3" },
     { id: 2, name: "Exercise", streak: 5, completedToday: false, color: "bg-chart-1" },
     { id: 3, name: "Read", streak: 8, completedToday: true, color: "bg-chart-2" },
   ];
 
-  const completedTasks = tasks.filter((t) => t.completed).length;
-  const progress = (completedTasks / tasks.length) * 100;
+  const overAllTaskCount = taskCollection.map((d) => {
+    return d.tasks
+  }).flat()
 
+  const completedTasks = overAllTaskCount.filter((d) => d.status === TaskStatus.DONE).length // O(3n)
+  logger.trace(completedTasks)
+  
   return (
     <div>
       <DashboardHeader />
@@ -32,7 +34,7 @@ export default function Dashboard() {
         <StatusCard className="border-l-primary">
             <div>
                   <p className="text-sm text-muted-foreground mb-1">Tasks Today</p>
-                  <p className="text-3xl">{completedTasks}/{tasks.length}</p>
+                  <p className="text-3xl">{completedTasks}/{overAllTaskCount.length}</p>
                 </div>
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                   <CircleCheck className="w-6 h-6 text-primary" />
@@ -71,7 +73,7 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 overflow-hidden">
-       <DashboardTodoCarousel />
+       <DashboardTodoCarousel query={query} />
 
         {/* Habit Tracker Preview */}
         <Card className="shadow-sm">

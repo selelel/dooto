@@ -97,6 +97,7 @@ const del = async <TResponse = unknown, TBody = unknown>(
 
   logger.info("DELETE:", url);
   logger.info("Body:", body);
+  logger.info("Opts:", options);
 
   return axios.delete<TResponse>(url, {
     headers: options.headers,

@@ -2,7 +2,9 @@ import React from 'react';
 import { CircleCheck, Circle } from 'lucide-react';
 import { Task, TaskStatus } from '@/modules/tasks/types';
 import { usePatchTask } from '@/modules/tasks/hooks';
-import { logger } from '@/lib/logger';
+import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
+import { AxiosResponse } from 'axios';
+import { QueryKeys } from '@/constant/queryKeys';
 
 interface TaskItemProps {
   task: {
@@ -13,6 +15,7 @@ interface TaskItemProps {
 }
 
 const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
+  const queryClient = useQueryClient();
   const { mutate, isPending, data } = usePatchTask();
   const taskItem: Task = data?.data || task;
   let icon;
@@ -55,7 +58,17 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
         break;
     }
 
-    mutate({ taskId: task.taskId, status: newStatus });
+    mutate(
+      { taskId: task.taskId, status: newStatus },
+      {
+        onSuccess: () => {
+
+          if(TaskStatus.PENDING === newStatus || TaskStatus.DONE === newStatus  ) {
+            queryClient.invalidateQueries({queryKey: QueryKeys.TasksQueryKeys.parent('get-task-collection')}); // or specific query key you use
+          }
+        },
+      }
+    );
   };
 
   return (

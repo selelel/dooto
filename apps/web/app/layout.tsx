@@ -24,7 +24,6 @@ export default function RootLayout({
           <Navigation>
             {children}
           </Navigation>
-            
          </CustomLayout>
          {/* <ThemeProvider
             attribute="class"

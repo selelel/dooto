@@ -19,7 +19,7 @@ export const ROUTES_CLIENT = {
   },
   PRIVATE: {
     HOME: "/",
-    TODO: "/todo",
+    TASKS: "/tasks",
     TIMER: "/timer",
     HABITS: "/habits",
     MOOD: "/mood",

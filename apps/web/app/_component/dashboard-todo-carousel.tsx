@@ -2,15 +2,15 @@
 
 import React, { useEffect, useState } from 'react';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { useGetTaskCollection } from '@/modules/tasks/hooks';
 import { POSTTasksCollectionResponseT } from '@/modules/tasks/types';
-import { logger } from '@/lib/logger';
 import TaskCollection from './task-collection';
+import { UseQueryResult } from '@tanstack/react-query';
+import { AxiosResponse } from 'axios';
 
-function DashboardTodoCarousel() {
-  const { data, error } = useGetTaskCollection();
+function DashboardTodoCarousel({query}: {query: UseQueryResult<AxiosResponse<any, any, {}>, Error>}) {
+  const {data, error} = query
   const [carouselApi, setCarouselApi] = useState<any>(null);
   const [carouselProgress, setCarouselProgress] = useState(0);
 
@@ -31,8 +31,6 @@ function DashboardTodoCarousel() {
     return () => carouselApi.off('select', updateProgress);
   }, [carouselApi]);
 
-  logger.info(data, error);
-
   if (error) return <p>Error loading tasks.</p>;
   if (!data) return <p>Loading tasks...</p>;
   if (taskCollection.length === 0)
@@ -51,6 +49,7 @@ function DashboardTodoCarousel() {
             <Card className="shadow-sm min-h-112">
               <CardHeader>
                 <CardTitle>{taskGroup.tasksName}</CardTitle>
+                <CardDescription>{taskGroup.details}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 <TaskCollection taskGroup={taskGroup} />

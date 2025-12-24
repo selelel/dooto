@@ -1,6 +1,6 @@
 import { TaskService } from '../services/task.services';
-import { Request } from '../types/express';
 import { logger } from '../utils/logger';
+import { Request } from '../types/express';
 
 export const POSTtask = async (req: Request, res: any) => {
   try {
@@ -25,7 +25,8 @@ export const PATCHtask = async (req: Request, res: any) => {
 
 export const DELETEtask = async (req: Request, res: any) => {
   try {
-    const tasks = await TaskService.deleteTask(req.params.id!);
+    const {id} = req.query
+    const tasks = await TaskService.deleteTask(String(id));
 
     res.status(201).json(tasks);
   } catch (error) {

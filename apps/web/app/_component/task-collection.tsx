@@ -3,6 +3,8 @@ import { Progress } from '@/components/ui/progress';
 import { TaskStatus, POSTTasksCollectionResponseT } from '@/modules/tasks/types';
 import { Circle } from 'lucide-react';
 import TaskItem from './tasks-item';
+import { UseQueryResult } from '@tanstack/react-query';
+import { AxiosResponse } from 'axios';
 
 interface TaskListProps {
   taskGroup: POSTTasksCollectionResponseT;

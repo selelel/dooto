@@ -126,7 +126,6 @@ router.post('/', isAuth, validate(POSTtaskDTO), POSTtask);
  */
 router.patch('/', isAuth, validate(PATCHtaskDTO), PATCHtask);
 
-
 /**
  * @swagger
  * /task:
@@ -136,22 +135,21 @@ router.patch('/', isAuth, validate(PATCHtaskDTO), PATCHtask);
  *       - Tasks
  *     security:
  *       - cookieAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *            $ref: '#/components/schemas/DELETEtaskDTO'
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Task ID
  *     responses:
  *       200:
  *         description: Task deleted successfully
- *       400:
- *         description: Validation error
  *       401:
  *         description: Unauthorized
  *       404:
  *         description: Task not found
  */
-router.delete('/:id', isAuth, validate(DELETEtasksDTO), DELETEtask);
+router.delete('/', isAuth, validate(DELETEtasksDTO), DELETEtask);
 
 module.exports = router;

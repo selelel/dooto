@@ -11,7 +11,7 @@ function Navigation({ children }: { children: ReactNode }) {
 
 const navigation = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: ROUTES_CLIENT.PRIVATE.HOME },
-  { id: "todo", label: "Todo List", icon: SquareCheck, path: ROUTES_CLIENT.PRIVATE.TODO },
+  { id: "tasks", label: "Tasks", icon: SquareCheck, path: ROUTES_CLIENT.PRIVATE.TASKS },
   { id: "timer", label: "Focus Timer", icon: Timer, path: ROUTES_CLIENT.PRIVATE.TIMER },
   { id: "habits", label: "Habit Tracker", icon: Target, path: ROUTES_CLIENT.PRIVATE.HABITS },
   { id: "mood", label: "Mood Journal", icon: BookHeart, path: ROUTES_CLIENT.PRIVATE.MOOD },

@@ -1,7 +1,7 @@
 import { QueryKeys } from "@/constant/queryKeys";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createTasksCollection, getTasksCollection, patchTask } from "./actions";
-import { POSTTasksCollectionRequestT, Task } from "./types";
+import { createTask, createTasksCollection, deleteTask, getTasksCollection, patchTask, patchTasksCollection } from "./actions";
+import { PATCHTasksCollectionRequestT, POSTTaskRequest, POSTTasksCollectionRequestT, Task } from "./types";
 
 export const useCreateTaskCollection = () => {
   return useMutation({
@@ -9,6 +9,21 @@ export const useCreateTaskCollection = () => {
     mutationFn: (value: POSTTasksCollectionRequestT) => createTasksCollection(value),
   });
 };
+
+export const usePatchTasksCollection = () => {
+   return useMutation({
+    mutationKey: QueryKeys.TasksQueryKeys.item('patch-task-collection'),
+    mutationFn: (payload: Partial<PATCHTasksCollectionRequestT> & {tasksId: string}) => patchTasksCollection(payload),
+  });
+};
+
+export const useCreateTask = () => {
+  return useMutation({
+    mutationKey: QueryKeys.TasksQueryKeys.parent('create-task'),
+    mutationFn: (value: POSTTaskRequest) => createTask(value),
+  });
+};
+
 
 export const useGetTaskCollectionById = () => {
   return useMutation({
@@ -26,7 +41,14 @@ export const useGetTaskCollection = () => {
 
 export const usePatchTask = () => {
    return useMutation({
-    mutationKey: QueryKeys.TasksQueryKeys.item('patch-task-collection'),
+    mutationKey: QueryKeys.TasksQueryKeys.item('patch-task'),
     mutationFn: (payload: Partial<Task>) => patchTask(payload),
+  });
+};
+
+export const useDeleteTask = () => {
+   return useMutation({
+    mutationKey: QueryKeys.TasksQueryKeys.item('delete-task'),
+    mutationFn: (id: string) => deleteTask(id),
   });
 };
