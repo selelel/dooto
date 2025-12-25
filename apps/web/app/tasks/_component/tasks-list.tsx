@@ -1,32 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { logger } from '@/lib/logger'
-import {
-  useCreateTask,
-  useDeleteTask,
-  useGetTaskCollectionById,
-  usePatchTask,
-  usePatchTasksCollection,
-} from '@/modules/tasks/hooks'
-import { Task, TaskStatus } from '@/modules/tasks/types'
-import { Plus, Calendar, Trash2, Circle, CircleCheck } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
+import { TaskStatus } from '@/modules/tasks/types'
+import { Circle } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import TaskCreateDialog, {
-  TaskCreateFormValues,
 } from './task-create-dialog'
-import StatusCard from '@/app/_component/status-card'
-import { Form, FormField } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
-import { QueryKeys } from '@/constant/queryKeys'
-import { useQueryClient } from '@tanstack/react-query'
 import useTasksList from '../_hooks/useTasksList'
 import TaskHeader from './task-header'
 import TaskRow from './task-row'
 import TaskSection from './task-section'
-import StatsGrid from './task0-stats-grid'
+import StatsGrid from './task-stats-grid'
 
 function TasksList() {
   const searchParams = useSearchParams()

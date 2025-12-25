@@ -11,7 +11,7 @@ export default function useTasksList(id: string | null) {
   const { mutate: patchTaskCollection } = usePatchTasksCollection()
   const { mutate: patchTask } = usePatchTask()
   const { mutate: deleteTask } = useDeleteTask()
-  const { data, mutate: refetchTasks } = useGetTaskCollectionById()
+  const { data, mutate: refetchTasks} = useGetTaskCollectionById(id)
   const { mutate: createTask } = useCreateTask()
 
   const [tasks, setTasks] = useState<Task[]>([])
@@ -71,6 +71,26 @@ export default function useTasksList(id: string | null) {
     )
   }
 
+  const handlePatchTasks = (task: Partial<Task>) => {
+    patchTask(
+      { taskId: task.taskId, ...task},
+      {
+        onSuccess: () => {
+            refetchTasks(task.tasksId!)
+            queryClient.invalidateQueries({
+              queryKey: QueryKeys.TasksQueryKeys.parent(['get-task-collection-by-id', task.tasksId]),
+            })
+        },
+        onError: (err) => {
+          logger.error(err)
+          queryClient.invalidateQueries({
+            queryKey: QueryKeys.TasksQueryKeys.parent('get-task-collection-by-id'),
+          })
+        },
+      }
+    )
+  }
+
   const handleDeleteTask = (taskId: string) => {
     setTasks((prev) => prev.filter((t) => t.taskId !== taskId))
 
@@ -100,6 +120,8 @@ export default function useTasksList(id: string | null) {
     )
   }
 
+  
+
   return {
     tasks,
     taskCollectionData: data?.data,
@@ -107,6 +129,7 @@ export default function useTasksList(id: string | null) {
     handleDeleteTask,
     handleCreateTask,
     patchTaskCollection,
+    handlePatchTasks,
     queryClient,
   }
 }

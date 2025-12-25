@@ -14,8 +14,8 @@ export default function StatsGrid({
 }) {
   return (
     <div className="grid grid-cols-4 gap-6 mb-8 max-w-4xl mx-auto">
-      <Stat title="In Progress" value={inProgress} color="primary" id={TaskStatus.IN_PROGRESS} />
       <Stat title="Not Started" value={pendingTasks} color="secondary" id={TaskStatus.PENDING} />
+      <Stat title="In Progress" value={inProgress} color="primary" id={TaskStatus.IN_PROGRESS} />
       <Stat title="Completed" value={completedTasks} color="success" id={TaskStatus.DONE} />
       <Stat title="Total" value={total} color="accent" id="TOTAL" />
     </div>
