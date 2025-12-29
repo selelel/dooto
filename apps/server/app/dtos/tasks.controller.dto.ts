@@ -11,7 +11,10 @@ export const POSTtasksDTO = z.object({
 
 export const DELETEtasksDTO = z.object({
   query : z.object({
-    id: z.string(),
+    id: z.string().optional(),
+  }),
+  path: z.object({
+    id: z.string().optional(),
   })
 })
 

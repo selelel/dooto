@@ -8,7 +8,13 @@ const TasksQueryKeys = {
     item: (params:any) => ["tasks", "tasks-collection", "item", params],
 }
 
+const HabitQueryKeys = {
+    parent: (key: string | any[]) =>
+      ["habit", ...(Array.isArray(key) ? key : [key])],
+  }
+
 export const QueryKeys = {
     UserQueryKeys,
-    TasksQueryKeys
+    TasksQueryKeys,
+    HabitQueryKeys
 }

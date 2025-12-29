@@ -19,7 +19,9 @@ export const POSThabit = async (req: Request, res: any) => {
 export const GEThabit = async (req: Request, res: any) => {
   try {
     const { id } = req.params;
-    const habit = await HabitService.getHabitById(id!);
+    const { from, to } = req.query;
+    const dateRange = { from, to } as any
+    const habit = await HabitService.getHabitById(id!, dateRange);
     if (!habit) {
       return res.status(404).json({ message: "Habit not found" });
     }
@@ -32,10 +34,9 @@ export const GEThabit = async (req: Request, res: any) => {
 
 export const GEThabits = async (req: Request, res: any) => {
   try {
-    const {from, to, categoryId} = req.query;
-    const dateRange = !!from || !!to ? {from: from as string, to: to as string} : undefined;
+    const {categoryId} = req.query;
     const _categoryId = categoryId ? categoryId as string : undefined;
-    const habit = await HabitService.getHabits(req.user?.id!, dateRange, _categoryId);
+    const habit = await HabitService.getHabits(req.user?.id!, _categoryId);
     if (!habit) {
       return res.status(404).json({ message: "Habit not found" });
     }
@@ -51,10 +52,10 @@ export const ToggleContribution = async (req: Request, res: any) => {
   try {
     const { id } = req.params;
     const date = req.query.date as string;
+    logger.info(id)
     const payload = {
       habitId: id!,
       date: date,
-      completed: req.body.completed ?? true,
     }
     const habit = await HabitService.addContribution(payload);
     res.status(201).json(habit);

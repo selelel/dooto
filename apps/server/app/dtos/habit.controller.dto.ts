@@ -9,21 +9,26 @@ export const POSTHabitDTO = z.object({
 })
 
 export const POSTAddContributionDTO = z.object({
-  body : z.object({
-    completed: z.boolean().optional(),
-  }),
   params: {
     id: z.string(),
   }
 })
 
-export const GEThabitDTO = z.object({
+export const GEThabitsDTO = z.object({
   query : z.object({
-    from: z.string().optional(),
-    to : z.string().optional(),
-    categoryId :z.boolean().optional()
+    categoryId :z.string().optional()
   })
 })
 
+export const GEThabitDTO =  z.object({
+  params : z.object({
+    id :z.string().optional()
+  }),
+  query : z.object({
+    from :z.string().optional(),
+  to: z.string().optional(),
+  }).optional()
+})
+
 export type POSTHabitT = z.infer<typeof POSTHabitDTO>['body']
-export type POSTAddContributionT = z.infer<typeof POSTAddContributionDTO>['body']
+export type POSTAddContributionT = z.infer<typeof POSTAddContributionDTO>

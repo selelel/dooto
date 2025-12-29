@@ -26,7 +26,7 @@
 import express = require('express');
 import { isAuth } from '../lib/auth';
 import { validate } from '../middleware/validate.dto';
-import { GEThabitDTO, IdParams, POSTAddContributionDTO, POSTHabitDTO } from '../dtos';
+import { GEThabitDTO, GEThabitsDTO, POSTHabitDTO } from '../dtos';
 import { GEThabit, GEThabits, POSThabit, ToggleContribution } from '../controllers/habit.controller';
 
 const router = express.Router();
@@ -57,9 +57,9 @@ router.post('/', isAuth, validate(POSTHabitDTO), POSThabit);
 
 /**
  * @swagger
- * /habit/{id}:
+ * /habit/contribution/{id}:
  *   get:
- *     summary: Get a habit by ID
+ *     summary: Get habit contributions by habit ID
  *     tags:
  *       - Habit
  *     security:
@@ -72,6 +72,23 @@ router.post('/', isAuth, validate(POSTHabitDTO), POSThabit);
  *         schema:
  *           type: string
  *           format: uuid
+ *
+ *       - in: query
+ *         name: from
+ *         required: false
+ *         description: Start date (ISO 8601)
+ *         schema:
+ *           type: string
+ *           format: date
+ *
+ *       - in: query
+ *         name: to
+ *         required: false
+ *         description: End date (ISO 8601)
+ *         schema:
+ *           type: string
+ *           format: date
+ *
  *     responses:
  *       200:
  *         description: Habit retrieved successfully
@@ -80,8 +97,7 @@ router.post('/', isAuth, validate(POSTHabitDTO), POSThabit);
  *       404:
  *         description: Habit not found
  */
-
-router.get('/:id', isAuth, validate(IdParams), GEThabit);
+router.get('/contribution/:id', isAuth, validate(GEThabitDTO), GEThabit);
 
 /**
  * @swagger
@@ -94,20 +110,6 @@ router.get('/:id', isAuth, validate(IdParams), GEThabit);
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: from
- *         schema:
- *           type: string
- *           format: date
- *         required: false
- *         description: Start date for filtering habits
- *       - in: query
- *         name: to
- *         schema:
- *           type: string
- *           format: date
- *         required: false
- *         description: End date for filtering habits
- *       - in: query
  *         name: categoryId
  *         schema:
  *           type: string
@@ -119,11 +121,11 @@ router.get('/:id', isAuth, validate(IdParams), GEThabit);
  *       401:
  *         description: Unauthorized
  */
-router.get('/', isAuth, validate(GEThabitDTO), GEThabits);
+router.get('/', isAuth, validate(GEThabitsDTO), GEThabits);
 
 /**
  * @swagger
- * /habit/{id}/toggle:
+ * /habit/toggle/{id}:
  *   post:
  *     summary: Toggle habit contribution (mark complete/incomplete) for a given date (defaults to today)
  *     tags:
@@ -146,17 +148,6 @@ router.get('/', isAuth, validate(GEThabitDTO), GEThabits);
  *           type: string
  *           format: date
  *           example: "2025-12-18"
- *     requestBody:
- *       required: false
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               completed:
- *                 type: boolean
- *                 description: Mark contribution as completed or not. Defaults to true.
- *                 example: true
  *     responses:
  *       201:
  *         description: Contribution toggled successfully
@@ -167,7 +158,7 @@ router.get('/', isAuth, validate(GEThabitDTO), GEThabits);
  *       404:
  *         description: Habit not found
  */
-router.post('/:id/toggle', isAuth, validate(POSTAddContributionDTO), ToggleContribution);
+router.post('/toggle/:id', isAuth, ToggleContribution);
 
 
 

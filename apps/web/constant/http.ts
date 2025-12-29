@@ -9,6 +9,10 @@ export const ENDPOINT = {
     TASKS : {
       tasks_collection: '/api/tasks/tasks-collection/',
       task: '/api/tasks/task/'
+    },
+    HABIT : {
+      habit: '/api/habit/',
+      contribution: '/api/habit/contribution/'
     }
 }
 

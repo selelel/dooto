@@ -1,8 +1,7 @@
 import { prisma } from "../lib/prisma";
 import { logger } from "../utils/logger";
-import { POSTAddContributionT, POSTHabitT } from "../dtos";
+import { POSTHabitT } from "../dtos";
 import { Habit, HabitContribution } from "../generated/prisma/client";
-import { HabitContributionWhereInput } from "../generated/prisma/models";
 
 async function createHabit(data: POSTHabitT & { userId: string }): Promise<Habit> {
   const { userId, habitName, details, categoryId } = data;
@@ -48,21 +47,31 @@ async function createHabit(data: POSTHabitT & { userId: string }): Promise<Habit
   }
 }
 
-async function getHabitById(id:string): Promise<Habit | null> {
+async function getHabitById(
+  id: string,
+  dateRange?: { from?: string; to?: string }
+): Promise<Habit | null> {
+  const contributionWhere =
+    dateRange?.from || dateRange?.to
+      ? {
+          date: {
+            ...(dateRange.from && { gte: new Date(dateRange.from) }),
+            ...(dateRange.to && { lte: new Date(dateRange.to) }),
+          },
+        }
+      : undefined;
+
   try {
-    const habit = await prisma.habit.findUnique({
-      where: {
-        id
-      },
+    return await prisma.habit.findUnique({
+      where: { id },
       include: {
         contributions: {
+          ...(contributionWhere && { where: contributionWhere }),
           orderBy: { date: 'asc' },
         },
         category: true,
       },
     });
-
-    return habit;
   } catch (error) {
     logger.error("Error getting habit by id:", error);
     throw error;
@@ -71,44 +80,34 @@ async function getHabitById(id:string): Promise<Habit | null> {
 
 async function getHabits(
   userId: string,
-  dateRange?: { from?: string; to?: string },
+  // dateRange: { from?: string; to?: string } | any,
   categoryId? : string
 ): Promise<Habit[]> {
-  const contributionDateWhere: HabitContributionWhereInput | undefined =
-    dateRange?.from || dateRange?.to
-      ? {
-          date: {
-            ...(dateRange?.from && { gte: new Date(dateRange.from) }),
-            ...(dateRange?.to && { lte: new Date(dateRange.to) }),
-          },
-        }
-      : undefined;
+  // const contributionDateWhere: HabitContributionWhereInput | undefined =
+  //   dateRange?.from || dateRange?.to
+  //     ? {
+  //         date: {
+  //           ...(!!dateRange?.from && { gte: new Date(dateRange.from) }),
+  //           ...(!!dateRange?.to && { lte: new Date(dateRange.to) }),
+  //         },
+  //       }
+  //     : undefined;
 
   try {
-    const habit = await prisma.habit.findMany({
+
+    return await prisma.habit.findMany({
       where: {
         userId,
-        ...(contributionDateWhere && {
-          contributions: {
-            some: contributionDateWhere,
-          },
-        }),
         ...(categoryId && {
           categoryId,
         }),
       },
       include: {
         contributions: {
-          ...(contributionDateWhere && {
-            where: contributionDateWhere,
-          }),
           orderBy: { date: 'asc' },
         },
-        category: true,
       },
     });
-
-    return habit;
   } catch (error) {
     logger.error("Error getting habits:", error);
     throw error;
@@ -116,16 +115,32 @@ async function getHabits(
 }
 
 
-async function addContribution(data: POSTAddContributionT & { date?: string; habitId: string }): Promise<HabitContribution | null> {
-  const { habitId, completed = true } = data;
-  const inputDate = data.date || new Date();
+async function addContribution(data: {
+  date?: string;
+  habitId: string;
+}): Promise<HabitContribution> {
+  const { habitId } = data;
 
-  const contributionDate = new Date(inputDate);
+  const contributionDate = data.date
+    ? new Date(data.date)
+    : new Date();
+
   contributionDate.setUTCHours(0, 0, 0, 0);
 
   try {
-    if (completed === false) {
-      const contribution = await prisma.habitContribution.delete({
+    // 1️⃣ Check if contribution already exists
+    const existing = await prisma.habitContribution.findUnique({
+      where: {
+        habitId_date: {
+          habitId,
+          date: contributionDate,
+        },
+      },
+    });
+
+    // 2️⃣ If exists → delete (toggle OFF)
+    if (existing) {
+      await prisma.habitContribution.delete({
         where: {
           habitId_date: {
             habitId,
@@ -133,34 +148,26 @@ async function addContribution(data: POSTAddContributionT & { date?: string; hab
           },
         },
       });
-      return contribution;
+
+      existing.completed = false
+
+      return existing;
     }
 
-    const contribution = await prisma.habitContribution.upsert({
-      where: {
-        habitId_date: {
-          habitId,
-          date: contributionDate,
-        },
-      },
-      update: {
-        completed,
-      },
-      create: {
+    // 3️⃣ If not exists → create (toggle ON)
+    return await prisma.habitContribution.create({
+      data: {
         habitId,
         date: contributionDate,
-        completed,
+        completed: true,
         createdAt: new Date(),
       },
     });
-
-    return contribution;
   } catch (error) {
-    logger.error("Error adding contribution:", error);
+    logger.error("Error toggling contribution:", error);
     throw error;
   }
 }
-
 
 export const HabitService = {
   createHabit,
