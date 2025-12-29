@@ -97,7 +97,7 @@ async function createTask(data: Task): Promise<Task> {
     const task = await prisma.task.create({
       data: {
         ...data,
-        due: data.due ?? new Date(),
+        due: data.due,
         subClassId: data.subClassId,
         },
     });

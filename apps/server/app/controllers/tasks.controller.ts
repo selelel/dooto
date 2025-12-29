@@ -44,7 +44,7 @@ export const GETtasksCollections = async (req: Request, res: any) => {
 
 export const DELETEtasksCollection = async (req: Request, res: any) => {
   try {
-    const { id } = req.params;
+    const { id } = req.query;
     const collection = await TaskService.deleteTaskCollectionById(String(id));
 
     res.status(200).json(collection);

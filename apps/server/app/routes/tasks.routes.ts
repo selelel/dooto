@@ -140,7 +140,7 @@ router.get('/', isAuth, validate(GETtasksDTO), GETtasksCollections);
  *     security:
  *       - cookieAuth: []
  *     parameters:
- *       - in: path
+ *       - in: query
  *         name: id
  *         required: true
  *         schema:
@@ -162,7 +162,7 @@ router.get('/', isAuth, validate(GETtasksDTO), GETtasksCollections);
  *       500:
  *         description: Failed to delete tasks collection
  */
-router.delete('/:id', isAuth, validate(DELETEtasksDTO), DELETEtasksCollection);
+router.delete('/', isAuth, validate(DELETEtasksDTO), DELETEtasksCollection);
 
 /**
  * @swagger

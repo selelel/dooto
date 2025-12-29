@@ -27,6 +27,19 @@ export const getTasksCollection = async (id?: string) => {
   }
 };
 
+export const deleteTasksCollection = async (id?: string) => {
+  try {
+    const endpoint = ENDPOINT.TASKS.tasks_collection;
+    const params = id ? { id } : {};
+    const response = await axios.delete(endpoint, {params});
+
+    return response;
+  } catch (e:any) {
+    logger.trace(e)
+    throw e;
+  }
+};
+
 export const createTask= async (payload: POSTTaskRequest) => {
   try {
     const endpoint = ENDPOINT.TASKS.task;
@@ -52,10 +65,9 @@ export const patchTasksCollection = async (payload: Partial<PATCHTasksCollection
 
 export const patchTask = async (payload: Partial<Task>) => {
   try {
-    logger.trace("patchTask");
     const endpoint = ENDPOINT.TASKS.task;
+    logger.trace("patchTask", payload);
     const response = await axios.patch(endpoint, payload);
-
     return response;
   } catch (e: any) {
     logger.trace(e);

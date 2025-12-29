@@ -1,6 +1,6 @@
 import { QueryKeys } from "@/constant/queryKeys";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createTask, createTasksCollection, deleteTask, getTasksCollection, patchTask, patchTasksCollection } from "./actions";
+import { createTask, createTasksCollection, deleteTask, deleteTasksCollection, getTasksCollection, patchTask, patchTasksCollection } from "./actions";
 import { PATCHTasksCollectionRequestT, POSTTaskRequest, POSTTasksCollectionRequestT, Task } from "./types";
 
 export const useCreateTaskCollection = () => {
@@ -29,6 +29,13 @@ export const useGetTaskCollectionById = (id: string | null) => {
   return useMutation({
     mutationKey: QueryKeys.TasksQueryKeys.parent(['get-task-collection-by-id', id]),
     mutationFn: (id: string) => getTasksCollection(id),
+  });
+};
+
+export const useDeleteTaskCollectionById = () => {
+  return useMutation({
+    mutationKey: QueryKeys.TasksQueryKeys.parent(['delete-task-collection-by-id']),
+    mutationFn: (id: string) => deleteTasksCollection(id),
   });
 };
 

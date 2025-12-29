@@ -1,12 +1,12 @@
 
 export type PATCHTasksCollectionRequestT = {
   tasksName: string
-  details: string
-  date: Date
+  details?: string
+  due: Date
   tasksId: string
 }
 
-export type POSTTasksCollectionRequestT = Omit<PATCHTasksCollectionRequestT, 'tasksId'>
+export type POSTTasksCollectionRequestT = Omit<PATCHTasksCollectionRequestT, "tasksId" | "date" |"due">
 export type POSTTasksCollectionResponseT = {
   tasksId: string
   tasksName: string

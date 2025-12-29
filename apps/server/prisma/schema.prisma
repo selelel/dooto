@@ -64,7 +64,7 @@ model Task {
   tasksId    String          @db.Uuid
   taskName   String
   created    DateTime        @default(now())
-  due        DateTime
+  due        DateTime?
   updated    DateTime        @updatedAt
   status     TaskStatus      @default(PENDING)
   tags       String[]

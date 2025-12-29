@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "task" ALTER COLUMN "due" DROP NOT NULL;

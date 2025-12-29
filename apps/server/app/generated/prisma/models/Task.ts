@@ -178,7 +178,7 @@ export type TaskGroupByOutputType = {
   tasksId: string
   taskName: string
   created: Date
-  due: Date
+  due: Date | null
   updated: Date
   status: $Enums.TaskStatus
   tags: string[]
@@ -212,7 +212,7 @@ export type TaskWhereInput = {
   tasksId?: Prisma.UuidFilter<"Task"> | string
   taskName?: Prisma.StringFilter<"Task"> | string
   created?: Prisma.DateTimeFilter<"Task"> | Date | string
-  due?: Prisma.DateTimeFilter<"Task"> | Date | string
+  due?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   updated?: Prisma.DateTimeFilter<"Task"> | Date | string
   status?: Prisma.EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
   tags?: Prisma.StringNullableListFilter<"Task">
@@ -228,7 +228,7 @@ export type TaskOrderByWithRelationInput = {
   tasksId?: Prisma.SortOrder
   taskName?: Prisma.SortOrder
   created?: Prisma.SortOrder
-  due?: Prisma.SortOrder
+  due?: Prisma.SortOrderInput | Prisma.SortOrder
   updated?: Prisma.SortOrder
   status?: Prisma.SortOrder
   tags?: Prisma.SortOrder
@@ -247,7 +247,7 @@ export type TaskWhereUniqueInput = Prisma.AtLeast<{
   tasksId?: Prisma.UuidFilter<"Task"> | string
   taskName?: Prisma.StringFilter<"Task"> | string
   created?: Prisma.DateTimeFilter<"Task"> | Date | string
-  due?: Prisma.DateTimeFilter<"Task"> | Date | string
+  due?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   updated?: Prisma.DateTimeFilter<"Task"> | Date | string
   status?: Prisma.EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
   tags?: Prisma.StringNullableListFilter<"Task">
@@ -263,7 +263,7 @@ export type TaskOrderByWithAggregationInput = {
   tasksId?: Prisma.SortOrder
   taskName?: Prisma.SortOrder
   created?: Prisma.SortOrder
-  due?: Prisma.SortOrder
+  due?: Prisma.SortOrderInput | Prisma.SortOrder
   updated?: Prisma.SortOrder
   status?: Prisma.SortOrder
   tags?: Prisma.SortOrder
@@ -282,7 +282,7 @@ export type TaskScalarWhereWithAggregatesInput = {
   tasksId?: Prisma.UuidWithAggregatesFilter<"Task"> | string
   taskName?: Prisma.StringWithAggregatesFilter<"Task"> | string
   created?: Prisma.DateTimeWithAggregatesFilter<"Task"> | Date | string
-  due?: Prisma.DateTimeWithAggregatesFilter<"Task"> | Date | string
+  due?: Prisma.DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
   updated?: Prisma.DateTimeWithAggregatesFilter<"Task"> | Date | string
   status?: Prisma.EnumTaskStatusWithAggregatesFilter<"Task"> | $Enums.TaskStatus
   tags?: Prisma.StringNullableListFilter<"Task">
@@ -294,7 +294,7 @@ export type TaskCreateInput = {
   taskId?: string
   taskName: string
   created?: Date | string
-  due: Date | string
+  due?: Date | string | null
   updated?: Date | string
   status?: $Enums.TaskStatus
   tags?: Prisma.TaskCreatetagsInput | string[]
@@ -309,7 +309,7 @@ export type TaskUncheckedCreateInput = {
   tasksId: string
   taskName: string
   created?: Date | string
-  due: Date | string
+  due?: Date | string | null
   updated?: Date | string
   status?: $Enums.TaskStatus
   tags?: Prisma.TaskCreatetagsInput | string[]
@@ -322,7 +322,7 @@ export type TaskUpdateInput = {
   taskId?: Prisma.StringFieldUpdateOperationsInput | string
   taskName?: Prisma.StringFieldUpdateOperationsInput | string
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   tags?: Prisma.TaskUpdatetagsInput | string[]
@@ -337,7 +337,7 @@ export type TaskUncheckedUpdateInput = {
   tasksId?: Prisma.StringFieldUpdateOperationsInput | string
   taskName?: Prisma.StringFieldUpdateOperationsInput | string
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   tags?: Prisma.TaskUpdatetagsInput | string[]
@@ -351,7 +351,7 @@ export type TaskCreateManyInput = {
   tasksId: string
   taskName: string
   created?: Date | string
-  due: Date | string
+  due?: Date | string | null
   updated?: Date | string
   status?: $Enums.TaskStatus
   tags?: Prisma.TaskCreatetagsInput | string[]
@@ -363,7 +363,7 @@ export type TaskUpdateManyMutationInput = {
   taskId?: Prisma.StringFieldUpdateOperationsInput | string
   taskName?: Prisma.StringFieldUpdateOperationsInput | string
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   tags?: Prisma.TaskUpdatetagsInput | string[]
@@ -375,7 +375,7 @@ export type TaskUncheckedUpdateManyInput = {
   tasksId?: Prisma.StringFieldUpdateOperationsInput | string
   taskName?: Prisma.StringFieldUpdateOperationsInput | string
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   tags?: Prisma.TaskUpdatetagsInput | string[]
@@ -509,6 +509,10 @@ export type TaskUncheckedCreateNestedManyWithoutParentInput = {
   connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
 }
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type EnumTaskStatusFieldUpdateOperationsInput = {
   set?: $Enums.TaskStatus
 }
@@ -560,7 +564,7 @@ export type TaskCreateWithoutCollectionInput = {
   taskId?: string
   taskName: string
   created?: Date | string
-  due: Date | string
+  due?: Date | string | null
   updated?: Date | string
   status?: $Enums.TaskStatus
   tags?: Prisma.TaskCreatetagsInput | string[]
@@ -573,7 +577,7 @@ export type TaskUncheckedCreateWithoutCollectionInput = {
   taskId?: string
   taskName: string
   created?: Date | string
-  due: Date | string
+  due?: Date | string | null
   updated?: Date | string
   status?: $Enums.TaskStatus
   tags?: Prisma.TaskCreatetagsInput | string[]
@@ -616,7 +620,7 @@ export type TaskScalarWhereInput = {
   tasksId?: Prisma.UuidFilter<"Task"> | string
   taskName?: Prisma.StringFilter<"Task"> | string
   created?: Prisma.DateTimeFilter<"Task"> | Date | string
-  due?: Prisma.DateTimeFilter<"Task"> | Date | string
+  due?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   updated?: Prisma.DateTimeFilter<"Task"> | Date | string
   status?: Prisma.EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
   tags?: Prisma.StringNullableListFilter<"Task">
@@ -628,7 +632,7 @@ export type TaskCreateWithoutSubTasksInput = {
   taskId?: string
   taskName: string
   created?: Date | string
-  due: Date | string
+  due?: Date | string | null
   updated?: Date | string
   status?: $Enums.TaskStatus
   tags?: Prisma.TaskCreatetagsInput | string[]
@@ -642,7 +646,7 @@ export type TaskUncheckedCreateWithoutSubTasksInput = {
   tasksId: string
   taskName: string
   created?: Date | string
-  due: Date | string
+  due?: Date | string | null
   updated?: Date | string
   status?: $Enums.TaskStatus
   tags?: Prisma.TaskCreatetagsInput | string[]
@@ -659,7 +663,7 @@ export type TaskCreateWithoutParentInput = {
   taskId?: string
   taskName: string
   created?: Date | string
-  due: Date | string
+  due?: Date | string | null
   updated?: Date | string
   status?: $Enums.TaskStatus
   tags?: Prisma.TaskCreatetagsInput | string[]
@@ -673,7 +677,7 @@ export type TaskUncheckedCreateWithoutParentInput = {
   tasksId: string
   taskName: string
   created?: Date | string
-  due: Date | string
+  due?: Date | string | null
   updated?: Date | string
   status?: $Enums.TaskStatus
   tags?: Prisma.TaskCreatetagsInput | string[]
@@ -706,7 +710,7 @@ export type TaskUpdateWithoutSubTasksInput = {
   taskId?: Prisma.StringFieldUpdateOperationsInput | string
   taskName?: Prisma.StringFieldUpdateOperationsInput | string
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   tags?: Prisma.TaskUpdatetagsInput | string[]
@@ -720,7 +724,7 @@ export type TaskUncheckedUpdateWithoutSubTasksInput = {
   tasksId?: Prisma.StringFieldUpdateOperationsInput | string
   taskName?: Prisma.StringFieldUpdateOperationsInput | string
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   tags?: Prisma.TaskUpdatetagsInput | string[]
@@ -748,7 +752,7 @@ export type TaskCreateManyCollectionInput = {
   taskId?: string
   taskName: string
   created?: Date | string
-  due: Date | string
+  due?: Date | string | null
   updated?: Date | string
   status?: $Enums.TaskStatus
   tags?: Prisma.TaskCreatetagsInput | string[]
@@ -760,7 +764,7 @@ export type TaskUpdateWithoutCollectionInput = {
   taskId?: Prisma.StringFieldUpdateOperationsInput | string
   taskName?: Prisma.StringFieldUpdateOperationsInput | string
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   tags?: Prisma.TaskUpdatetagsInput | string[]
@@ -773,7 +777,7 @@ export type TaskUncheckedUpdateWithoutCollectionInput = {
   taskId?: Prisma.StringFieldUpdateOperationsInput | string
   taskName?: Prisma.StringFieldUpdateOperationsInput | string
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   tags?: Prisma.TaskUpdatetagsInput | string[]
@@ -786,7 +790,7 @@ export type TaskUncheckedUpdateManyWithoutCollectionInput = {
   taskId?: Prisma.StringFieldUpdateOperationsInput | string
   taskName?: Prisma.StringFieldUpdateOperationsInput | string
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   tags?: Prisma.TaskUpdatetagsInput | string[]
@@ -799,7 +803,7 @@ export type TaskCreateManyParentInput = {
   tasksId: string
   taskName: string
   created?: Date | string
-  due: Date | string
+  due?: Date | string | null
   updated?: Date | string
   status?: $Enums.TaskStatus
   tags?: Prisma.TaskCreatetagsInput | string[]
@@ -810,7 +814,7 @@ export type TaskUpdateWithoutParentInput = {
   taskId?: Prisma.StringFieldUpdateOperationsInput | string
   taskName?: Prisma.StringFieldUpdateOperationsInput | string
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   tags?: Prisma.TaskUpdatetagsInput | string[]
@@ -824,7 +828,7 @@ export type TaskUncheckedUpdateWithoutParentInput = {
   tasksId?: Prisma.StringFieldUpdateOperationsInput | string
   taskName?: Prisma.StringFieldUpdateOperationsInput | string
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   tags?: Prisma.TaskUpdatetagsInput | string[]
@@ -837,7 +841,7 @@ export type TaskUncheckedUpdateManyWithoutParentInput = {
   tasksId?: Prisma.StringFieldUpdateOperationsInput | string
   taskName?: Prisma.StringFieldUpdateOperationsInput | string
   created?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  due?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
   tags?: Prisma.TaskUpdatetagsInput | string[]
@@ -963,7 +967,7 @@ export type $TaskPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     tasksId: string
     taskName: string
     created: Date
-    due: Date
+    due: Date | null
     updated: Date
     status: $Enums.TaskStatus
     tags: string[]

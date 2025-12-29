@@ -475,10 +475,6 @@ export type BadHabitTimerUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.BadHabitTimerScalarWhereInput | Prisma.BadHabitTimerScalarWhereInput[]
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
