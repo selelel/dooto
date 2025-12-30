@@ -25,9 +25,9 @@ export const PATCHtask = async (req: Request, res: any) => {
 
 export const DELETEtask = async (req: Request, res: any) => {
   try {
-    const {id} = req.query
+    const { id } = req.query
+    logger.info(id)
     const tasks = await TaskService.deleteTask(String(id));
-
     res.status(201).json(tasks);
   } catch (error) {
     logger.info("Error:", error);

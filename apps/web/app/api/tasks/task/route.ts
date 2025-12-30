@@ -61,7 +61,6 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const id = searchParams.get('id')
   const headers = ParseHeader(req.headers)
-
   try {
     logger.trace({ id })
 
