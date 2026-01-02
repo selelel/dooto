@@ -6,11 +6,12 @@ import {
   toggleHabitContribution,
   getHabitContributions,
 } from "@/modules/habit/actions";
+import { POSTHabitRequest } from "./types";
 
 export const useCreateHabit = () => {
   return useMutation({
     mutationKey: QueryKeys.HabitQueryKeys.parent("create-habit"),
-    mutationFn: createHabit,
+    mutationFn: (payload: POSTHabitRequest) => createHabit(payload),
   });
 };
 

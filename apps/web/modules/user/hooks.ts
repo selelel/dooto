@@ -1,6 +1,6 @@
 import { QueryKeys } from "@/constant/queryKeys";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { register, signIn } from "./actions";
+import { getCategories, register, signIn } from "./actions";
 import { POSTRegisterRequestT, POSTSigninRequestT } from "./types";
 
 export const useSignInUser = () => {
@@ -14,5 +14,12 @@ export const useRegisterUser = () => {
   return useMutation({
     mutationKey: QueryKeys.UserQueryKeys.actions('register'),
     mutationFn: (value: POSTRegisterRequestT) => register(value),
+  });
+};
+
+export const useGetCategory = () => {
+  return useQuery({
+    queryKey: QueryKeys.UserQueryKeys.item('category'),
+    queryFn: () => getCategories(),
   });
 };

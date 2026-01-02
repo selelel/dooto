@@ -4,7 +4,8 @@ export const ENDPOINT = {
     USER: {
         signin: '/api/user/auth/signin/',
         register: '/api/user/auth/register/',
-        logout: '/api/user/auth/logout/'
+        logout: '/api/user/auth/logout/',
+        category: '/api/user/category/'
     },
     TASKS : {
       tasks_collection: '/api/tasks/tasks-collection/',

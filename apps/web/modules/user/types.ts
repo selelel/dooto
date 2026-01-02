@@ -13,3 +13,10 @@ export type POSTRegisterRequestT = {
   email: string,
   password: string
 }
+
+export type Category = {
+      id: string,
+      userId: string,
+      name: string,
+      createdAt: string
+    }

@@ -1,5 +1,5 @@
 
-export type POSTHabitRequest = Omit<POSTHabitResponse, 'id' | 'createdAt' | 'userId'>
+export type POSTHabitRequest = Omit<POSTHabitResponse, 'id' | 'createdAt' | 'userId' | 'contributions'>
 
 export type POSTHabitResponse = {
   id: string,
@@ -8,7 +8,7 @@ export type POSTHabitResponse = {
   categoryId: string,
   createdAt:string,
   userId: string
-  contribution: Contribution[]
+  contributions: Contribution[]
 }
 
 export type Contribution = {
