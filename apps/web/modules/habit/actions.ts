@@ -5,6 +5,7 @@ import {
   POSTHabitResponse,
 } from "@/modules/habit/types";
 import { normalizeAxiosError } from "@/lib/utils";
+import { logger } from "@/lib/logger";
 
 /* =========================
    Create Habit
@@ -41,16 +42,16 @@ export const getHabits = async (categoryId?: string): Promise<POSTHabitResponse[
 };
 
 
-export const toggleHabitContribution = async (
-  habitId: string
-): Promise<POSTHabitResponse> => {
+export const toggleHabitContribution = async ({habitId, date}: {habitId: string
+  date: string}): Promise<POSTHabitResponse> => {
   try {
     const response = await axios.post<POSTHabitResponse>(
-      ENDPOINT.HABIT.habit, {id: habitId}
+      ENDPOINT.HABIT.contribution, undefined, {params: {habitId, date}}
     );
 
     return response.data;
   } catch (error) {
+    logger.trace(error)
     throw normalizeAxiosError(error);
   }
 };

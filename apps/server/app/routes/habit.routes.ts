@@ -26,7 +26,7 @@
 import express = require('express');
 import { isAuth } from '../lib/auth';
 import { validate } from '../middleware/validate.dto';
-import { GEThabitDTO, GEThabitsDTO, POSTHabitDTO } from '../dtos';
+import { GEThabitDTO, GEThabitsDTO, GETtoggleDTO, POSTHabitDTO } from '../dtos';
 import { GEThabit, GEThabits, POSThabit, ToggleContribution } from '../controllers/habit.controller';
 
 const router = express.Router();
@@ -158,7 +158,7 @@ router.get('/', isAuth, validate(GEThabitsDTO), GEThabits);
  *       404:
  *         description: Habit not found
  */
-router.post('/toggle/:id', isAuth, ToggleContribution);
+router.post('/toggle/:id', isAuth, validate(GETtoggleDTO), ToggleContribution);
 
 
 

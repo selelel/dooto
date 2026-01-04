@@ -1,21 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import { POSTHabitResponse } from "@/modules/habit/types";
+import { cn, normalizeDate } from "@/lib/utils";
+import { Contribution, POSTHabitResponse } from "@/modules/habit/types";
 import { Flame, CircleCheck, Circle } from "lucide-react";
 import React from "react";
+import Habit from "./habit-day";
+import { useHabits } from "../_context/habit-context";
 
 function HabitItem({ habit }: { habit: POSTHabitResponse }) {
-  // normalizeDate utility to get yyyy-mm-dd string
-  const normalizeDate = (d: string | Date | undefined) => {
-    if (!d) return "";
+  const { handleToggleHabit } = useHabits();
+  const jsDay = new Date().getDay();
 
-    const date = typeof d === "string" ? new Date(d) : d;
-
-    return new Intl.DateTimeFormat("en-CA", {
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    }).format(date);
-  };
   // Use a color for completed days — example: green
   const completedColor = "bg-success";
 
@@ -43,10 +38,6 @@ function HabitItem({ habit }: { habit: POSTHabitResponse }) {
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const today = normalizeDate(new Date());
-  const lastContributionDate = normalizeDate(habit.contributions.at(-1)?.date);
-  const completedToday = habit.contributions.some(
-    (c) => normalizeDate(c.date) === today && c.completed
-  );
 
   return (
     <Card
@@ -66,42 +57,20 @@ function HabitItem({ habit }: { habit: POSTHabitResponse }) {
                   </p>
                 )}
               </div>
-              {false && (
+              {computeStreak(habit.contributions) >= 2 && (
                 <div className='flex items-center gap-2'>
                   <Flame className='w-4 h-4 text-orange-500' />
                   <span className='text-sm text-muted-foreground'>
-                    {0} day streak
+                    {computeStreak(habit.contributions)} day streak
                   </span>
                 </div>
               )}
             </div>
           </div>
-          <Button
-            size='lg'
-            className={
-              lastContributionDate === today
-                ? "bg-success hover:bg-success/90"
-                : "bg-muted hover:bg-muted/80 text-muted-foreground"
-            }
-          >
-            {completedToday ? (
-              <>
-                <CircleCheck className='w-5 h-5 mr-2' />
-                Done
-              </>
-            ) : (
-              <>
-                <Circle className='w-5 h-5 mr-2' />
-                Mark Done
-              </>
-            )}
-          </Button>
         </div>
 
-        {/* Weekdays labels */}
         <div className='flex gap-2 mb-2 text-xs text-muted-foreground'>
           {weekDays.map((day, i) => {
-            const jsDay = new Date().getDay(); // 0 (Sun) - 6 (Sat)
             const todayIndex = jsDay === 0 ? 6 : jsDay - 1;
             return (
               <div
@@ -121,21 +90,55 @@ function HabitItem({ habit }: { habit: POSTHabitResponse }) {
 
         {/* Week Progress */}
         <div className='flex gap-2'>
-          {weekCompleted.map((completed, index) => (
-            <div key={index} className='flex-1'>
-              <div
-                className={`h-12 rounded-lg flex items-center justify-center ${
-                  completed ? completedColor : "bg-muted"
-                }`}
-              >
-                {completed && <CircleCheck className='w-4 h-4 text-white' />}
-              </div>
-            </div>
-          ))}
+          {weekCompleted.map((d, index) => {
+            const todayIndex = jsDay === 0 ? 6 : jsDay - 1;
+            return (
+              <Habit
+                onClick={() => {
+                  handleToggleHabit({
+                    habitId: habit.id,
+                    date: weekDates[index]!,
+                  });
+                }}
+                className={cn(
+                  index >= todayIndex + 1 ? "bg-muted-foreground/10" : "",
+                  todayIndex === index ? "border-2 border-red-300" : ""
+                )}
+                key={index}
+                completed={d}
+                completedColor={completedColor}
+                disabled={index >= new Date().getDay()}
+              />
+            );
+          })}
         </div>
       </CardContent>
     </Card>
   );
+}
+
+export function computeStreak(contributions: Contribution[]): number {
+  if (!contributions?.length) return 0;
+
+  const completedDays = new Set(
+    contributions
+      .filter((c) => c.completed)
+      .map((c) => new Date(c.date).toISOString().split("T")[0])
+  );
+
+  let streak = 0;
+  const cursor = new Date(); // start from today
+
+  while (true) {
+    const day = cursor.toISOString().split("T")[0];
+
+    if (!completedDays.has(day)) break;
+
+    streak++;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  return streak;
 }
 
 export default HabitItem;

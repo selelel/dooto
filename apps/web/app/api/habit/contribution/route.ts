@@ -2,7 +2,6 @@ import { ParseHeader } from "@/lib/header";
 import { logger } from "@/lib/logger";
 import { ServerApiClient } from "@/lib/serverApiClient";
 import { requireId } from "@/lib/utils";
-import { POSTHabitResponse } from "@/modules/habit/types";
 import { AxiosError } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -19,15 +18,17 @@ const buildParams = (to?: string | null, from?: string | null) => {
 export async function POST(req: NextRequest) {
   const headers = ParseHeader(req.headers);
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get("habitId");
+  const habitId = searchParams.get("habitId");
+  const date = searchParams.get('date')
 
-  requireId(id)
+  const params = date ? {date} : {}
+  requireId(habitId)
 
   try {
     const response = await ServerApiClient.post(
-      `${endpoint}/toggle/${id}`,
+      `${endpoint}/toggle/${habitId}`,
       undefined,
-      { headers }
+      { headers, params }
     );
 
     // Toggle action → 200 OK

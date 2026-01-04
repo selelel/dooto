@@ -29,3 +29,22 @@ export const normalizeAxiosError = (error: unknown): Error => {
   return new Error("Unexpected error occurred");
 };
 
+  export const normalizeDate = (d: string | Date | undefined) => {
+    if (!d) return "";
+
+    const date = typeof d === "string" ? new Date(d) : d;
+
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    }).format(date);
+  };
+
+  export const localizeDate = (d: string | Date | undefined) => {
+    if (!d) return "";
+
+    const date = typeof d === "string" ? new Date(d) : d;
+
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    }).format(date);
+  };

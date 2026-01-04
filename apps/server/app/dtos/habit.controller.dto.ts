@@ -20,6 +20,12 @@ export const GEThabitsDTO = z.object({
   })
 })
 
+export const GETtoggleDTO = z.object({
+  query : z.object({
+    date: z.string()
+  }),
+})
+
 export const GEThabitDTO =  z.object({
   params : z.object({
     id :z.string().optional()

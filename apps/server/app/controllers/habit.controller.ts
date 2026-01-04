@@ -52,7 +52,6 @@ export const ToggleContribution = async (req: Request, res: any) => {
   try {
     const { id } = req.params;
     const date = req.query.date as string;
-    logger.info(id)
     const payload = {
       habitId: id!,
       date: date,

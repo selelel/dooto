@@ -65,9 +65,11 @@ const post = async <TResponse = unknown, TBody = unknown>(
   logger.info("POST:", url);
   // ! REMOVE WHEN DEPLOYED
   logger.info("Body:", body);
+  logger.info("Opts:", options);
 
   return axios.post<TResponse>(url, body, {
     headers: options.headers,
+    params: options.params,
     ...options.config,
   });
 };

@@ -17,10 +17,7 @@ export const useCreateHabit = () => {
 
 export const useGetHabits = (categoryId?: string) => {
   return useQuery({
-    queryKey: QueryKeys.HabitQueryKeys.parent([
-      "get-habits",
-      categoryId,
-    ]),
+    queryKey: QueryKeys.HabitQueryKeys.parent("get-habits"),
     queryFn: () => getHabits(categoryId),
     enabled: true,
   });
@@ -31,8 +28,9 @@ export const useToggleHabitContribution = () => {
     mutationKey: QueryKeys.HabitQueryKeys.parent(
       "toggle-habit-contribution"
     ),
-    mutationFn: (habitId: string) =>
-      toggleHabitContribution(habitId),
+    mutationFn: (payload: {habitId: string
+  date: string}) =>
+      toggleHabitContribution(payload),
   });
 };
 

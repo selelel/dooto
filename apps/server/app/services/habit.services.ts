@@ -116,7 +116,7 @@ async function getHabits(
 
 
 async function addContribution(data: {
-  date?: string;
+  date?: string | undefined;
   habitId: string;
 }): Promise<HabitContribution> {
   const { habitId } = data;

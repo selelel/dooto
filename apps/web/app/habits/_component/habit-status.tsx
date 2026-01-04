@@ -2,9 +2,12 @@ import StatusCard from "@/app/_component/status-card";
 import { Award, CircleCheck, Flame, TrendingUp } from "lucide-react";
 import React from "react";
 import { useHabits } from "../_context/habit-context";
+import { normalizeDate } from "@/lib/utils";
 
 function HabitStatus() {
-  const { habitsData } = useHabits();
+  const { habitsData, completedTodayCount, totalHabits, completionPercent } =
+    useHabits();
+
   return (
     <div className='grid grid-cols-1 md:grid-cols-4 gap-4 mb-8'>
       <StatusCard className='shadow-sm border-l-4 border-l-primary'>
@@ -13,7 +16,9 @@ function HabitStatus() {
             <CircleCheck className='w-5 h-5 text-primary' />
           </div>
           <div>
-            <p className='text-2xl'>1/2</p>
+            <p className='text-2xl'>
+              {completedTodayCount}/{habitsData?.length}
+            </p>
             <p className='text-xs text-muted-foreground'>Today</p>
           </div>
         </div>
@@ -36,7 +41,7 @@ function HabitStatus() {
             <TrendingUp className='w-5 h-5 text-secondary' />
           </div>
           <div>
-            <p className='text-2xl'>{1}%</p>
+            <p className='text-2xl'>{completionPercent}%</p>
             <p className='text-xs text-muted-foreground'>Completion</p>
           </div>
         </div>
