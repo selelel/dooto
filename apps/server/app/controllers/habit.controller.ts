@@ -1,3 +1,4 @@
+import { POSTHabitT } from '../dtos';
 import { HabitService } from '../services/habit.services';
 import { Request } from '../types/express';
 import { logger } from '../utils/logger';
@@ -57,6 +58,33 @@ export const ToggleContribution = async (req: Request, res: any) => {
       date: date,
     }
     const habit = await HabitService.addContribution(payload);
+    res.status(201).json(habit);
+  } catch (error) {
+    logger.error("Error:", error);
+    res.status(500).json({ message: "Failed to create habit" });
+  }
+};
+
+export const DeleteHabit = async (req: Request, res: any) => {
+  try {
+    const id = req.query.id as string;
+    const habit = await HabitService.deleteHabit(id || '');
+    res.status(201).json(habit);
+  } catch (error) {
+    logger.error("Error:", error);
+    res.status(500).json({ message: "Failed to create habit" });
+  }
+};
+
+export const PatchHabit = async (req: Request, res: any) => {
+  try {
+    const body = req.body as Partial<POSTHabitT> & {
+      habitId: string;
+    };
+    const userId = req.user?.id!
+    const payload = {...body, userId}
+
+    const habit = await HabitService.patchHabit(payload);
     res.status(201).json(habit);
   } catch (error) {
     logger.error("Error:", error);

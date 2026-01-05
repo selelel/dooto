@@ -5,6 +5,8 @@ import {
   getHabits,
   toggleHabitContribution,
   getHabitContributions,
+  deleteHabit,
+  updateHabit,
 } from "@/modules/habit/actions";
 import { POSTHabitRequest } from "./types";
 
@@ -49,5 +51,25 @@ export const useGetHabitContributions = (
     queryFn: () =>
       getHabitContributions({ habitId, from, to }),
     enabled: Boolean(habitId),
+  });
+};
+
+export const useDeleteHabit = () => {
+  return useMutation({
+    mutationKey: QueryKeys.HabitQueryKeys.parent(
+      "delete-habit"
+    ),
+    mutationFn: (id: string) =>
+      deleteHabit(id),
+  });
+};
+
+export const useUpdateHabit = () => {
+  return useMutation({
+    mutationKey: QueryKeys.HabitQueryKeys.parent(
+      "update-habit"
+    ),
+    mutationFn: (payload: Partial<POSTHabitRequest> & {habitId: string}) =>
+      updateHabit(payload),
   });
 };

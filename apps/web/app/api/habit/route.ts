@@ -61,3 +61,58 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  const headers = ParseHeader(req.headers);
+  const { searchParams } = new URL(req.url)
+  const id = searchParams.get('id')
+
+  const params = id ? {id} : {}
+
+  logger.trace(id)
+
+  try {
+    
+    const response = await ServerApiClient.delete<POSTHabitResponse>(endpoint, undefined, { headers, params });
+    return NextResponse.json(response.data, { status: 200 });
+  } catch (error) {
+    logger.trace(error)
+    if (error instanceof AxiosError) {
+      const status = error.response?.status ?? 500;
+      const message =
+        error.response?.data?.message ?? error.message ?? "Request failed";
+
+      return NextResponse.json({ message }, { status });
+    }
+
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(req: NextRequest) {
+  const headers = ParseHeader(req.headers);
+  const body = await req.json();
+  logger.trace("Patch Body: ", req.body)
+
+  try {
+    const response = await ServerApiClient.patch<POSTHabitResponse>(endpoint, body, {headers});
+    return NextResponse.json(response.data, { status: 200 });
+  } catch (error) {
+    logger.trace(error)
+    if (error instanceof AxiosError) {
+      const status = error.response?.status ?? 500;
+      const message =
+        error.response?.data?.message ?? error.message ?? "Request failed";
+
+      return NextResponse.json({ message }, { status });
+    }
+
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}

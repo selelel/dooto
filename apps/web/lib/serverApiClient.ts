@@ -104,6 +104,7 @@ const del = async <TResponse = unknown, TBody = unknown>(
   return axios.delete<TResponse>(url, {
     headers: options.headers,
     data: body,
+    params: options.params,
     ...options.config,
   });
 };

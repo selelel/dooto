@@ -6,6 +6,7 @@ export type POSTHabitResponse = {
   habitName: string,
   details: string,
   categoryId: string,
+  category: Category,
   createdAt:string,
   userId: string
   contributions: Contribution[]
@@ -17,3 +18,10 @@ export type Contribution = {
   completed: boolean,
   createdAt: string
 }
+
+export type Category = {
+      id:string,
+      userId: string,
+      name: string,
+      createdAt: string
+    }

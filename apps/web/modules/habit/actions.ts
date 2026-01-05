@@ -81,3 +81,37 @@ export const getHabitContributions = async (params: {
     throw normalizeAxiosError(error);
   }
 };
+
+export const deleteHabit = async (id:string): Promise<POSTHabitResponse> => {
+  try {
+
+    const params: Record<string, string> = {};
+    params.id = id
+
+    const response = await axios.delete<POSTHabitResponse>(
+      ENDPOINT.HABIT.habit,
+      {
+        params,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    logger.trace(normalizeAxiosError(error))
+    throw normalizeAxiosError(error);
+  }
+};
+
+export const updateHabit = async (data: Partial<POSTHabitRequest> & {habitId: string}): Promise<POSTHabitResponse> => {
+  try {
+    const response = await axios.patch<POSTHabitResponse>(
+      ENDPOINT.HABIT.habit,
+      data
+    );
+
+    return response.data;
+  } catch (error) {
+    logger.trace(normalizeAxiosError(error))
+    throw normalizeAxiosError(error);
+  }
+};

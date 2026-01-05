@@ -106,6 +106,7 @@ async function getHabits(
         contributions: {
           orderBy: { date: 'asc' },
         },
+        category: true
       },
     });
   } catch (error) {
@@ -169,9 +170,54 @@ async function addContribution(data: {
   }
 }
 
+async function deleteHabit(
+  habitId: string,
+): Promise<Habit> {
+  try {
+    return await prisma.habit.delete({where: {id: habitId}});
+  } catch (error) {
+    logger.error("Error getting habits:", error);
+    throw error;
+  }
+}
+
+async function patchHabit(
+  data: Partial<POSTHabitT> & {
+    habitId: string;
+    userId: string;
+  }
+): Promise<Habit> {
+  const { habitId, habitName, details, categoryId } = data;
+
+  try {
+    const habit = await prisma.habit.findUnique({
+      where: { id: habitId },
+    });
+
+    if (!habit) {
+      throw new Error("Habit not found");
+    }
+
+    const updatedHabit = await prisma.habit.update({
+      where: { id: habitId },
+      data: {
+        ...(habitName !== undefined && { habitName }),
+        ...(details !== undefined && { details }),
+        ...(categoryId !== undefined && { categoryId }),
+      },
+    });
+
+    return updatedHabit;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const HabitService = {
   createHabit,
   getHabitById,
   getHabits,
-  addContribution
+  addContribution,
+  deleteHabit,
+  patchHabit
 };

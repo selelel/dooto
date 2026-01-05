@@ -26,6 +26,21 @@ export const GETtoggleDTO = z.object({
   }),
 })
 
+export const DELETEHabitDTO = z.object({
+  query : z.object({
+    id: z.string()
+  }),
+})
+
+export const PATCHHabitDTO = z.object({
+  body : z.object({
+    habitName: z.string().optional(),
+    categoryId: z.string().optional(),
+    details: z.string().optional(),
+  })
+})
+
+
 export const GEThabitDTO =  z.object({
   params : z.object({
     id :z.string().optional()

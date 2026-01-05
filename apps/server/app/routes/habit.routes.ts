@@ -26,8 +26,8 @@
 import express = require('express');
 import { isAuth } from '../lib/auth';
 import { validate } from '../middleware/validate.dto';
-import { GEThabitDTO, GEThabitsDTO, GETtoggleDTO, POSTHabitDTO } from '../dtos';
-import { GEThabit, GEThabits, POSThabit, ToggleContribution } from '../controllers/habit.controller';
+import { DELETEHabitDTO, GEThabitDTO, GEThabitsDTO, GETtoggleDTO, PATCHHabitDTO, POSTHabitDTO } from '../dtos';
+import { DeleteHabit, GEThabit, GEThabits, PatchHabit, POSThabit, ToggleContribution } from '../controllers/habit.controller';
 
 const router = express.Router();
 /**
@@ -159,6 +159,84 @@ router.get('/', isAuth, validate(GEThabitsDTO), GEThabits);
  *         description: Habit not found
  */
 router.post('/toggle/:id', isAuth, validate(GETtoggleDTO), ToggleContribution);
+
+/**
+ * @swagger
+ * /habit:
+ *   delete:
+ *     summary: Delete a habit by ID
+ *     tags:
+ *       - Habit
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         description: Habit ID to delete
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *           example: "550e8400-e29b-41d4-a716-446655440000"
+ *     responses:
+ *       200:
+ *         description: Habit deleted successfully
+ *       400:
+ *         description: Invalid input (e.g., missing or invalid habit ID)
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Habit not found
+ */
+router.delete('/', isAuth, validate(DELETEHabitDTO), DeleteHabit);
+
+
+/**
+ * @swagger
+ * /habit:
+ *   patch:
+ *     summary: Patch an existing habit
+ *     description: Update one or more fields of a habit owned by the authenticated user.
+ *     tags:
+ *       - Habit
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - habitId
+ *             properties:
+ *               habitId:
+ *                 type: string
+ *                 example: "clx9z8abc0001"
+ *               habitName:
+ *                 type: string
+ *                 example: "Morning Run"
+ *               details:
+ *                 type: string
+ *                 nullable: true
+ *                 example: "Run at least 3km"
+ *               categoryId:
+ *                 type: string
+ *                 nullable: true
+ *                 example: "clxcat123"
+ *     responses:
+ *       200:
+ *         description: Habit updated successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Habit not found
+ *       500:
+ *         description: Server error
+ */
+router.patch('/', isAuth, validate(PATCHHabitDTO), PatchHabit);
 
 
 
