@@ -14,6 +14,9 @@ export const ENDPOINT = {
     HABIT : {
       habit: '/api/habit/',
       contribution: '/api/habit/contribution/'
+    },
+    TIMER : {
+      timer: '/api/timer/',
     }
 }
 

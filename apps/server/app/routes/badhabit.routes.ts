@@ -24,10 +24,11 @@ import {
   ToggleBadHabitTimerRelapse, 
   GetAllBadHabitTimers, 
   GetBadHabitTimerById, 
-  DeleteBadHabitTimerById
+  DeleteBadHabitTimerById,
+  PatchBadHabitTimer
 } from '../controllers/badhabit.controller';
 import { validate } from '../middleware/validate.dto';
-import { IdParams, POSTCreateBadHabitDTO } from '../dtos';
+import { IdParams, PATCHCreateBadHabitDTO, POSTCreateBadHabitDTO } from '../dtos';
 
 const router = express.Router();
 
@@ -81,6 +82,52 @@ router.post('/', isAuth, validate(POSTCreateBadHabitDTO), CreateBadHabitTimer);
  *         description: Bad habit timer not found
  */
 router.post('/:id/relapse/toggle', isAuth, validate(IdParams), ToggleBadHabitTimerRelapse);
+
+/**
+ * @swagger
+ * /badhabit-timer/{id}:
+ *   patch:
+ *     summary: Update a bad habit timer's details
+ *     tags:
+ *       - Bad Habit Timer
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the bad habit timer to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               habitName:
+ *                 type: string
+ *                 description: The name of the habit
+ *               details:
+ *                 type: string
+ *                 description: Additional details or notes
+ *             example:
+ *               habitName: "No smoking"
+ *               details: "Trying to reduce smoking to zero"
+ *     responses:
+ *       200:
+ *         description: Bad habit timer updated successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Bad habit timer not found
+ *       500:
+ *         description: Internal server error
+ */
+router.patch('/:id', isAuth, validate(PATCHCreateBadHabitDTO), PatchBadHabitTimer);
 
 /**
  * @swagger

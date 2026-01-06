@@ -13,8 +13,15 @@ const HabitQueryKeys = {
       ["habit", ...(Array.isArray(key) ? key : [key])],
   }
 
+const TimerQueryKeys = {
+    parent: (key: string | any[]) =>
+      ["timer", ...(Array.isArray(key) ? key : [key])],
+  }
+
+
 export const QueryKeys = {
     UserQueryKeys,
     TasksQueryKeys,
-    HabitQueryKeys
+    HabitQueryKeys,
+    TimerQueryKeys
 }

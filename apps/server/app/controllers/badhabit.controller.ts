@@ -18,6 +18,21 @@ export const CreateBadHabitTimer = async (_req: Request, res: Response): Promise
   }
 };
 
+export const PatchBadHabitTimer = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const req = _req as CustomRequest;
+    const { id } = req.params;
+    const userId = req.user!.id;
+    const body = req.body
+
+    const updatedTimer = await BadHabitTimerService.updateBadHabitTimer(id!, userId, body);
+    res.status(200).json(updatedTimer);
+  } catch (error) {
+    logger.error('Error recording relapse:', error);
+    res.status(500).json({ message: error instanceof Error ? error.message : 'Failed to record relapse' });
+  }
+};
+
 export const ToggleBadHabitTimerRelapse = async (_req: Request, res: Response): Promise<void> => {
   try {
     const req = _req as CustomRequest;

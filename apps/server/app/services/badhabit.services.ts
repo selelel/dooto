@@ -17,6 +17,7 @@ async function createBadHabitTimer(data: CreateBadHabitTimerInput & {userId: str
       details: details ?? null,
       longestStreakSeconds: 0,
       relapsesCount: 0,
+      lastRelapseAt: new Date()
     },
   });
 }
