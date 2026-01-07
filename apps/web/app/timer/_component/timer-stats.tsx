@@ -2,9 +2,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Trophy } from "lucide-react";
 import React from "react";
 import { useTimer } from "../_context/timer-context";
+import { getTimeSince, hoursToDay } from "../_utils";
 
 function TimerStats() {
   const { data } = useTimer();
+  const totalHoursData = data
+    .map((d) => hoursToDay(getTimeSince(new Date(d.lastRelapseAt)).totalHours))
+    .reduce((max, hours) => Math.max(max, hours), 0);
+
   return (
     <div className='grid grid-cols-3 gap-4 mb-8'>
       <Card className='shadow-sm border-l-4 border-l-primary'>
@@ -15,7 +20,7 @@ function TimerStats() {
       </Card>
       <Card className='shadow-sm border-l-4 border-l-success'>
         <CardContent className='p-4 text-center'>
-          <p className='text-3xl mb-1'>{data?.length}</p>
+          <p className='text-3xl mb-1'>{totalHoursData}</p>
           <p className='text-sm text-muted-foreground'>Longest Streak (Days)</p>
         </CardContent>
       </Card>

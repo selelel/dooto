@@ -11,3 +11,5 @@ export type POSTTimerResponse = {
     longestStreakSeconds: number,
     relapsesCount: number
   }
+
+export type UpdateTimerT = Partial<POSTTimerRequest> & { id: string }

@@ -1,13 +1,26 @@
 "use client";
 import { QueryKeys } from "@/constant/queryKeys";
-import { useCreateTimer, useGetTimers } from "@/modules/timer/hooks";
-import { POSTTimerRequest, POSTTimerResponse } from "@/modules/timer/types";
+import {
+  useCreateTimer,
+  useDeleteTimer,
+  useGetTimers,
+  useRelapseTimer,
+  useUpdateTimer,
+} from "@/modules/timer/hooks";
+import {
+  POSTTimerRequest,
+  POSTTimerResponse,
+  UpdateTimerT,
+} from "@/modules/timer/types";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { createContext, useContext, useState } from "react";
 
 interface TimerContextValue {
   data: POSTTimerResponse[];
   handleCreateTimer: (d: POSTTimerRequest) => void;
+  handleRelapseTimer: (d: string) => void;
+  handleDeleteTimer: (d: string) => void;
+  handleUpdateTimer: (d: UpdateTimerT) => void;
 }
 
 const TimerContext = createContext<TimerContextValue | null>(null);
@@ -15,16 +28,33 @@ const TimerContext = createContext<TimerContextValue | null>(null);
 export function TimerProvider({ children }: { children: React.ReactNode }) {
   const queryClient = useQueryClient();
   const { data: timerData } = useGetTimers();
+  const { mutate: relpaseTimer } = useRelapseTimer();
+  const { mutate: deleteTimer } = useDeleteTimer();
+  const { mutate: updateTimer } = useUpdateTimer();
   const { mutate: createTimer } = useCreateTimer();
 
+  const onSuccessRefetch = {
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: QueryKeys.TimerQueryKeys.parent("get-timers"),
+      });
+    },
+  };
+
   const handleCreateTimer = (data: POSTTimerRequest) => {
-    createTimer(data, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: QueryKeys.TimerQueryKeys.parent("get-timers"),
-        });
-      },
-    });
+    createTimer(data, onSuccessRefetch);
+  };
+
+  const handleDeleteTimer = (id: string) => {
+    deleteTimer(id, onSuccessRefetch);
+  };
+
+  const handleUpdateTimer = (data: UpdateTimerT) => {
+    updateTimer(data, onSuccessRefetch);
+  };
+
+  const handleRelapseTimer = (id: string) => {
+    relpaseTimer(id, onSuccessRefetch);
   };
 
   return (
@@ -32,6 +62,9 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
       value={{
         data: timerData || [],
         handleCreateTimer,
+        handleRelapseTimer,
+        handleDeleteTimer,
+        handleUpdateTimer,
       }}
     >
       {children}
