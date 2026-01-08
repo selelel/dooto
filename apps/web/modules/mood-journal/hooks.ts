@@ -1,46 +1,39 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/constant/queryKeys";
-import { createTimer, deleteTimer, getTimer, getTimers, relapse, updateTimer } from "./actions";
-import { POSTTimerRequest, UpdateTimerT } from "./types";
+import { createMoodJournal, deleteMoodJournal, getMoodJournal, getMoodJournals, updateMoodJournal } from "./actions";
+import { PATCHMoodJournal, POSTMoodJournalRequest } from "./types";
 
-export const useCreateTimer = () => {
+export const useCreateMoodJournal = () => {
   return useMutation({
-    mutationKey: QueryKeys.TimerQueryKeys.parent("create-timer"),
-    mutationFn: (payload: POSTTimerRequest) => createTimer(payload),
+    mutationKey: QueryKeys.MoodJournalQueryKeys.parent("create-mood-journal"),
+    mutationFn: (payload: POSTMoodJournalRequest) => createMoodJournal(payload),
   });
 };
 
-export const useGetTimers = () => {
+export const useGetMoodJournals = () => {
   return useQuery({
-    queryKey: QueryKeys.TimerQueryKeys.parent("get-timers"),
-    queryFn: () => getTimers()
+    queryKey: QueryKeys.MoodJournalQueryKeys.parent("get-mood-journals"),
+    queryFn: () => getMoodJournals()
   });
 };
 
-export const useDeleteTimer = () => {
-  return useMutation({
-    mutationKey: QueryKeys.TimerQueryKeys.parent("delete-timer"),
-    mutationFn: (id: string) => deleteTimer(id),
-  });
-};
-
-export const useUpdateTimer = () => {
-  return useMutation({
-    mutationKey: QueryKeys.TimerQueryKeys.parent("patch-timer"),
-    mutationFn: (data: UpdateTimerT) => updateTimer(data),
-  });
-};
-
-export const useGetTimer = (id: string) => {
+export const useGetMoodJournalById = (id: string) => {
   return useQuery({
-    queryKey: QueryKeys.TimerQueryKeys.parent("get-timer"),
-    queryFn: () => getTimer(id)
+    queryKey: QueryKeys.MoodJournalQueryKeys.parent("get-mood-journals"),
+    queryFn: () => getMoodJournal(id)
   });
 };
 
-export const useRelapseTimer = () => {
+export const useDeleteMoodJournal = () => {
   return useMutation({
-    mutationKey: QueryKeys.TimerQueryKeys.parent("relapse-timer"),
-    mutationFn: (id:string) => relapse(id),
+    mutationKey: QueryKeys.MoodJournalQueryKeys.parent("delete-mood-journals"),
+    mutationFn: (id: string) => deleteMoodJournal(id),
+  });
+};
+
+export const useUpdateMoodJournal = () => {
+  return useMutation({
+    mutationKey: QueryKeys.MoodJournalQueryKeys.parent("update-mood-journal"),
+    mutationFn: (payload: PATCHMoodJournal) => updateMoodJournal(payload),
   });
 };

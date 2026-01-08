@@ -11,4 +11,6 @@ export type POSTMoodJournalResponse = {
   date: string
 }
 
+export type PATCHMoodJournal = Partial<POSTMoodJournalRequest> & {id: string}
+
 export type MOOD =  "HAPPY" | "SAD" | "ANGRY" | "ANXIOUS" | "EXCITED" | "CALM"

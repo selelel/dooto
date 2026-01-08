@@ -1,19 +1,19 @@
 import axios from "axios";
 import { ENDPOINT } from "@/constant/http";
 import { normalizeAxiosError } from "@/lib/utils";
-import { POSTTimerRequest, POSTTimerResponse, UpdateTimerT } from "./types";
 import { logger } from "@/lib/logger";
+import { PATCHMoodJournal, POSTMoodJournalRequest, POSTMoodJournalResponse } from "./types";
 
 /* =========================
    Create Habit
 ========================= */
 
-export const createTimer = async (
-  payload: POSTTimerRequest
-): Promise<POSTTimerResponse> => {
+export const createMoodJournal = async (
+  payload: POSTMoodJournalRequest
+): Promise<POSTMoodJournalResponse> => {
   try {
-    const response = await axios.post<POSTTimerResponse>(
-      ENDPOINT.TIMER.timer,
+    const response = await axios.post<POSTMoodJournalResponse>(
+      ENDPOINT.MOOD.mood,
       payload
     );
 
@@ -23,10 +23,10 @@ export const createTimer = async (
   }
 };
 
-export const getTimers = async (): Promise<POSTTimerResponse[]> => {
+export const getMoodJournals = async (): Promise<POSTMoodJournalResponse[]> => {
   try {
-    const response = await axios.get<POSTTimerResponse[]>(
-      ENDPOINT.TIMER.timer,
+    const response = await axios.get<POSTMoodJournalResponse[]>(
+      ENDPOINT.MOOD.mood,
     );
 
     return response.data;
@@ -35,10 +35,10 @@ export const getTimers = async (): Promise<POSTTimerResponse[]> => {
   }
 };
 
-export const deleteTimer = async (id: string): Promise<POSTTimerResponse> => {
+export const deleteMoodJournal = async (id: string): Promise<POSTMoodJournalResponse> => {
   try {
-    const response = await axios.delete<POSTTimerResponse>(
-      `${ENDPOINT.TIMER.timer}/${id}`,
+    const response = await axios.delete<POSTMoodJournalResponse>(
+      `${ENDPOINT.MOOD.mood}/${id}`,
     );
 
     return response.data;
@@ -47,11 +47,11 @@ export const deleteTimer = async (id: string): Promise<POSTTimerResponse> => {
   }
 };
 
-export const updateTimer = async (data: UpdateTimerT ): Promise<POSTTimerResponse> => {
+export const updateMoodJournal = async (data: PATCHMoodJournal ): Promise<POSTMoodJournalResponse> => {
   try {
     const {id, ...payload} = data
-    const response = await axios.patch<POSTTimerResponse>(
-      `${ENDPOINT.TIMER.timer}/${data.id}`,
+    const response = await axios.patch<POSTMoodJournalResponse>(
+      `${ENDPOINT.MOOD.mood}/${id}`,
       payload
     );
 
@@ -61,21 +61,9 @@ export const updateTimer = async (data: UpdateTimerT ): Promise<POSTTimerRespons
   }
 };
 
-export const getTimer = async (id: string): Promise<POSTTimerResponse> => {
+export const getMoodJournal = async (id: string): Promise<POSTMoodJournalResponse> => {
   try {
-    const response = await axios.get<POSTTimerResponse>(
-      `${ENDPOINT.TIMER.timer}/${id}`,
-    );
-
-    return response.data;
-  } catch (error) {
-    throw normalizeAxiosError(error);
-  }
-};
-
-export const relapse = async (id: string): Promise<POSTTimerResponse> => {
-  try {
-    const response = await axios.post<POSTTimerResponse>(
+    const response = await axios.get<POSTMoodJournalResponse>(
       `${ENDPOINT.TIMER.timer}/${id}`,
     );
 

@@ -17,6 +17,9 @@ export const ENDPOINT = {
     },
     TIMER : {
       timer: '/api/timer/',
+    },
+    MOOD: {
+      mood: "/api/mood-journal",
     }
 }
 

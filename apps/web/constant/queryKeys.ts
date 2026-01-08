@@ -18,10 +18,17 @@ const TimerQueryKeys = {
       ["timer", ...(Array.isArray(key) ? key : [key])],
   }
 
+const MoodJournalQueryKeys = {
+parent: (key: string | any[]) =>
+    ["mood-journal", ...(Array.isArray(key) ? key : [key])],
+}
+
+
 
 export const QueryKeys = {
     UserQueryKeys,
     TasksQueryKeys,
     HabitQueryKeys,
-    TimerQueryKeys
+    TimerQueryKeys,
+    MoodJournalQueryKeys
 }
