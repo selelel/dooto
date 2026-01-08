@@ -30,7 +30,7 @@ export const ROUTES_CLIENT = {
     TASKS: "/tasks",
     TIMER: "/timer",
     HABITS: "/habits",
-    MOOD: "/mood",
+    MOOD: "/mood-journal",
     SETTINGS: "/settings",
     SHOWCASE: "/showcase",
   }

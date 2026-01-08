@@ -7,7 +7,7 @@ export const POSTCreateMoodJournalDTO = z.object({
   body : z.object({
     note: z.string(),
     mood: MoodEnum,
-    date: z.date()
+    date: z.string()
   })
 })
 

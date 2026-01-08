@@ -10,6 +10,7 @@ export const CreateMoodJournal = async (_req: Request, res: Response): Promise<v
       ...req.body,
       userId: req.user!.id,
     };
+
     const moodJournal = await MoodJournalService.createMoodJournal(payload);
     res.status(201).json(moodJournal);
   } catch (error) {
@@ -28,7 +29,6 @@ export const GetAllMoodJournals = async (_req: Request, res: Response): Promise<
     const journals = await MoodJournalService.getMoodJournalsByUser(userId, dateRange);
     res.status(200).json(journals);
   } catch (error) {
-    logger.error('Error fetching mood journals:', error);
     res.status(500).json({ message: error instanceof Error ? error.message : 'Failed to fetch mood journals' });
   }
 };
