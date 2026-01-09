@@ -257,7 +257,7 @@ export function MoodDialog({
 
             {/* Gratitude */}
             {moodEntry.gratitude && (
-              <div className='p-4 rounded-lg bg-gradient-to-br from-success/10 to-success/5 border border-success/20'>
+              <div className='p-4 rounded-lg bg-linear-to-br from-success/10 to-success/5 border border-success/20'>
                 <div className='flex items-center gap-2 mb-3'>
                   <Heart className='w-5 h-5 text-success' />
                   <p className='text-sm font-medium'>Grateful For</p>

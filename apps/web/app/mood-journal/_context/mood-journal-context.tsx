@@ -47,7 +47,7 @@ export function MoodJournalProvider({
   };
 
   const handleUpdateMoodJournal = (data: PATCHMoodJournal) => {
-    updateMoodJournal(data);
+    updateMoodJournal(data, onSuccessRefetch);
   };
 
   const handleDeleteMoodJournal = (id: string) => {

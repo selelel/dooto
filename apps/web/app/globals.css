@@ -139,3 +139,15 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
 }
+
+.no-tailwind * {
+  display: revert; /* revert to browser default */
+  box-sizing: border-box;
+  font-family: revert;
+  color: revert;
+  background: revert;
+  margin: 0.5em 0;
+  padding: revert;
+  border: revert;
+  /* add any other properties you want to reset */
+}
