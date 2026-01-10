@@ -158,7 +158,7 @@ function MoodNewEntry() {
                       {...field}
                       value={field.value}
                       onChange={(val) => field.onChange(val || "")}
-                      height={500}
+                      height={300}
                     />
                   </FormControl>
                   <FormMessage className='mt-2' />

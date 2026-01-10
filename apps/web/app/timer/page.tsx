@@ -12,7 +12,6 @@ import TimerCreate from "./_component/timer-create";
 function TimerPage() {
   return (
     <div className='p-8 max-w-5xl mx-auto'>
-      {/* Header */}
       <div className='mb-8'>
         <h1 className='text-4xl mb-2'>Since Timer ⏱️</h1>
         <p className='text-muted-foreground'>
@@ -20,13 +19,9 @@ function TimerPage() {
           for habit tracking and recovery journeys.
         </p>
       </div>
-      {/* Stats */}
       <TimerStats />
-      {/* Add New Timer */}
       <TimerCreate />
-      {/* Timers Grid */}
       <TimerList />
-      {/* Tips */}
       <div className='mt-8'>
         <Card className='shadow-sm bg-linear-to-br from-primary/5 to-transparent'>
           <CardHeader>

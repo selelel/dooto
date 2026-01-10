@@ -17,7 +17,7 @@ function MoodIndividual({
       key={entry.id}
       className='shadow-sm hover:shadow-md transition-shadow cursor-pointer'
     >
-      <CardContent className='p-6'>
+      <CardContent>
         <div className='flex items-start justify-between mb-4'>
           <div className='flex items-center gap-3'>
             <div className={`p-3 rounded-xl ${moodEmojis[entry.mood].bg}`}>

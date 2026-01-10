@@ -44,7 +44,6 @@ export const GetMoodJournal = async (_req: Request, res: Response): Promise<void
     res.status(200).json(journals);
 
   } catch (error) {
-    logger.error('Error fetching mood journals:', error);
     res.status(500).json({
       message: error instanceof Error ? error.message : 'Failed to fetch mood journals',
     });
@@ -66,7 +65,6 @@ export const UpdateMoodJournal = async (_req: Request, res: Response): Promise<v
 
     res.status(200).json(moodjournal);
   } catch (error) {
-    logger.error('Error updating mood journal:', error);
     res.status(500).json({ message: error instanceof Error ? error.message : 'Failed to update mood journal' });
   }
 };
@@ -81,7 +79,6 @@ export const DeleteMoodJournal = async (_req: Request, res: Response): Promise<v
 
     res.status(204).json({ message: 'Mood journal deleted successfully' });
   } catch (error) {
-    logger.error('Error deleting mood journal:', error);
     res.status(500).json({ message: error instanceof Error ? error.message : 'Failed to delete mood journal' });
   }
 };
