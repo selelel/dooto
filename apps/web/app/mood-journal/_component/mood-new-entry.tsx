@@ -41,11 +41,14 @@ export const moodEntrySchema = z.object({
 export type MoodEntryFormValues = z.infer<typeof moodEntrySchema>;
 
 function MoodNewEntry() {
-  const now = new Date();
-  const timeString = now.toLocaleTimeString([], {
+  const timeString = new Date().toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
   });
+
   const { data, handleCreateMoodJournal, handleUpdateMoodJournal } =
     useMoodJournal();
   const toUpdateRef = React.useRef<string | null>(null);
@@ -121,7 +124,7 @@ function MoodNewEntry() {
                             type='button'
                             onClick={() => field.onChange(mood)}
                             className={cn(
-                              "flex-1 p-4 rounded-xl border transition",
+                              "flex-1 p-4 rounded-xl border transition cursor-pointer duration-200 hover:scale-105",
                               isSelected
                                 ? cn(config.bg, "border-2", config.color)
                                 : "border-border"

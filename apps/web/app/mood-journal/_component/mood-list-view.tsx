@@ -2,7 +2,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
 import { useMoodJournal } from "../_context/mood-journal-context";
 import { moodEmojis } from "../_utils";
-import { Badge } from "@/components/ui/badge";
 import { BookHeart } from "lucide-react";
 import MoodNewEntry from "./mood-new-entry";
 import MoodIndividual from "./mood-individual";
@@ -12,10 +11,12 @@ function MoodListView() {
   return (
     <>
       <MoodNewEntry />
-      {data.map((entry, idx) => {
-        const Icon = moodEmojis[entry.mood]?.icon;
-        return <MoodIndividual key={idx} Icon={Icon} entry={entry} />;
-      })}
+      <div className='flex flex-col gap-8'>
+        {data.map((entry, idx) => {
+          const Icon = moodEmojis[entry.mood]?.icon;
+          return <MoodIndividual key={idx} Icon={Icon} entry={entry} />;
+        })}
+      </div>
 
       {data.length === 0 && (
         <Card>

@@ -8,6 +8,7 @@ import {
 } from "@uiw/react-md-editor/commands";
 import { normalize } from "path";
 import { Button } from "@/components/ui/button";
+import { normalizeDate } from "@/lib/utils";
 
 export const moodEmojis: Record<
   MOOD,
@@ -71,9 +72,12 @@ export const insertTimestamp = (mood?: string): ICommand => {
     ),
     execute: (state: TextState, api: TextAreaTextApi) => {
       const now = new Date();
-      const timeString = now.toLocaleTimeString([], {
+      const timeString = new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
+        month: "short",
+        day: "numeric",
+        year: "numeric",
       });
 
       const textToInsert = `\n ###### ${timeString}-${mood ? `${mood}` : ""} \n`;
@@ -88,3 +92,96 @@ export const insertTimestamp = (mood?: string): ICommand => {
     },
   };
 };
+
+export function getDayStreak(dates: string[]): number {
+  if (dates.length === 0) return 0;
+
+  const uniqueDates = Array.from(new Set(dates.map(normalizeDate))).sort(
+    (a, b) => (a < b ? 1 : -1)
+  );
+
+  let streak = 0;
+  let current = new Date();
+
+  for (const date of uniqueDates) {
+    const expected = normalizeDate(current);
+
+    if (date === expected) {
+      streak++;
+      current.setDate(current.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  return streak;
+}
+
+export function getCurrentStreak(dates: string[]): number {
+  if (dates.length === 0) return 0;
+
+  const uniqueDates = Array.from(new Set(dates.map(normalizeDate))).sort(
+    (a, b) => (a < b ? 1 : -1)
+  );
+
+  let streak = 0;
+  let cursor = new Date();
+
+  for (const date of uniqueDates) {
+    if (date === normalizeDate(cursor)) {
+      streak++;
+      cursor.setDate(cursor.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  return streak;
+}
+
+export function getLongestStreak(dates: string[]): number {
+  if (dates.length === 0) return 0;
+
+  const sorted = Array.from(new Set(dates.map(normalizeDate))).sort(); // ascending
+
+  let longest = 1;
+  let current = 1;
+
+  for (let i = 1; i < sorted.length; i++) {
+    const prev = new Date(sorted[i - 1]!);
+    const curr = new Date(sorted[i]!);
+
+    prev.setDate(prev.getDate() + 1);
+
+    if (prev.toISOString().split("T")[0] === curr.toISOString().split("T")[0]) {
+      current++;
+      longest = Math.max(longest, current);
+    } else {
+      current = 1;
+    }
+  }
+
+  return longest;
+}
+
+export function getMostCommonMood(moods: MOOD[]): MOOD | null {
+  if (moods.length === 0) return null;
+
+  const count = new Map<MOOD, number>();
+
+  for (const mood of moods) {
+    count.set(mood, (count.get(mood) ?? 0) + 1);
+  }
+
+  let mostCommon: MOOD | null = null;
+  let max = 0;
+
+  for (const [mood, value] of count) {
+    if (value > max) {
+      max = value;
+      mostCommon = mood;
+    }
+  }
+
+  return mostCommon;
+}

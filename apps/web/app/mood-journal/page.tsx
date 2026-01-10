@@ -26,6 +26,7 @@ import { POSTMoodJournalResponse } from "@/modules/mood-journal/types";
 import MoodHeader from "./_component/mood-header";
 import { moodEmojis } from "./_utils";
 import MoodListView from "./_component/mood-list-view";
+import MoodStats from "./_component/mood-stats";
 
 /* ---------------------------------- */
 /* Types */
@@ -56,6 +57,7 @@ function MoodJournal() {
     <div className='p-8 max-w-6xl mx-auto'>
       {/* Header */}
       <MoodHeader />
+      <MoodStats />
 
       {/* {true && (
         <MoodCalendar
