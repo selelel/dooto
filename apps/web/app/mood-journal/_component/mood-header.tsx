@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Calendar, List } from "lucide-react";
 import React, { useState } from "react";
+import { useMoodJournal } from "../_context/mood-journal-context";
 
 function MoodHeader() {
-  const [view, setView] = useState<"list" | "calendar">("list");
+  const { view, setView } = useMoodJournal();
   return (
     <div className='mb-8 flex items-start justify-between'>
       <div>

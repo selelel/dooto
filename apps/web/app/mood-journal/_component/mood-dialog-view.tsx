@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { format } from "date-fns";
 import { Calendar, BookHeart, Edit2, Trash2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -53,12 +53,14 @@ export default function MoodDialogView({
     []
   );
 
+  const curr: POSTMoodJournalResponse = useMemo(() => data, [data]);
+
   const form = useForm<MoodEntryFormValues>({
     resolver: zodResolver(moodEntrySchema),
     mode: "onChange",
     defaultValues: {
-      mood: data.mood,
-      note: `${data.note}\n ###### ${timeString} - ${data.mood}\n`,
+      mood: curr.mood,
+      note: `${curr.note}\n ###### ${timeString} - ${curr.mood}\n`,
     },
   });
 

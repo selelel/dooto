@@ -12,13 +12,23 @@ import {
   POSTMoodJournalResponse,
 } from "@/modules/mood-journal/types";
 import { useQueryClient } from "@tanstack/react-query";
-import { createContext, useContext } from "react";
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
 
 interface MoodJournalContextValue {
   data: POSTMoodJournalResponse[];
   handleCreateMoodJournal: (d: POSTMoodJournalRequest) => void;
   handleUpdateMoodJournal: (d: PATCHMoodJournal) => void;
   handleDeleteMoodJournal: (d: string) => void;
+  setView: Dispatch<SetStateAction<"list" | "calendar">>;
+  view: "list" | "calendar";
+  setCurrentMonth: Dispatch<SetStateAction<Date>>;
+  currentMonth: Date;
 }
 
 const MoodJournalContext = createContext<MoodJournalContextValue | null>(null);
@@ -33,6 +43,8 @@ export function MoodJournalProvider({
   const { mutate: createMoodJournal } = useCreateMoodJournal();
   const { mutate: updateMoodJournal } = useUpdateMoodJournal();
   const { mutate: deleteMoodJournal } = useDeleteMoodJournal();
+  const [view, setView] = useState<"list" | "calendar">("list");
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const onSuccessRefetch = {
     onSuccess: () => {
@@ -61,6 +73,10 @@ export function MoodJournalProvider({
         handleCreateMoodJournal,
         handleUpdateMoodJournal,
         handleDeleteMoodJournal,
+        view,
+        setView,
+        currentMonth,
+        setCurrentMonth,
       }}
     >
       {children}
