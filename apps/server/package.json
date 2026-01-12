@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon -r dotenv-flow/config ./app/server.ts",
     "build": "npx tsc --build && nodemon ./dist/server.js",
-    "preview": "node ./dist/server.js"
+    "preview": "node ./dist/server.js",
+    "start" : "node ./dist/server.js"
   },
   "keywords": [],
   "author": "",
