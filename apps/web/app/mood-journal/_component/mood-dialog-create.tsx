@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo } from "react";
+import React from "react";
 import { format } from "date-fns";
-import { Calendar, BookHeart, Edit2, Trash2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getCommands } from "@uiw/react-md-editor";
@@ -13,12 +12,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import Markdown from "@/components/ui/markdown";
 import Editor from "@/components/ui/editor";
 
 import {
   Form,
-  FormControl,
   FormDescription,
   FormField,
   FormItem,
@@ -36,6 +33,8 @@ type MoodDialogViewProps = {
   onOpenChange: (open: boolean) => void;
   date: Date;
 };
+
+//! Fix this please, the handleSubmit isn't working for some reason. BRUTE FORCE
 
 export default function MoodDialogCreate({
   open,
@@ -61,18 +60,20 @@ export default function MoodDialogCreate({
 
   const mood = form.watch("mood");
 
-  const onSubmit = (values: MoodEntryFormValues) => {
+  const handleSubmit = () => {
+    const values: MoodEntryFormValues = form.getValues();
     handleCreateMoodJournal({
       mood: values.mood,
       note: values.note,
       date: normalizeDate(date),
     });
+    onOpenChange(false);
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <Form {...form}>
+        <form>
           <DialogContent className='sm:max-w-3xl'>
             <DialogHeader>
               <DialogTitle className='text-xl'>
@@ -95,37 +96,35 @@ export default function MoodDialogCreate({
                   <FormDescription className='text-xs'>
                     Choose the option that best matches how you feel right now.
                   </FormDescription>
-                  <FormControl>
-                    <div className='flex gap-3'>
-                      {MOODS.map((mood) => {
-                        const config = moodEmojis[mood];
-                        const Icon = config.icon;
-                        const isSelected = field.value === mood;
+                  <div className='flex gap-3'>
+                    {MOODS.map((mood) => {
+                      const config = moodEmojis[mood];
+                      const Icon = config.icon;
+                      const isSelected = field.value === mood;
 
-                        return (
-                          <button
-                            key={mood}
-                            type='button'
-                            onClick={() => field.onChange(mood)}
+                      return (
+                        <button
+                          key={mood}
+                          type='button'
+                          onClick={() => field.onChange(mood)}
+                          className={cn(
+                            "flex-1 p-4 rounded-xl border transition cursor-pointer duration-200 hover:scale-105",
+                            isSelected
+                              ? cn(config.bg, "border-2", config.color)
+                              : "border-border"
+                          )}
+                        >
+                          <Icon
                             className={cn(
-                              "flex-1 p-4 rounded-xl border transition cursor-pointer duration-200 hover:scale-105",
-                              isSelected
-                                ? cn(config.bg, "border-2", config.color)
-                                : "border-border"
+                              "w-6 h-6 mx-auto",
+                              isSelected && config.color
                             )}
-                          >
-                            <Icon
-                              className={cn(
-                                "w-6 h-6 mx-auto",
-                                isSelected && config.color
-                              )}
-                            />
-                            <p className='text-xs mt-1'>{config.label}</p>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </FormControl>
+                          />
+                          <p className='text-xs mt-1'>{config.label}</p>
+                        </button>
+                      );
+                    })}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -140,15 +139,13 @@ export default function MoodDialogCreate({
                     Write freely — thoughts, events, or anything that stood out
                     today.
                   </FormDescription>
-                  <FormControl>
-                    <Editor
-                      commands={[...getCommands(), insertTimestamp(mood)]}
-                      {...field}
-                      value={field.value}
-                      onChange={(val) => field.onChange(val || "")}
-                      height={300}
-                    />
-                  </FormControl>
+                  <Editor
+                    commands={[...getCommands(), insertTimestamp(mood)]}
+                    {...field}
+                    value={field.value}
+                    onChange={(val) => field.onChange(val || "")}
+                    height={300}
+                  />
                   <FormMessage className='mt-2' />
                 </FormItem>
               )}
@@ -156,19 +153,21 @@ export default function MoodDialogCreate({
 
             <DialogFooter className='gap-2'>
               <Button
-                disabled={!form.formState.isValid}
+                type='submit'
+                onClick={() => {
+                  handleSubmit();
+                }}
                 className={cn(
                   "w-full",
                   !form.formState.isValid && "opacity-50 cursor-not-allowed"
                 )}
-                type='submit'
               >
                 Save journal entry
               </Button>
             </DialogFooter>
           </DialogContent>
-        </Dialog>
-      </form>
-    </Form>
+        </form>
+      </Form>
+    </Dialog>
   );
 }

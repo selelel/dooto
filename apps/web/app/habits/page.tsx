@@ -6,7 +6,7 @@ import HabitHeader from "./_component/habit-header";
 import HabitStatus from "./_component/habit-status";
 import HabitProgress from "./_component/habit-progress";
 import HabitList from "./_component/habit-list";
-import { HabitProvider, useHabits } from "./_context/habit-context";
+import { HabitProvider } from "./_context/habit-context";
 import HabitCreate from "./_component/habit-create";
 
 function HabitTracker() {

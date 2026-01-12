@@ -7,7 +7,6 @@ import { moodEmojis } from "../_utils";
 import { Fragment, useState } from "react";
 import MoodDialogView from "./mood-dialog-view";
 import MoodDialogCreate from "./mood-dialog-create";
-import { se } from "date-fns/locale";
 
 export function MoodCalendarComponent() {
   const { currentMonth, setCurrentMonth, data } = useMoodJournal();

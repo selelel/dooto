@@ -36,9 +36,13 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const headers = ParseHeader(req.headers);
+  const { searchParams } = new URL(req.url);
+  const to = searchParams.get('to');
+  const from = searchParams.get('from');
+  const params = to && from ? { to, from } : {};
   
   try {
-    const response = await ServerApiClient.get<POSTMoodJournalResponse[]>(endpoint, {headers});
+    const response = await ServerApiClient.get<POSTMoodJournalResponse[]>(endpoint, {headers, params});
     return NextResponse.json(response.data, { status: 200 });
   } catch (error) {
     logger.trace(error)

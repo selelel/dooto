@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/constant/queryKeys";
-import { createMoodJournal, deleteMoodJournal, getMoodJournal, getMoodJournals, updateMoodJournal } from "./actions";
+import { createMoodJournal, deleteMoodJournal, getMoodJournal, getMoodJournalByDate, getMoodJournals, updateMoodJournal } from "./actions";
 import { PATCHMoodJournal, POSTMoodJournalRequest } from "./types";
 
 export const useCreateMoodJournal = () => {
@@ -14,6 +14,13 @@ export const useGetMoodJournals = () => {
   return useQuery({
     queryKey: QueryKeys.MoodJournalQueryKeys.parent("get-mood-journals"),
     queryFn: () => getMoodJournals()
+  });
+};
+
+export const useGetMoodJournalByDate = (dataRange: {to: string , from: string}) => {
+  return useQuery({
+    queryKey: QueryKeys.MoodJournalQueryKeys.parent("get-mood-journal-date"),
+    queryFn: () => getMoodJournalByDate(dataRange)
   });
 };
 

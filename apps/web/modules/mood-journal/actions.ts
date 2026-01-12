@@ -35,6 +35,19 @@ export const getMoodJournals = async (): Promise<POSTMoodJournalResponse[]> => {
   }
 };
 
+export const getMoodJournalByDate = async (dataRange: {to: string , from: string}): Promise<POSTMoodJournalResponse[]> => {
+  try {
+    const response = await axios.get<POSTMoodJournalResponse[]>(
+      ENDPOINT.MOOD.mood,
+      {params: dataRange}
+    );
+
+    return response.data;
+  } catch (error) {
+    throw normalizeAxiosError(error);
+  }
+};
+
 export const deleteMoodJournal = async (id: string): Promise<POSTMoodJournalResponse> => {
   try {
     const response = await axios.delete<POSTMoodJournalResponse>(

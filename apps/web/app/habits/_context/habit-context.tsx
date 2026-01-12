@@ -11,6 +11,7 @@ import {
 import { POSTHabitRequest, POSTHabitResponse } from "@/modules/habit/types";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { createContext, useContext, useState } from "react";
+import { isCompletedToday } from "../_utils";
 interface HabitContextValue {
   habitsData: POSTHabitResponse[] | undefined;
   handleCreateHabit: (d: POSTHabitRequest) => void;
@@ -35,11 +36,6 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
   const today = normalizeDate(new Date());
 
   const totalHabits = habitsData?.length ?? 0;
-
-  const isCompletedToday = (habit: any) =>
-    habit.contributions.some(
-      (c: any) => normalizeDate(c.date) === today && c.completed
-    );
 
   const completedTodayCount = habitsData?.filter(isCompletedToday).length ?? 0;
 

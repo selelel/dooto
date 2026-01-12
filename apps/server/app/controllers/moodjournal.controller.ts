@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { logger } from '../utils/logger';
 import { Request as CustomRequest } from '../types/express';
 import { MoodJournalService } from '../services/moodjournal.services';
 
@@ -14,7 +13,6 @@ export const CreateMoodJournal = async (_req: Request, res: Response): Promise<v
     const moodJournal = await MoodJournalService.createMoodJournal(payload);
     res.status(201).json(moodJournal);
   } catch (error) {
-    logger.error('Error creating mood journal:', error);
     res.status(500).json({ message: error instanceof Error ? error.message : 'Failed to create mood journal' });
   }
 };
@@ -27,6 +25,7 @@ export const GetAllMoodJournals = async (_req: Request, res: Response): Promise<
     const dateRange = { from: from as string, to: to as string };
 
     const journals = await MoodJournalService.getMoodJournalsByUser(userId, dateRange);
+    
     res.status(200).json(journals);
   } catch (error) {
     res.status(500).json({ message: error instanceof Error ? error.message : 'Failed to fetch mood journals' });

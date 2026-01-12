@@ -72,6 +72,47 @@ export function computeStreak(contributions: Contribution[]): number {
   return streak;
 }
 
+export function getLongestStreakFromDates(contributions: {
+  date: string;
+}[]): number {
+  if (!contributions || contributions.length === 0) return 0;
+
+  // Unique completed days
+  const days = Array.from(
+    new Set(contributions.map(c => normalizeDate(c.date)))
+  )
+    .map(d => new Date(d))
+    .sort((a, b) => a.getTime() - b.getTime());
+
+  let longest = 1;
+  let current = 1;
+
+  for (let i = 1; i < days.length; i++) {
+    const prev = days[i - 1];
+    const curr = days[i];
+
+    if (!prev || !curr) continue;
+
+    const diffInDays =
+      (curr.getTime() - prev.getTime()) / (1000 * 60 * 60 * 24);
+
+    if (diffInDays === 1) {
+      current++;
+    } else {
+      longest = Math.max(longest, current);
+      current = 1;
+    }
+  }
+
+  return Math.max(longest, current);
+}
+
+export const isCompletedToday = (habit: any) =>
+    habit.contributions.some(
+      (c: any) => normalizeDate(c.date) === today && c.completed
+    );
+
+
 export interface WeeklyCompletionResult {
   total: number;
   completed: number;

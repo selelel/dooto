@@ -43,7 +43,7 @@ export default function MoodDialogView({
   onOpenChange,
   data,
 }: MoodDialogViewProps) {
-  const { handleUpdateMoodJournal } = useMoodJournal();
+  const { handleUpdateMoodJournal, handleDeleteMoodJournal } = useMoodJournal();
   const [mode, setMode] = React.useState<"view" | "edit">("view");
 
   const MoodIcon = React.useMemo(() => moodEmojis[data.mood].icon, [data.mood]);
@@ -71,6 +71,11 @@ export default function MoodDialogView({
       note: values.note,
     });
     setMode("view");
+  };
+
+  const handleDelete = () => {
+    handleDeleteMoodJournal(data.id);
+    onOpenChange(false);
   };
 
   const VIEW = () => (
@@ -220,7 +225,7 @@ export default function MoodDialogView({
                 Edit Entry
               </Button>
 
-              <Button variant='destructive'>
+              <Button onClick={handleDelete} variant='destructive'>
                 <Trash2 className='w-4 h-4' />
               </Button>
             </>
