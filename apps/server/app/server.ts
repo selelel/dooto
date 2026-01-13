@@ -6,6 +6,8 @@
 require('dotenv-flow').config({
   node_env: process.argv[2] || '',
 });
+import * as cors from "cors";
+import { CorsOptionsDelegate } from "cors";
 import 'dotenv/config';
 
 /**
@@ -112,6 +114,29 @@ app.get('/session-test', (req:any, res:any) => {
   });
 });
 
+
+/**
+ * ============================
+ * CORS
+ * ============================
+*/
+
+const allowedOrigins = ["https://dooto.onrender.com/", "http://localhost:3000/"];
+
+const corsOptions: CorsOptionsDelegate = (req, callback) => {
+   const origin = req.headers.origin as string | undefined;
+
+  if (!origin || allowedOrigins.includes(origin)) {
+    callback(null, {
+      origin: true,
+      credentials: true,
+    });
+  } else {
+    callback(new Error("Not allowed by CORS"));
+  }
+};
+
+app.use(cors(corsOptions));
 /**
  * ============================
  * SERVER START

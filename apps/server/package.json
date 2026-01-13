@@ -8,7 +8,7 @@
     "dev": "nodemon -r dotenv-flow/config ./app/server.ts",
     "build": "npx tsc --build",
     "preview": "node ./dist/server.js",
-    "start" : "node ./dist/server.js"
+    "start": "node ./dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
     "bcrypt": "^6.0.0",
     "connect-pg-simple": "^10.0.0",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "dotenv-flow": "^4.1.0",
     "express": "^5.1.0",
@@ -40,6 +41,7 @@
     "@repo/typescript-config": "workspace:*",
     "@types/bcrypt": "^6.0.0",
     "@types/connect-pg-simple": "^7.0.3",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
     "@types/express-session": "^1.18.2",
     "@types/jsonwebtoken": "^9.0.10",
