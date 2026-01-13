@@ -79,7 +79,7 @@ app.use(express.urlencoded({ extended: true }));
  * ============================
  */
 app.use('/', require('./lib/swagger'));
-// app.use('/', require('./routes/client.routes'));
+app.use('/', require('./routes/client.routes'));
 app.use('/users', require('./routes/user.routes'));
 app.use('/tasks', require('./routes/tasks.routes'));
 app.use('/task', require('./routes/task.routes'));

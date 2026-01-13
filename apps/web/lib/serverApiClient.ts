@@ -2,10 +2,12 @@
 
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { NextRequest } from "next/server";
-import { PREFIX } from "@/constant/http";
 import { logger } from "./logger";
+import https from "https";
 
-const APIUrl = `${process.env.API_URL}${PREFIX}`;
+const APIUrl = `${process.env.API_URL}`;
+
+console.log(APIUrl)
 
 /* ---------------------------------- */
 /* Types                              */
@@ -36,6 +38,10 @@ const buildQueryParams = (req?: NextRequest, params?: unknown) => {
   };
 };
 
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false,  // disables SSL cert validation - ONLY FOR DEV / TESTING!
+});
+
 /* ---------------------------------- */
 /* HTTP Methods                       */
 /* ---------------------------------- */
@@ -51,6 +57,7 @@ const get = async <TResponse = unknown, TParams = unknown>(
   return axios.get<TResponse>(url, {
     params: buildQueryParams(options.req, options.params),
     headers: options.headers,
+    httpsAgent,
     ...options.config,
   });
 };
@@ -70,6 +77,7 @@ const post = async <TResponse = unknown, TBody = unknown>(
   return axios.post<TResponse>(url, body, {
     headers: options.headers,
     params: options.params,
+    httpsAgent,
     ...options.config,
   });
 };
@@ -86,6 +94,7 @@ const patch = async <TResponse = unknown, TBody = unknown>(
 
   return axios.patch<TResponse>(url, body, {
     headers: options.headers,
+    httpsAgent,
     ...options.config,
   });
 };
@@ -105,6 +114,7 @@ const del = async <TResponse = unknown, TBody = unknown>(
     headers: options.headers,
     data: body,
     params: options.params,
+    httpsAgent,
     ...options.config,
   });
 };
