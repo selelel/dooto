@@ -21,6 +21,7 @@ const expressSession = require('express-session');
 const pgSession = require('connect-pg-simple')(expressSession);
 import { Pool } from 'pg';
 import { passportLocal } from './config/passport-local';
+import { logger } from "./utils/logger";
 
 /**
  * ============================
@@ -33,38 +34,64 @@ const port = process.env.PORT || 9090;
 /**
  * ============================
  * POSTGRESQL CONNECTION
- * (Shared DB with Prisma)
  * ============================
  */
-
 const poolConfigOpts = {
   connectionString: process.env.DATABASE_URL,
 }
 const poolInstance = new Pool(poolConfigOpts);
 
 const postgreStore = new pgSession({
-  // check interface PGStoreOptions for more info https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/connect-pg-simple/index.d.ts
   pool: poolInstance,
   tableName: 'session',
-  createTableIfMissing: true, // this will create a `session` table if you do not have it yet
-})
+  createTableIfMissing: true,
+});
+
+/**
+ * ============================
+ * CORS - MUST BE FIRST
+ * ============================
+ */
+const allowedOrigins = [
+  "https://dooto.onrender.com",
+  "http://localhost:3000",
+];
+
+const corsOptions: CorsOptionsDelegate = (req, callback) => {
+  const origin = req.headers.origin as string | undefined;
+
+  if (!origin || allowedOrigins.includes(origin)) {
+    callback(null, {
+      origin: true,
+      credentials: true,  // important for session cookies
+    });
+  } else {
+    callback(new Error("Not allowed by CORS"));
+  }
+};
+app.use(cors(corsOptions)); // <-- FIRST THING: use CORS middleware BEFORE sessions!
 
 /**
  * ============================
  * SESSION STORE CONFIGURATION
  * ============================
  */
-
 app.use(expressSession({
     store: postgreStore,
     cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 },
     secret: 'secret',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    // optionally set these for production secure cookies:
+    // cookie: {
+    //   secure: process.env.NODE_ENV === 'production', 
+    //   sameSite: 'lax',
+    // },
 }));
 
 app.use(passportLocal.initialize());
 app.use(passportLocal.session());
+
 /**
  * ============================
  * BODY PARSERS
@@ -72,6 +99,31 @@ app.use(passportLocal.session());
  */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+/**
+ * ============================
+ * LOGGING SESSION & REQUESTS (OPTIONAL DEBUG)
+ * ============================
+ */
+app.use((req, res, next) => {
+  logger.info('Request:', req.method, req.path);
+  logger.info('Origin:', req.headers.origin);
+  logger.info('Session user:', (req.session as any)?.passport?.user);
+  next();
+});
+
+/**
+ * ============================
+ * AUTHENTICATION GUARD (OPTIONAL)
+ * ============================
+ */
+// Uncomment and place here to protect all routes below:
+// app.use((req, res, next) => {
+//   if (req.session?.passport?.user) {
+//     return next();
+//   }
+//   res.status(401).json({ message: 'Unauthorized' });
+// });
 
 /**
  * ============================
@@ -86,14 +138,6 @@ app.use('/task', require('./routes/task.routes'));
 app.use('/habit', require('./routes/habit.routes'));
 app.use('/badhabit-timer', require('./routes/badhabit.routes'));
 app.use('/mood-journal', require('./routes/moodjournal.routes'));
-  
-
-// app.use((req: Request, res: any, next:any) => {
-//   if(req.session?.passport?.user !== null) {
-//     return next();
-//   }
-//   return res.status(401).json({ message: 'Unauthorized' });
-// });
 
 /**
  * ============================
@@ -107,39 +151,13 @@ app.use(express.static(path.join(__dirname, '/public')));
  * SESSION TEST ROUTE
  * ============================
  */
-app.get('/session-test', (req:any, res:any) => {
+app.get('/session-test', (req: any, res: any) => {
   res.json({
     sessionID: req.sessionID,
     session: req.session,
   });
 });
 
-
-/**
- * ============================
- * CORS
- * ============================
-*/
-
-const allowedOrigins = [
-  "https://dooto.onrender.com",
-  "http://localhost:3000",
-];
-
-const corsOptions: CorsOptionsDelegate = (req, callback) => {
-   const origin = req.headers.origin as string | undefined;
-
-  if (!origin || allowedOrigins.includes(origin)) {
-    callback(null, {
-      origin: true,
-      credentials: true,
-    });
-  } else {
-    callback(new Error("Not allowed by CORS"));
-  }
-};
-
-app.use(cors(corsOptions));
 /**
  * ============================
  * SERVER START
@@ -147,9 +165,9 @@ app.use(cors(corsOptions));
  */
 app.listen(port, () => {
   poolInstance
-  .query('SELECT 1')
-  .then(() => console.log('PostgreSQL connected'))
-  .catch((err) => console.error('PostgreSQL connection failed', err));
+    .query('SELECT 1')
+    .then(() => console.log('PostgreSQL connected'))
+    .catch((err) => console.error('PostgreSQL connection failed', err));
 
   console.log(
     `App is on ${
