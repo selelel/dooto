@@ -24,6 +24,9 @@ const options = {
         },
         servers: [
         {
+            url: `https://dooto.onrender.com`,
+        },
+        {
             url: `http://localhost:${process.env.PORT}`,
         },
         ],
