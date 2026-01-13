@@ -12,7 +12,7 @@ const endpoint = "/mood-journal";
 
 export async function POST(req: NextRequest) {
   const cookie = GetCookie(req.headers);
-const headers = { cookie }
+  const headers = { cookie }
   const body = await req.json();
   
   try {

@@ -32,7 +32,7 @@ import { useHabits } from "../_context/habit-context";
 
 export const HabitCreateSchema = z.object({
   name: z.string().min(1, "Habit name is required").max(100),
-  category: z.string().min(1, "Category is required"),
+  // category: z.string().min(1, "Category is required"),
   details: z.string().max(500).optional(),
 });
 
@@ -52,7 +52,7 @@ function HabitCreateDialog({
     resolver: zodResolver(HabitCreateSchema),
     defaultValues: {
       name: "",
-      category: "",
+      // category: "",
       details: "",
     },
     mode: "onChange", // <-- important for live validation
@@ -63,7 +63,7 @@ function HabitCreateDialog({
     handleCreateHabit({
       habitName: data.name,
       details: data.details || "",
-      categoryId: data.category,
+      // categoryId: data.category,
     });
     onOpenChange(false);
   };
@@ -97,28 +97,6 @@ function HabitCreateDialog({
             />
 
             {/* Category */}
-            <FormField
-              name='category'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category *</FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger className='w-full'>
-                      <SelectValue placeholder='Select category' />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {(data?.categories || []).map((d) => (
-                        <SelectItem key={d.id} value={d.id}>
-                          {d.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             {/* Details */}
             <FormField
@@ -158,3 +136,28 @@ function HabitCreateDialog({
 }
 
 export default HabitCreateDialog;
+
+{
+  /* <FormField
+  name='category'
+  control={form.control}
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Category *</FormLabel>
+      <Select value={field.value} onValueChange={field.onChange}>
+        <SelectTrigger className='w-full'>
+          <SelectValue placeholder='Select category' />
+        </SelectTrigger>
+        <SelectContent>
+          {(data?.categories || []).map((d) => (
+            <SelectItem key={d.id} value={d.id}>
+              {d.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>; */
+}

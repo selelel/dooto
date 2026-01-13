@@ -17,7 +17,7 @@ const buildParams = (to?: string | null, from?: string | null) => {
 
 export async function POST(req: NextRequest) {
   const cookie = GetCookie(req.headers);
-const headers = { cookie }
+  const headers = { cookie }
   const { searchParams } = new URL(req.url);
   const habitId = searchParams.get("habitId");
   const date = searchParams.get('date')
@@ -53,7 +53,7 @@ const headers = { cookie }
 
 export async function GET(req: NextRequest) {
   const cookie = GetCookie(req.headers);
-const headers = { cookie }
+  const headers = { cookie }
   const { searchParams } = new URL(req.url);
 
   const id = searchParams.get("habitId");

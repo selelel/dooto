@@ -55,6 +55,7 @@ const postgreStore = new pgSession({
 const allowedOrigins = [
   "https://dooto.onrender.com",
   "http://localhost:3000",
+  "http://localhost:8080",
 ];
 
 const corsOptions: CorsOptionsDelegate = (req, callback) => {

@@ -5,8 +5,8 @@ export type POSTHabitResponse = {
   id: string,
   habitName: string,
   details: string,
-  categoryId: string,
-  category: Category,
+  categoryId?: string,
+  category?: Category,
   createdAt:string,
   userId: string
   contributions: Contribution[]

@@ -9,6 +9,7 @@ export const POSThabit = async (req: Request, res: any) => {
       ...req.body,
       userId: req.user?.id,
     }
+    
     const habit = await HabitService.createHabit(payload);
     res.status(201).json(habit);
   } catch (error) {
