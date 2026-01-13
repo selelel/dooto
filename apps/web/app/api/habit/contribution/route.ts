@@ -1,4 +1,4 @@
-import { ParseHeader } from "@/lib/header";
+import { GetCookie, ParseHeader } from "@/lib/header";
 import { logger } from "@/lib/logger";
 import { ServerApiClient } from "@/lib/serverApiClient";
 import { requireId } from "@/lib/utils";
@@ -16,7 +16,8 @@ const buildParams = (to?: string | null, from?: string | null) => {
 
 
 export async function POST(req: NextRequest) {
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+const headers = { cookie }
   const { searchParams } = new URL(req.url);
   const habitId = searchParams.get("habitId");
   const date = searchParams.get('date')
@@ -51,7 +52,8 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+const headers = { cookie }
   const { searchParams } = new URL(req.url);
 
   const id = searchParams.get("habitId");

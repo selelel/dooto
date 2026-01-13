@@ -1,4 +1,4 @@
-import { ParseHeader } from "@/lib/header";
+import { GetCookie, ParseHeader } from "@/lib/header";
 import { ServerApiClient } from "@/lib/serverApiClient";
 import { POSTTasksCollectionResponseT } from "@/modules/tasks/types";
 import { Category } from "@/modules/user/types";
@@ -7,7 +7,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const endpoint = "/users/category";
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+const headers = { cookie }
 
   try {
     const response = await ServerApiClient.get< {categories: Category[]} >(endpoint, {headers});

@@ -1,4 +1,4 @@
-import { ParseHeader } from "@/lib/header";
+import { GetCookie, ParseHeader } from "@/lib/header";
 import { logger } from "@/lib/logger";
 import { ServerApiClient } from "@/lib/serverApiClient";
 import { POSTHabitRequest, POSTHabitResponse } from "@/modules/habit/types";
@@ -11,7 +11,8 @@ import { NextRequest, NextResponse } from "next/server";
 const endpoint = "/mood-journal";
 
 export async function POST(req: NextRequest) {
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+const headers = { cookie }
   const body = await req.json();
   
   try {
@@ -35,7 +36,8 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+const headers = { cookie }
   const { searchParams } = new URL(req.url);
   const to = searchParams.get('to');
   const from = searchParams.get('from');

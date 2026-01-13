@@ -1,4 +1,4 @@
-import { ParseHeader } from "@/lib/header";
+import { GetCookie, ParseHeader } from "@/lib/header";
 import { logger } from "@/lib/logger";
 import { ServerApiClient } from "@/lib/serverApiClient";
 import { POSTTaskRequest, Task } from "@/modules/tasks/types";
@@ -7,7 +7,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const endpoint = "/task";
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+const headers = { cookie }
   const body = await req.json();
   
   try {
@@ -33,7 +34,8 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   const endpoint = "/task";
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+const headers = { cookie }
   const body = await req.json();
   
   try {

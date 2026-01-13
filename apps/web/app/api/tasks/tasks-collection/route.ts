@@ -1,14 +1,14 @@
-import { ParseHeader } from "@/lib/header";
+import { GetCookie, ParseHeader } from "@/lib/header";
 import { logger } from "@/lib/logger";
 import { ServerApiClient } from "@/lib/serverApiClient";
 import { PATCHTasksCollectionRequestT, POSTTasksCollectionRequestT, POSTTasksCollectionResponseT } from "@/modules/tasks/types";
 import { AxiosError } from "axios";
 import { NextRequest, NextResponse } from "next/server";
-import { join } from "path";
 
 export async function POST(req: NextRequest) {
   const endpoint = "/tasks";
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+  const headers = { cookie }
 
   try {
     const body: POSTTasksCollectionRequestT = await req.json();
@@ -35,11 +35,18 @@ export async function GET(req: NextRequest) {
   const endpoint = "/tasks";
   const { searchParams } = new URL(req.url);
   const id = searchParams.get('id');
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+  const headers = { cookie }
   const params = id ? { id } : {};
 
   try {
-    const response = await ServerApiClient.get<Partial<POSTTasksCollectionResponseT[] | POSTTasksCollectionResponseT>>(endpoint, {headers, params});
+    const response = await ServerApiClient.get<Partial<POSTTasksCollectionResponseT[] | POSTTasksCollectionResponseT>>(
+  endpoint,
+  {
+    headers,
+    params,
+  }
+);
     return NextResponse.json(response.data, { status: 200 });
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -59,7 +66,8 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   const endpoint = "/tasks";
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+  const headers = { cookie }
   const body:PATCHTasksCollectionRequestT = await req.json();
   logger.trace(body)
   
@@ -87,7 +95,8 @@ export async function DELETE(req: NextRequest) {
   const endpoint = "/tasks";
   const { searchParams } = new URL(req.url);
   const id = searchParams.get('id');
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+  const headers = { cookie }
 
   try {
     const response = await ServerApiClient.delete([endpoint, id].join('?id='), undefined, {headers});

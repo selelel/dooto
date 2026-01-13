@@ -5,3 +5,7 @@ export function ParseHeader(headers: Headers): Record<string, string> {
   });
   return result;
 }
+
+export function GetCookie(headers: Headers): string {
+  return ParseHeader(headers).cookie ?? '';
+}

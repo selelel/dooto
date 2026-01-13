@@ -1,4 +1,4 @@
-import { ParseHeader } from "@/lib/header";
+import { GetCookie, ParseHeader } from "@/lib/header";
 import { logger } from "@/lib/logger";
 import { ServerApiClient } from "@/lib/serverApiClient";
 import { POSTTimerRequest, POSTTimerResponse } from "@/modules/timer/types";
@@ -8,7 +8,8 @@ import { NextRequest, NextResponse } from "next/server";
 const endpoint = "/badhabit-timer";
 
 export async function POST(req: NextRequest, {params}: { params: Promise<{ id: string }> }) {
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+const headers = { cookie }
   const {id} = (await params);
   
   try {
@@ -33,7 +34,8 @@ export async function POST(req: NextRequest, {params}: { params: Promise<{ id: s
 
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-    const headers = ParseHeader(req.headers);
+    const cookie = GetCookie(req.headers);
+const headers = { cookie }
     const id = (await params).id
   try {
     const response = await ServerApiClient.get<POSTTimerResponse>(`${endpoint}/${id}`, {headers});
@@ -56,7 +58,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-    const headers = ParseHeader(req.headers);
+    const cookie = GetCookie(req.headers);
+const headers = { cookie }
     const { id } = (await params);
     const body = await req.json()
 
@@ -83,7 +86,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+const headers = { cookie }
   const { id } = (await params);
 
   try {
