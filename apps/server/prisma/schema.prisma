@@ -114,7 +114,6 @@ model Habit {
 
   @@unique([userId, habitName])
   @@index([userId])
-  @@index([categoryId])
 }
 model HabitContribution {
   habitId   String   @db.Uuid

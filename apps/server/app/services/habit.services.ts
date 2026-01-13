@@ -3,24 +3,10 @@ import { logger } from "../utils/logger";
 import { POSTHabitT } from "../dtos";
 import { Habit, HabitContribution } from "../generated/prisma/client";
 
-async function createHabit(data: POSTHabitT & { userId: string }): Promise<Habit> {
+async function createHabit(data: POSTHabitT & { categoryId?: string, userId: string }): Promise<Habit> {
   const { userId, habitName, details, categoryId } = data;
 
   try {
-    // If categoryId is provided, validate it exists
-    if (categoryId) {
-      const category = await prisma.category.findUnique({
-        where: { id: categoryId },
-      });
-
-      if (!category) {
-        throw new Error(`Category with ID ${categoryId} not found`);
-      }
-      // Optionally, also verify category.userId === userId, to ensure ownership
-      if (category.userId !== userId) {
-        throw new Error(`Category does not belong to the user`);
-      }
-    }
 
     // Check if habit with the same name exists for the user
     const existingHabit = await prisma.habit.findFirst({

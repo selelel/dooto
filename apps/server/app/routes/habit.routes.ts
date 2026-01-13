@@ -17,10 +17,6 @@
  *           type: string
  *           description: Optional description of the habit
  *           example: Drink a glass of water after every meal
- *         categoryId:
- *           type: string
- *           description: Optional category of the habit
- *           example: efc93804-e869-4bc9-b12f-6ddec9e5487a
  */
 
 import express = require('express');
