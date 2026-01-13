@@ -106,9 +106,8 @@ app.use(express.urlencoded({ extended: true }));
  * ============================
  */
 app.use((req, res, next) => {
-  logger.info('Request:', JSON.stringify(req.method), JSON.stringify(req.path));
-  logger.info('Origin:', JSON.stringify(req.headers.origin));
-  logger.info('Session user:', JSON.stringify((req.session as any)?.passport?.user));
+  const ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
+  console.log(ip)
   next();
 });
 
