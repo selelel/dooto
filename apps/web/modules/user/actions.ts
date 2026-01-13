@@ -10,6 +10,7 @@ export const signIn = async (payload: POSTSigninRequestT) => {
 
     return response;
   } catch (e:any) {
+    logger.trace(e)
     throw e;
   }
 };

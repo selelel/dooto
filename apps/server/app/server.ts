@@ -121,7 +121,10 @@ app.get('/session-test', (req:any, res:any) => {
  * ============================
 */
 
-const allowedOrigins = ["https://dooto.onrender.com/", "http://localhost:3000/"];
+const allowedOrigins = [
+  "https://dooto.onrender.com",
+  "http://localhost:3000",
+];
 
 const corsOptions: CorsOptionsDelegate = (req, callback) => {
    const origin = req.headers.origin as string | undefined;
