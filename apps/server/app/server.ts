@@ -106,9 +106,9 @@ app.use(express.urlencoded({ extended: true }));
  * ============================
  */
 app.use((req, res, next) => {
-  logger.info('Request:', req.method, req.path);
-  logger.info('Origin:', req.headers.origin);
-  logger.info('Session user:', (req.session as any)?.passport?.user);
+  logger.info('Request:', JSON.stringify(req.method), JSON.stringify(req.path));
+  logger.info('Origin:', JSON.stringify(req.headers.origin));
+  logger.info('Session user:', JSON.stringify((req.session as any)?.passport?.user));
   next();
 });
 

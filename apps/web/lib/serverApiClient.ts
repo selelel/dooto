@@ -1,5 +1,3 @@
-// serverApiClient.ts
-
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { NextRequest } from "next/server";
 import { logger } from "./logger";
@@ -9,10 +7,6 @@ const APIUrl = `${process.env.API_URL}`;
 
 console.log(APIUrl)
 
-/* ---------------------------------- */
-/* Types                              */
-/* ---------------------------------- */
-
 export type RequestOptions<TParams = unknown> = {
   req?: NextRequest;
   params?: TParams;
@@ -21,10 +15,6 @@ export type RequestOptions<TParams = unknown> = {
 };
 
 export type ApiResponse<T> = AxiosResponse<T>;
-
-/* ---------------------------------- */
-/* Helpers                            */
-/* ---------------------------------- */
 
 const buildQueryParams = (req?: NextRequest, params?: unknown) => {
   const queryFromReq =
@@ -42,10 +32,6 @@ const httpsAgent = new https.Agent({
   rejectUnauthorized: false,  // disables SSL cert validation - ONLY FOR DEV / TESTING!
 });
 
-/* ---------------------------------- */
-/* HTTP Methods                       */
-/* ---------------------------------- */
-
 const get = async <TResponse = unknown, TParams = unknown>(
   endpoint: string,
   options: RequestOptions<TParams> = {}
@@ -58,6 +44,7 @@ const get = async <TResponse = unknown, TParams = unknown>(
     params: buildQueryParams(options.req, options.params),
     headers: options.headers,
     httpsAgent,
+    withCredentials: true,  // <-- Added here
     ...options.config,
   });
 };
@@ -70,7 +57,6 @@ const post = async <TResponse = unknown, TBody = unknown>(
   const url = `${APIUrl}${endpoint}`;
 
   logger.info("POST:", url);
-  // ! REMOVE WHEN DEPLOYED
   logger.info("Body:", body);
   logger.info("Opts:", options);
 
@@ -78,6 +64,7 @@ const post = async <TResponse = unknown, TBody = unknown>(
     headers: options.headers,
     params: options.params,
     httpsAgent,
+    withCredentials: true,  // <-- Added here
     ...options.config,
   });
 };
@@ -95,6 +82,7 @@ const patch = async <TResponse = unknown, TBody = unknown>(
   return axios.patch<TResponse>(url, body, {
     headers: options.headers,
     httpsAgent,
+    withCredentials: true,  // <-- Added here
     ...options.config,
   });
 };
@@ -115,13 +103,10 @@ const del = async <TResponse = unknown, TBody = unknown>(
     data: body,
     params: options.params,
     httpsAgent,
+    withCredentials: true,  // <-- Added here
     ...options.config,
   });
 };
-
-/* ---------------------------------- */
-/* Export                            */
-/* ---------------------------------- */
 
 export const ServerApiClient = {
   get,
