@@ -21,7 +21,6 @@ const expressSession = require('express-session');
 const pgSession = require('connect-pg-simple')(expressSession);
 import { Pool } from 'pg';
 import { passportLocal } from './config/passport-local';
-import { logger } from "./utils/logger";
 
 /**
  * ============================
