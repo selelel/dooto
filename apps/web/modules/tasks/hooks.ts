@@ -25,9 +25,9 @@ export const useCreateTask = () => {
 };
 
 
-export const useGetTaskCollectionById = (id: string | null) => {
+export const useGetTaskCollectionById = () => {
   return useMutation({
-    mutationKey: QueryKeys.TasksQueryKeys.parent(['get-task-collection-by-id', id]),
+    mutationKey: QueryKeys.TasksQueryKeys.parent('get-task-collection-by-id'),
     mutationFn: (id: string) => getTasksCollection(id),
   });
 };

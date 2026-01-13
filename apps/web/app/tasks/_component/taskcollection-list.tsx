@@ -10,7 +10,7 @@ import {
   TaskStatus,
 } from "@/modules/tasks/types";
 import { List } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import TaskCollectionCreateDialog from "./taskcollection-create-dialog";
 

@@ -1,11 +1,14 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/dist/client/components/navigation";
 import TaskCollectionList from "./_component/taskcollection-list";
 import TasksList from "./_component/tasks-list";
 import { TasksProvider } from "./_hooks/useTasks";
+import { Suspense } from "react";
 
 function TodoListPage() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id") || "";
   return (
     <div>
       <div className='mb-8'>
@@ -21,7 +24,7 @@ function TodoListPage() {
         </div>
 
         <div className='col-span-9'>
-          <TasksList />
+          <TasksList id={id} />
         </div>
       </div>
     </div>
@@ -29,11 +32,11 @@ function TodoListPage() {
 }
 
 export default function CONTEXTED() {
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
   return (
-    <TasksProvider id={id}>
-      <TodoListPage />
+    <TasksProvider>
+      <Suspense fallback={<div>Loading...</div>}>
+        <TodoListPage />
+      </Suspense>
     </TasksProvider>
   );
 }

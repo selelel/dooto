@@ -120,11 +120,11 @@ function HabitEditDialog({
                       />
                     </DialogTitle>
                     <div className='w-full flex items-center gap-2 flex-wrap'>
-                      {habitData.categoryId && (
+                      {/* {habitData.categoryId && (
                         <Badge variant='outline' className='text-xs'>
                           {habitData.category.name}
                         </Badge>
-                      )}
+                      )} */}
                       <Badge
                         variant={completedToday ? "default" : "outline"}
                         className={completedToday ? "bg-success" : ""}

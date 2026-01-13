@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { useTasks } from "../_hooks/useTasks";
+import { POSTTasksCollectionResponseT } from "@/modules/tasks/types";
 
 /** Define your Zod schema for task creation */
 const taskCreateSchema = z.object({
@@ -49,9 +50,14 @@ export type TaskCreateFormValues = z.infer<typeof taskCreateSchema>;
 interface TaskCreateDialogProps {
   open: boolean;
   onOpenChange: Dispatch<React.SetStateAction<boolean>>;
+  data: POSTTasksCollectionResponseT;
 }
 
-function TaskCreateDialog({ open, onOpenChange }: TaskCreateDialogProps) {
+function TaskCreateDialog({
+  open,
+  onOpenChange,
+  data: tasksCollectionData,
+}: TaskCreateDialogProps) {
   const { handleCreateTask } = useTasks();
   const form = useForm<TaskCreateFormValues>({
     resolver: zodResolver(taskCreateSchema),
@@ -63,7 +69,7 @@ function TaskCreateDialog({ open, onOpenChange }: TaskCreateDialogProps) {
   });
 
   const handleSubmit = (data: TaskCreateFormValues) => {
-    handleCreateTask(data);
+    handleCreateTask({ ...data, id: tasksCollectionData.tasksId });
     onOpenChange(false);
   };
 

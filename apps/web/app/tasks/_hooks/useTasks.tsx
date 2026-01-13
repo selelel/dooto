@@ -40,7 +40,7 @@ interface TasksContextValue {
   handleCreateTaskCollection: (task: POSTTasksCollectionRequestT) => void;
   handleToggleStatus: (task: Task) => void;
   handleDeleteTask: (taskId: string) => void;
-  handleCreateTask: (form: TaskCreateFormValues) => void;
+  handleCreateTask: (form: TaskCreateFormValues & { id: string }) => void;
   handlePatchTasks: (task: Partial<Task>) => void;
   patchTaskCollection: ReturnType<typeof usePatchTasksCollection>["mutate"];
   queryClient: ReturnType<typeof useQueryClient>;
@@ -54,11 +54,10 @@ const TasksContext = createContext<TasksContextValue | null>(null);
 ======================= */
 
 interface TasksProviderProps {
-  id: string | null;
   children: ReactNode;
 }
 
-export function TasksProvider({ id, children }: TasksProviderProps) {
+export function TasksProvider({ children }: TasksProviderProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { mutate: createTaskCollection } = useCreateTaskCollection();
@@ -69,7 +68,7 @@ export function TasksProvider({ id, children }: TasksProviderProps) {
     data,
     mutate: refetchTasks,
     error: getTaskCollectionByIdError,
-  } = useGetTaskCollectionById(id);
+  } = useGetTaskCollectionById();
   const { mutate: createTask } = useCreateTask();
   const { mutate: mutateDeleteCollection } = useDeleteTaskCollectionById();
 
@@ -84,15 +83,6 @@ export function TasksProvider({ id, children }: TasksProviderProps) {
       setTasks(data.data.tasks);
     }
   }, [data]);
-
-  useEffect(() => {
-    if (id) {
-      queryClient.invalidateQueries({
-        queryKey: QueryKeys.TasksQueryKeys.parent("get-task-collection"),
-      });
-      refetchTasks(id);
-    }
-  }, [id, refetchTasks]);
 
   /* =======================
      Helpers
@@ -204,10 +194,10 @@ export function TasksProvider({ id, children }: TasksProviderProps) {
     });
   };
 
-  const handleCreateTask = (form: TaskCreateFormValues) => {
+  const handleCreateTask = (form: TaskCreateFormValues & { id: string }) => {
     createTask(
       {
-        tasksId: id || "",
+        tasksId: form.id,
         status: TaskStatus.PENDING,
         taskName: form.taskName,
         due: form.due?.toISOString(),
@@ -218,7 +208,7 @@ export function TasksProvider({ id, children }: TasksProviderProps) {
           queryClient.invalidateQueries({
             queryKey: QueryKeys.TasksQueryKeys.parent("get-task-collection"),
           });
-          refetchTasks(id!);
+          refetchTasks(form.id);
         },
       }
     );

@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TaskStatus } from "@/modules/tasks/types";
 import { Circle } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import TaskCreateDialog from "./task-create-dialog";
 import { useForm } from "react-hook-form";
 import TaskHeader from "./task-header";
@@ -24,10 +23,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 
-function TasksList() {
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
-
+function TasksList({ id }: { id: string }) {
   const [dialog, setOpenDialog] = useState(false);
   const [openCollectionDialog, setOpenCollectionDialog] = useState(false);
 
@@ -71,7 +67,11 @@ function TasksList() {
   return (
     <>
       {/* Task create dialog */}
-      <TaskCreateDialog open={dialog} onOpenChange={setOpenDialog} />
+      <TaskCreateDialog
+        open={dialog}
+        onOpenChange={setOpenDialog}
+        data={taskCollectionData}
+      />
 
       {/* Task collection create dialog (INLINE) */}
       <Dialog
