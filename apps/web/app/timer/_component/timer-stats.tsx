@@ -16,10 +16,9 @@ function SkeletonTrophyCard() {
 }
 
 function TimerStats() {
-  const { data, loading } = useTimer();
+  const { data, isFetching } = useTimer();
 
-  if (loading) {
-    // Show skeletons when loading
+  if (isFetching) {
     return (
       <div className='grid grid-cols-3 gap-4 mb-8'>
         <Card className='shadow-sm border-l-4 border-l-primary'>

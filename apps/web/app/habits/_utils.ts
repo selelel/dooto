@@ -18,14 +18,14 @@ export const weekDates = Array.from({ length: 7 }).map((_, i) => {
 
 export const weekCompleted = (d: POSTHabitResponse) =>
     weekDates.map((date) =>
-      d.contributions.some((c) => normalizeDate(c.date) === date && c.completed)
+      d.contributions?.some((c) => normalizeDate(c.date) === date && c.completed)
     );
 
 export const weekCompletedCount = (d: POSTHabitResponse) => {
   const weekSet = new Set(weekDates);
   let count = 0;
 
-  for (const c of d.contributions) {
+  for (const c of (d.contributions || [])) {
     const normalized = normalizeDate(c.date);
 
     if (weekSet.has(normalized) && c.completed) {
@@ -44,8 +44,8 @@ export const weekCompletionRate = (d: POSTHabitResponse) => {
 };
 
 
-export    const completedToday = (d: POSTHabitResponse) =>
-    d.contributions.some((c) => normalizeDate(c.date) === today && c.completed);
+export    const completedToday = (d: POSTHabitResponse) =>{
+    return d.contributions?.some((c) => normalizeDate(c.date) === today && c.completed) || false};
   
 
 export function computeStreak(contributions: Contribution[]): number {
@@ -108,7 +108,7 @@ export function getLongestStreakFromDates(contributions: {
 }
 
 export const isCompletedToday = (habit: any) =>
-    habit.contributions.some(
+    habit.contributions?.some(
       (c: any) => normalizeDate(c.date) === today && c.completed
     );
 

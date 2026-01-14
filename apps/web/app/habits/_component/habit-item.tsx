@@ -1,11 +1,10 @@
 "use client";
+
 import { Card, CardContent } from "@/components/ui/card";
-import { cn, normalizeDate } from "@/lib/utils";
-import { Contribution, POSTHabitResponse } from "@/modules/habit/types";
+import { cn } from "@/lib/utils";
 import { Flame } from "lucide-react";
 import React, { useState } from "react";
 import Habit from "./habit-day";
-import { useHabits } from "../_context/habit-context";
 import HabitEditDialog from "./habit-edit-dialog";
 import {
   completedToday as completedTodayFn,
@@ -13,15 +12,23 @@ import {
   weekCompleted,
   weekDates,
 } from "../_utils";
+import { useHabitStore } from "@/modules/habit/store";
 
-function HabitItem({ habit }: { habit: POSTHabitResponse }) {
+function HabitItem({ id }: { id: string }) {
+  // Subscribe directly to habit from store for reactive updates
+  const habit = useHabitStore((state) =>
+    state.habitsData.find((h) => h.id === id)
+  );
+  const handleToggleHabit = useHabitStore(
+    (state) => state.toggleHabitContribution
+  );
+
   const [openEdit, setOpenEdit] = useState(false);
-  const { handleToggleHabit } = useHabits();
+
+  if (!habit) return null; // handle case if habit is not found yet
+
   const completedToday = completedTodayFn(habit);
   const jsDay = new Date().getDay();
-
-  const completedColor = "bg-success";
-
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   return (
@@ -39,12 +46,12 @@ function HabitItem({ habit }: { habit: POSTHabitResponse }) {
           <div className='flex items-start justify-between mb-4'>
             <div className='flex items-start gap-3 flex-1'>
               <div
-                className={`w-4 h-4 rounded-full ${completedToday ? completedColor : "bg-muted-foreground/30"} mt-1`}
+                className={`w-4 h-4 rounded-full ${
+                  completedToday ? "bg-success" : "bg-muted-foreground/30"
+                } mt-1`}
               />
               <div
-                onClick={() => {
-                  setOpenEdit(true);
-                }}
+                onClick={() => setOpenEdit(true)}
                 className='flex-1 cursor-pointer'
               >
                 <div className='flex flex-col'>
@@ -86,26 +93,20 @@ function HabitItem({ habit }: { habit: POSTHabitResponse }) {
             })}
           </div>
 
-          {/* Week Progress */}
           <div className='flex gap-2'>
-            {weekCompleted(habit).map((d, index) => {
+            {weekCompleted(habit).map((completed, index) => {
               const todayIndex = jsDay === 0 ? 6 : jsDay - 1;
               return (
                 <Habit
-                  onClick={() => {
-                    handleToggleHabit({
-                      habitId: habit.id,
-                      date: weekDates[index]!,
-                    });
-                  }}
+                  key={index}
+                  completed={completed}
+                  completedColor='bg-success'
+                  disabled={index >= new Date().getDay()}
                   className={cn(
                     index >= todayIndex + 1 ? "bg-muted-foreground/10" : "",
                     todayIndex === index ? "border-2 border-red-300" : ""
                   )}
-                  key={index}
-                  completed={d}
-                  completedColor={completedColor}
-                  disabled={index >= new Date().getDay()}
+                  onClick={() => handleToggleHabit(habit.id, weekDates[index]!)}
                 />
               );
             })}

@@ -9,7 +9,7 @@ function HabitList() {
   return (
     <div className='space-y-4'>
       {habits.map((habit) => (
-        <HabitItem key={habit.id} habit={habit} />
+        <HabitItem key={habit.id} id={habit.id} />
       ))}
     </div>
   );

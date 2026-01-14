@@ -10,8 +10,9 @@ import {
 } from "@/modules/habit/hooks";
 import { POSTHabitRequest, POSTHabitResponse } from "@/modules/habit/types";
 import { useQueryClient } from "@tanstack/react-query";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { isCompletedToday } from "../_utils";
+import { useHabitStore } from "@/modules/habit/store";
 interface HabitContextValue {
   habitsData: POSTHabitResponse[] | undefined;
   handleCreateHabit: (d: POSTHabitRequest) => void;
@@ -22,18 +23,33 @@ interface HabitContextValue {
   today: string;
   handleDelete: (d: string) => void;
   handleUpdate: (d: Partial<POSTHabitRequest> & { habitId: string }) => void;
+  getHabitById: (id: string) => POSTHabitResponse | undefined;
 }
 
 const HabitContext = createContext<HabitContextValue | null>(null);
 
 export function HabitProvider({ children }: { children: React.ReactNode }) {
-  const queryClient = useQueryClient();
-  const { data: habitsData } = useGetHabits();
+  const {
+    setHabits,
+    habitsData,
+    toggleHabitContribution,
+    getHabitById,
+    updateHabit,
+    deleteHabit,
+    addHabit,
+  } = useHabitStore();
+  const { data: hbitsDt } = useGetHabits();
   const { mutate: createHabit } = useCreateHabit();
   const { mutate: toggleHabit } = useToggleHabitContribution();
-  const { mutate: deleteHabit } = useDeleteHabit();
-  const { mutate: updateHabit } = useUpdateHabit();
+  const { mutate: dltHbt } = useDeleteHabit();
+  const { mutate: updtHbt } = useUpdateHabit();
   const today = normalizeDate(new Date());
+
+  useEffect(() => {
+    if (hbitsDt) {
+      setHabits(hbitsDt);
+    }
+  }, [hbitsDt, setHabits]);
 
   const totalHabits = habitsData?.length ?? 0;
 
@@ -44,47 +60,63 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
       ? 0
       : Math.round((completedTodayCount / totalHabits) * 100);
 
-  const handleToggleHabit = function (payload: {
+  const handleToggleHabit = function ({
+    habitId,
+    date,
+  }: {
     habitId: string;
     date: string;
   }) {
-    toggleHabit(payload, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: QueryKeys.HabitQueryKeys.parent("get-habits"),
-        });
+    const prev = getHabitById(habitId);
+    if (!prev) return;
+
+    const prevSnapshot: POSTHabitResponse = structuredClone(prev);
+    toggleHabitContribution(habitId, date);
+    toggleHabit(
+      {
+        habitId,
+        date,
       },
-    });
+      {
+        onError: () => {
+          updateHabit(prevSnapshot);
+        },
+      }
+    );
   };
 
   const handleUpdate = function (
     body: Partial<POSTHabitRequest> & { habitId: string }
   ) {
-    updateHabit(body, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: QueryKeys.HabitQueryKeys.parent("get-habits"),
-        });
+    const prev = getHabitById(body.habitId);
+    if (!prev) return;
+
+    const prevSnapshot: POSTHabitResponse = structuredClone(prev);
+    updateHabit({ id: body.habitId, ...body });
+    updtHbt(body, {
+      onError: () => {
+        updateHabit(prevSnapshot);
       },
     });
   };
 
   const handleDelete = function (id: string) {
-    deleteHabit(id, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: QueryKeys.HabitQueryKeys.parent("get-habits"),
-        });
+    const prev = getHabitById(id);
+    if (!prev) return;
+
+    const prevSnapshot: POSTHabitResponse = structuredClone(prev);
+    deleteHabit(id);
+    dltHbt(id, {
+      onError: () => {
+        addHabit(prevSnapshot);
       },
     });
   };
 
   const handleCreateHabit = function (payload: POSTHabitRequest) {
     createHabit(payload, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: QueryKeys.HabitQueryKeys.parent("get-habits"),
-        });
+      onSuccess: (d) => {
+        addHabit(d);
       },
     });
   };
@@ -101,6 +133,7 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
         today,
         handleDelete,
         handleUpdate,
+        getHabitById,
       }}
     >
       {children}
