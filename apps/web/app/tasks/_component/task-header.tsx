@@ -1,48 +1,44 @@
+"use client";
 import { Button } from "@/components/ui/button";
-import { Form, FormField } from "@/components/ui/form";
+import { Form, FormControl, FormField } from "@/components/ui/form";
 import { QueryKeys } from "@/constant/queryKeys";
 import { logger } from "@/lib/logger";
 import { Ellipsis, Plus } from "lucide-react";
-import { UseFormReturn } from "react-hook-form";
+import { useForm, UseFormReturn } from "react-hook-form";
 import { useTasks } from "../_hooks/useTasks";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useDeleteTaskCollectionById } from "@/modules/tasks/hooks";
-import { useRouter } from "next/navigation";
-import { ROUTES_CLIENT } from "@/constant/http";
+import { POSTTasksCollectionResponseT } from "@/modules/tasks/types";
+import { useEffect } from "react";
 
 export default function TaskHeader({
-  form,
-  id,
+  data,
   onOpenDialog,
 }: {
-  form: UseFormReturn<
-    {
-      taskName: string;
-      details: string;
-    },
-    any,
-    {
-      taskName: string;
-      details: string;
-    }
-  >;
-  id: string;
+  data: POSTTasksCollectionResponseT;
   onOpenDialog: () => void;
 }) {
-  const router = useRouter();
-  const {
-    patchTaskCollection,
-    taskCollectionData,
-    queryClient,
-    handleDeleteTaskCollection,
-  } = useTasks();
+  const form = useForm({
+    defaultValues: {
+      taskName: data?.tasksName ?? "",
+      details: data?.details ?? "",
+    },
+  });
+
+  useEffect(() => {
+    form.reset({
+      taskName: data?.tasksName,
+      details: data?.details,
+    });
+  }, [data]);
+
+  const { handlePatchTaskCollection, handleDeleteTaskCollection } = useTasks();
 
   const handleDelete = () => {
-    handleDeleteTaskCollection(id);
+    handleDeleteTaskCollection(data.tasksId);
   };
   return (
     <div className='flex justify-center gap-2 mb-6'>
@@ -53,27 +49,21 @@ export default function TaskHeader({
               control={form.control}
               name='taskName'
               render={({ field }) => (
-                <input
-                  className='text-2xl mb-2'
-                  {...field}
-                  onBlur={() => {
-                    if (field.value !== taskCollectionData?.tasksName) {
-                      patchTaskCollection(
-                        { tasksId: id!, tasksName: field.value },
-                        {
-                          onSuccess: () => {
-                            queryClient.invalidateQueries({
-                              queryKey: QueryKeys.TasksQueryKeys.parent(
-                                "get-task-collection"
-                              ),
-                            });
-                          },
-                          onError: (err: any) => logger.error(err),
-                        }
-                      );
-                    }
-                  }}
-                />
+                <FormControl>
+                  <input
+                    className='text-2xl mb-2'
+                    {...field}
+                    value={field.value ?? ""}
+                    onBlur={() => {
+                      if (field.value !== data?.tasksName) {
+                        handlePatchTaskCollection({
+                          tasksId: data.tasksId!,
+                          tasksName: field.value,
+                        });
+                      }
+                    }}
+                  />
+                </FormControl>
               )}
             />
 
@@ -85,20 +75,11 @@ export default function TaskHeader({
                   className='text-sm text-muted-foreground'
                   {...field}
                   onBlur={() => {
-                    if (field.value !== taskCollectionData?.details) {
-                      patchTaskCollection(
-                        { tasksId: id!, details: field.value },
-                        {
-                          onSuccess: () => {
-                            queryClient.invalidateQueries({
-                              queryKey: QueryKeys.TasksQueryKeys.parent(
-                                "get-task-collection"
-                              ),
-                            });
-                          },
-                          onError: (err: any) => logger.error(err),
-                        }
-                      );
+                    if (field.value !== data?.details) {
+                      handlePatchTaskCollection({
+                        tasksId: data.tasksId!,
+                        details: field.value,
+                      });
                     }
                   }}
                 />

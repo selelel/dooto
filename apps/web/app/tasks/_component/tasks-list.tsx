@@ -22,27 +22,19 @@ import {
   DialogTitle,
   DialogClose,
 } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function TasksList({ id }: { id: string }) {
   const [dialog, setOpenDialog] = useState(false);
   const [openCollectionDialog, setOpenCollectionDialog] = useState(false);
-
   const {
-    tasks,
-    taskCollectionData,
+    getTaskCollectionById,
     handleCreateTaskCollection,
-    getTaskCollectionByIdError,
+    isCreatingTaskLoading,
   } = useTasks();
+  const taskCollectionData = getTaskCollectionById(id)!;
+  const tasks = taskCollectionData?.tasks || [];
 
-  /** Task collection edit form */
-  const form = useForm({
-    defaultValues: {
-      taskName: "",
-      details: "",
-    },
-  });
-
-  // First task list creation form
   const collectionForm = useForm({
     defaultValues: {
       tasksName: "",
@@ -50,30 +42,18 @@ function TasksList({ id }: { id: string }) {
     },
   });
 
-  // Reset collection edit form when data changes
-  useEffect(() => {
-    if (taskCollectionData) {
-      form.reset({
-        taskName: taskCollectionData.tasksName,
-        details: taskCollectionData.details,
-      });
-    }
-  }, [taskCollectionData, form]);
-
-  const inProgress = tasks.filter((t) => t.status === TaskStatus.IN_PROGRESS);
-  const pending = tasks.filter((t) => t.status === TaskStatus.PENDING);
-  const completed = tasks.filter((t) => t.status === TaskStatus.DONE);
+  const inProgress = tasks?.filter((t) => t.status === TaskStatus.IN_PROGRESS);
+  const pending = tasks?.filter((t) => t.status === TaskStatus.PENDING);
+  const completed = tasks?.filter((t) => t.status === TaskStatus.DONE);
 
   return (
     <>
-      {/* Task create dialog */}
       <TaskCreateDialog
         open={dialog}
         onOpenChange={setOpenDialog}
-        data={taskCollectionData}
+        data={taskCollectionData!}
       />
 
-      {/* Task collection create dialog (INLINE) */}
       <Dialog
         open={openCollectionDialog}
         onOpenChange={setOpenCollectionDialog}
@@ -114,11 +94,10 @@ function TasksList({ id }: { id: string }) {
         </DialogContent>
       </Dialog>
 
-      {!!id && !getTaskCollectionByIdError ? (
+      {!!id && !!taskCollectionData ? (
         <div>
           <TaskHeader
-            form={form}
-            id={id}
+            data={taskCollectionData}
             onOpenDialog={() => setOpenDialog(true)}
           />
 
@@ -137,12 +116,17 @@ function TasksList({ id }: { id: string }) {
             </TaskSection>
           )}
 
-          {pending.length > 0 && (
+          {isCreatingTaskLoading || pending.length > 0 ? (
             <TaskSection id={TaskStatus.PENDING} title='Pending Tasks'>
               {pending.map((task) => (
                 <TaskRow key={task.taskId} task={task} />
               ))}
+              {isCreatingTaskLoading && (
+                <Skeleton className='w-full h-15 bg-slate-500/10' />
+              )}
             </TaskSection>
+          ) : (
+            <></>
           )}
 
           {completed.length > 0 && (
@@ -153,7 +137,7 @@ function TasksList({ id }: { id: string }) {
             </TaskSection>
           )}
 
-          {tasks.length === 0 && (
+          {tasks.length === 0 && !isCreatingTaskLoading ? (
             <Card>
               <CardContent className='py-16 text-center'>
                 <Circle className='w-16 h-16 text-muted-foreground/30 mx-auto mb-4' />
@@ -163,6 +147,8 @@ function TasksList({ id }: { id: string }) {
                 </p>
               </CardContent>
             </Card>
+          ) : (
+            <></>
           )}
         </div>
       ) : (

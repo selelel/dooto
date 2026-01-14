@@ -13,6 +13,9 @@ import { List } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import TaskCollectionCreateDialog from "./taskcollection-create-dialog";
+import { useTasks } from "../_hooks/useTasks";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 const COLOR_VARIANTS = ["primary", "secondary", "success", "accent"] as const;
 type ColorVariant = (typeof COLOR_VARIANTS)[number];
@@ -46,19 +49,18 @@ const getListColorClasses = (index: number) => {
 function TaskCollectionList() {
   const router = useRouter();
   const [open, onOpenChange] = useState(false);
-  const { data } = useGetTaskCollection();
-  const taskCollection: POSTTasksCollectionResponseT[] = data?.data || [];
+  const { tasksCollection, isCreatingTaskCollectionLoading } = useTasks();
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   // Set first list as active once data loads
   useEffect(() => {
-    if (taskCollection.length > 0 && !selectedId) {
-      setSelectedId(taskCollection[0]!.tasksId);
+    if (tasksCollection.length > 0 && !selectedId) {
+      setSelectedId(tasksCollection[0]!.tasksId);
     }
     !!selectedId &&
       router.push([ROUTES_CLIENT.PRIVATE.TASKS, selectedId].join("?id="));
-  }, [taskCollection, selectedId]);
+  }, [tasksCollection, selectedId]);
 
   return (
     <>
@@ -72,11 +74,11 @@ function TaskCollectionList() {
         </CardHeader>
 
         <CardContent className='space-y-2'>
-          {taskCollection.length > 0 ? (
-            taskCollection.map((list, idx) => {
+          {tasksCollection.length > 0 &&
+            tasksCollection.map((list, idx) => {
               const colors = getListColorClasses(idx);
               const isActive = selectedId === list.tasksId;
-              const todoCount = list.tasks.filter(
+              const todoCount = list.tasks?.filter(
                 (t) => t.status !== TaskStatus.DONE
               ).length;
 
@@ -85,7 +87,7 @@ function TaskCollectionList() {
                   key={list.tasksId}
                   type='button'
                   onClick={() => setSelectedId(list.tasksId)}
-                  className={`group w-full flex items-center justify-between px-3 py-2 rounded-lg transition ${
+                  className={`pop-up-scale-animation group w-full flex items-center justify-between px-3 py-2 rounded-lg transition ${
                     isActive ? colors.active : `${colors.bg} hover:${colors.bg}`
                   }`}
                 >
@@ -98,8 +100,16 @@ function TaskCollectionList() {
                   )}
                 </button>
               );
-            })
-          ) : (
+            })}
+          {isCreatingTaskCollectionLoading && (
+            <Skeleton
+              className={cn(
+                "h-8.5 w-full",
+                getListColorClasses(tasksCollection.length).bg
+              )}
+            />
+          )}
+          {!(tasksCollection.length > 0) && (
             <>
               <p className='text-sm text-center text-muted-foreground'>
                 Empty task collection create now!

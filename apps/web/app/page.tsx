@@ -30,10 +30,13 @@ import { useGetMoodJournalByDate } from "@/modules/mood-journal/hooks";
 import { cn, normalizeDate } from "@/lib/utils";
 import { moodEmojis } from "./mood-journal/_utils";
 import DashboardHabitList from "./_component/dashboard-habit-list";
+import Navigation from "@/components/layout/navigation";
+import { TasksProvider, useTasks } from "./tasks/_hooks/useTasks";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export default function Dashboard() {
+function Dashboard() {
   const today = new Date();
-
+  const { tasksCollection, isTaskCollectionLoading } = useTasks();
   const dateRange = {
     from: normalizeDate(
       new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)
@@ -44,36 +47,9 @@ export default function Dashboard() {
   };
   const { data: timerData } = useGetTimers();
   const { data: todayMoodJournal } = useGetMoodJournalByDate(dateRange);
-  const query = useGetTaskCollection();
-  const taskCollection: POSTTasksCollectionResponseT[] = query.data?.data || [];
   const { data: habitsData } = useGetHabits();
-  console.log(todayMoodJournal);
 
-  const habits = [
-    {
-      id: 1,
-      name: "Drink water",
-      streak: 12,
-      completedToday: true,
-      color: "bg-chart-3",
-    },
-    {
-      id: 2,
-      name: "Exercise",
-      streak: 5,
-      completedToday: false,
-      color: "bg-chart-1",
-    },
-    {
-      id: 3,
-      name: "Read",
-      streak: 8,
-      completedToday: true,
-      color: "bg-chart-2",
-    },
-  ];
-
-  const overAllTaskCount = taskCollection
+  const overAllTaskCount = tasksCollection
     .map((d) => {
       return d.tasks;
     })
@@ -97,84 +73,98 @@ export default function Dashboard() {
 
   const Icon = moodConfig?.icon;
   return (
-    <div>
-      <DashboardHeader />
-      {/* Stats Overview */}
-      <div className='grid grid-cols-1 md:grid-cols-4 gap-4 mb-8'>
-        <StatusCard className='border-l-primary'>
-          <div>
-            <p className='text-sm text-muted-foreground mb-1'>Tasks Today</p>
-            <p className='text-3xl'>
-              {completedTasks}/{overAllTaskCount.length}
-            </p>
-          </div>
-          <div className='w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center'>
-            <CircleCheck className='w-6 h-6 text-primary' />
-          </div>
-        </StatusCard>
+    <Navigation>
+      <div>
+        <DashboardHeader />
+        <div className='grid grid-cols-1 md:grid-cols-4 gap-4 mb-8'>
+          <StatusCard className='border-l-primary'>
+            <div>
+              <p className='text-sm text-muted-foreground mb-1'>Tasks Today</p>
 
-        <StatusCard className='border-l-secondary'>
-          <div>
-            <p className='flex flex-col text-xs text-muted-foreground mb-1'>
-              <span>Since Timer </span>
-              <span>Longest Streak (days)</span>
-            </p>
-            <p className='text-3xl'>{totalHoursData}</p>
-          </div>
-          <div className='w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center'>
-            <Timer className='w-6 h-6 text-secondary' />
-          </div>
-        </StatusCard>
+              {isTaskCollectionLoading ? (
+                <Skeleton className='h-10 w-15' />
+              ) : (
+                <p className='text-3xl'>
+                  {completedTasks}/{overAllTaskCount.length}
+                </p>
+              )}
+            </div>
+            <div className='w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center'>
+              <CircleCheck className='w-6 h-6 text-primary' />
+            </div>
+          </StatusCard>
 
-        <StatusCard className='border-l-success'>
-          <div>
-            <p className='text-sm text-muted-foreground mb-1'>
-              Completed Habit
-            </p>
-            <p className='text-3xl'>
-              {completedTodayCount}/{(habitsData || []).length}
-            </p>
-          </div>
-          <div className='w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center'>
-            <Flame className='w-6 h-6 text-success' />
-          </div>
-        </StatusCard>
+          <StatusCard className='border-l-secondary'>
+            <div>
+              <p className='flex flex-col text-xs text-muted-foreground mb-1'>
+                <span>Since Timer </span>
+                <span>Longest Streak (days)</span>
+              </p>
+              <p className='text-3xl'>{totalHoursData}</p>
+            </div>
+            <div className='w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center'>
+              <Timer className='w-6 h-6 text-secondary' />
+            </div>
+          </StatusCard>
 
-        <StatusCard className='border-l-accent'>
-          <div>
-            <p className='text-sm text-muted-foreground mb-1'>Mood Today</p>
-            <p className='text-3xl'>
-              {moodConfig?.label ? moodConfig?.label : "N / A"}
+          <StatusCard className='border-l-success'>
+            <div>
+              <p className='text-sm text-muted-foreground mb-1'>
+                Completed Habit
+              </p>
+              <p className='text-3xl'>
+                {completedTodayCount}/{(habitsData || []).length}
+              </p>
+            </div>
+            <div className='w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center'>
+              <Flame className='w-6 h-6 text-success' />
+            </div>
+          </StatusCard>
+
+          <StatusCard className='border-l-accent'>
+            <div>
+              <p className='text-sm text-muted-foreground mb-1'>Mood Today</p>
+              <p className='text-3xl'>
+                {moodConfig?.label ? moodConfig?.label : "N / A"}
+              </p>
+            </div>
+            <div
+              className={cn(
+                "w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center",
+                moodConfig?.color,
+                moodConfig?.bg
+              )}
+            >
+              {Icon ? <Icon /> : <CircleQuestionMark />}
+            </div>
+          </StatusCard>
+        </div>
+
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 overflow-hidden'>
+          <DashboardTodoCarousel />
+
+          {/* Habit Tracker Preview */}
+          <DashboardHabitList />
+        </div>
+
+        <Card className='mt-6 bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 border-0 shadow-sm'>
+          <CardContent className='p-6 text-center'>
+            <p className='text-lg mb-2'>✨ You're doing amazing!</p>
+            <p className='text-muted-foreground'>
+              Keep up the great work. Small consistent steps lead to big
+              achievements.
             </p>
-          </div>
-          <div
-            className={cn(
-              "w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center",
-              moodConfig?.color,
-              moodConfig?.bg
-            )}
-          >
-            {Icon ? <Icon /> : <CircleQuestionMark />}
-          </div>
-        </StatusCard>
+          </CardContent>
+        </Card>
       </div>
+    </Navigation>
+  );
+}
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 overflow-hidden'>
-        <DashboardTodoCarousel query={query} />
-
-        {/* Habit Tracker Preview */}
-        <DashboardHabitList />
-      </div>
-
-      <Card className='mt-6 bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 border-0 shadow-sm'>
-        <CardContent className='p-6 text-center'>
-          <p className='text-lg mb-2'>✨ You're doing amazing!</p>
-          <p className='text-muted-foreground'>
-            Keep up the great work. Small consistent steps lead to big
-            achievements.
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+export default function CONTEXTED() {
+  return (
+    <TasksProvider>
+      <Dashboard />
+    </TasksProvider>
   );
 }

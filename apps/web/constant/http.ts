@@ -20,6 +20,9 @@ export const ENDPOINT = {
     },
     MOOD: {
       mood: "/api/mood-journal",
+    },
+    SERVER: {
+      health: "/api/server",
     }
 }
 

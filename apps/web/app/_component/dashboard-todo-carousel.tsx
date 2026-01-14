@@ -14,21 +14,19 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { POSTTasksCollectionResponseT } from "@/modules/tasks/types";
 import TaskCollection from "./task-collection";
-import { UseQueryResult } from "@tanstack/react-query";
-import { AxiosResponse } from "axios";
+import { useTasks } from "../tasks/_hooks/useTasks";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Circle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ROUTES_CLIENT } from "@/constant/http";
+import { useRouter } from "next/navigation";
 
-function DashboardTodoCarousel({
-  query,
-}: {
-  query: UseQueryResult<AxiosResponse<any, any, {}>, Error>;
-}) {
-  const { data, error } = query;
+function DashboardTodoCarousel() {
+  const router = useRouter();
+  const { tasksCollection, isTaskCollectionLoading } = useTasks();
   const [carouselApi, setCarouselApi] = useState<any>(null);
   const [carouselProgress, setCarouselProgress] = useState(0);
-
-  const taskCollection: POSTTasksCollectionResponseT[] = data?.data || [];
 
   useEffect(() => {
     if (!carouselApi) return;
@@ -52,15 +50,6 @@ function DashboardTodoCarousel({
     };
   }, [carouselApi]);
 
-  if (error) return <p>Error loading tasks.</p>;
-  if (!data) return <p>Loading tasks...</p>;
-  if (taskCollection.length === 0)
-    return (
-      <div className='text-center py-8'>
-        <p className='text-muted-foreground mb-2'>No task collections found.</p>
-      </div>
-    );
-
   return (
     <Carousel
       setApi={setCarouselApi}
@@ -72,21 +61,49 @@ function DashboardTodoCarousel({
         className='h-2 bg-primary/20'
         innerClassName='bg-primary/30'
       />
-      <CarouselContent className='h-full min-h-full'>
-        {taskCollection.map((taskGroup) => (
-          <CarouselItem key={taskGroup.tasksId}>
-            <Card className='shadow-sm min-h-112'>
-              <CardHeader>
-                <CardTitle>{taskGroup.tasksName}</CardTitle>
-                <CardDescription>{taskGroup.details}</CardDescription>
-              </CardHeader>
-              <CardContent className='space-y-3'>
-                <TaskCollection taskGroup={taskGroup} />
-              </CardContent>
-            </Card>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
+      {isTaskCollectionLoading ? (
+        <div>
+          <Skeleton className='h-100 ' />
+        </div>
+      ) : tasksCollection.length === 0 ? (
+        <Card className='shadow-sm min-h-112 flex items-center justify-center'>
+          <div className='text-center space-y-4 max-w-sm'>
+            <Circle className='w-14 h-14 mx-auto text-muted-foreground/40' />
+
+            <CardHeader className='p-0'>
+              <h3 className='text-lg font-semibold'>No task collections yet</h3>
+            </CardHeader>
+
+            <CardContent className='p-0 text-sm text-muted-foreground'>
+              Create your first task collection to start organizing your work
+              and tracking progress.
+            </CardContent>
+
+            <Button
+              onClick={() => router.push(ROUTES_CLIENT.PRIVATE.TASKS)}
+              className='mt-2'
+            >
+              Create task collection
+            </Button>
+          </div>
+        </Card>
+      ) : (
+        <CarouselContent className='h-full min-h-full'>
+          {tasksCollection.map((taskGroup) => (
+            <CarouselItem key={taskGroup.tasksId}>
+              <Card className='shadow-sm min-h-112'>
+                <CardHeader>
+                  <CardTitle>{taskGroup.tasksName}</CardTitle>
+                  <CardDescription>{taskGroup.details}</CardDescription>
+                </CardHeader>
+                <CardContent className='space-y-3'>
+                  <TaskCollection taskGroup={taskGroup} />
+                </CardContent>
+              </Card>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      )}
     </Carousel>
   );
 }

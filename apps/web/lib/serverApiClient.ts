@@ -5,8 +5,6 @@ import https from "https";
 
 const APIUrl = `${process.env.API_URL}`;
 
-console.log(APIUrl)
-
 export type RequestOptions<TParams = unknown> = {
   req?: NextRequest;
   params?: TParams;

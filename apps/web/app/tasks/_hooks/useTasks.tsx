@@ -13,12 +13,13 @@ import {
   usePatchTasksCollection,
   usePatchTask,
   useDeleteTask,
-  useGetTaskCollectionById,
   useCreateTask,
   useCreateTaskCollection,
   useDeleteTaskCollectionById,
+  useGetTaskCollection,
 } from "@/modules/tasks/hooks";
 import {
+  PATCHTasksCollectionRequestT,
   POSTTasksCollectionRequestT,
   POSTTasksCollectionResponseT,
   Task,
@@ -27,66 +28,80 @@ import {
 import { TaskCreateFormValues } from "../_component/task-create-dialog";
 import { ROUTES_CLIENT } from "@/constant/http";
 import { useRouter } from "next/navigation";
-
-/* =======================
-   Types
-======================= */
+import { useTasksStore } from "@/modules/tasks/store";
 
 interface TasksContextValue {
-  tasks: Task[];
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
-  taskCollectionData: POSTTasksCollectionResponseT;
+  tasksCollection: POSTTasksCollectionResponseT[];
   handleDeleteTaskCollection: (deleteTaskId: string) => void;
   handleCreateTaskCollection: (task: POSTTasksCollectionRequestT) => void;
   handleToggleStatus: (task: Task) => void;
   handleDeleteTask: (taskId: string) => void;
   handleCreateTask: (form: TaskCreateFormValues & { id: string }) => void;
-  handlePatchTasks: (task: Partial<Task>) => void;
-  patchTaskCollection: ReturnType<typeof usePatchTasksCollection>["mutate"];
+  handlePatchTasks: (task: Partial<Task> & { taskId: string }) => void;
+  handlePatchTaskCollection: (
+    task: Partial<PATCHTasksCollectionRequestT> & { tasksId: string }
+  ) => void;
   queryClient: ReturnType<typeof useQueryClient>;
-  getTaskCollectionByIdError: any;
+  getTaskCollectionById: (
+    tasksId: string
+  ) => POSTTasksCollectionResponseT | undefined;
+  getTaskById: (taskId: string) => Task | undefined;
+  isCreatingTaskCollectionLoading: boolean;
+  isPatchingTaskCollectionLoading: boolean;
+  isCreatingTaskLoading: boolean;
+  isPatchingTaskLoading: boolean;
+  isDeletingTaskLoading: boolean;
+  isDeletingTaskCollectionLoading: boolean;
+  isTaskCollectionLoading: boolean;
 }
 
 const TasksContext = createContext<TasksContextValue | null>(null);
-
-/* =======================
-   Provider
-======================= */
 
 interface TasksProviderProps {
   children: ReactNode;
 }
 
 export function TasksProvider({ children }: TasksProviderProps) {
+  const {
+    tasksCollection,
+    setTasksCollection,
+    getTaskCollectionById,
+    getTaskById,
+    addTaskCollection,
+    removeTasksCollectionById,
+    updateTaskCollection,
+    addTaskToCollection,
+    removeTask,
+    updateTask,
+  } = useTasksStore();
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { mutate: createTaskCollection } = useCreateTaskCollection();
-  const { mutate: patchTaskCollection } = usePatchTasksCollection();
-  const { mutate: patchTask } = usePatchTask();
-  const { mutate: deleteTask } = useDeleteTask();
   const {
-    data,
-    mutate: refetchTasks,
-    error: getTaskCollectionByIdError,
-  } = useGetTaskCollectionById();
-  const { mutate: createTask } = useCreateTask();
-  const { mutate: mutateDeleteCollection } = useDeleteTaskCollectionById();
-
-  const [tasks, setTasks] = useState<Task[]>([]);
-
-  /* =======================
-     Effects
-  ======================= */
+    mutate: createTaskCollection,
+    isPending: isCreatingTaskCollectionLoading,
+  } = useCreateTaskCollection();
+  const {
+    mutate: patchTaskCollection,
+    isPending: isPatchingTaskCollectionLoading,
+  } = usePatchTasksCollection();
+  const { mutate: patchTask, isPending: isPatchingTaskLoading } =
+    usePatchTask();
+  const { mutate: deleteTask, isPending: isDeletingTaskLoading } =
+    useDeleteTask();
+  const { data: taskCollectionData, isLoading: isTaskCollectionLoading } =
+    useGetTaskCollection();
+  const { mutate: createTask, isPending: isCreatingTaskLoading } =
+    useCreateTask();
+  const {
+    mutate: deleteTaskCollection,
+    isPending: isDeletingTaskCollectionLoading,
+  } = useDeleteTaskCollectionById();
 
   useEffect(() => {
-    if (data?.data?.tasks) {
-      setTasks(data.data.tasks);
+    if (!!taskCollectionData) {
+      setTasksCollection(taskCollectionData);
     }
-  }, [data]);
-
-  /* =======================
-     Helpers
-  ======================= */
+  }, [taskCollectionData]);
 
   const getNextStatus = (status: TaskStatus): TaskStatus => {
     switch (status) {
@@ -101,97 +116,49 @@ export function TasksProvider({ children }: TasksProviderProps) {
     }
   };
 
-  /* =======================
-     Actions
-  ======================= */
-
   const handleDeleteTaskCollection = (deleteTaskId: string) => {
-    mutateDeleteCollection(deleteTaskId, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: QueryKeys.TasksQueryKeys.parent("get-task-collection"),
-        });
-        refetchTasks(deleteTaskId);
+    const prev = getTaskCollectionById(deleteTaskId);
+
+    if (!prev) return;
+    const prevSnapshot: POSTTasksCollectionResponseT = structuredClone(prev);
+
+    removeTasksCollectionById(deleteTaskId);
+    deleteTaskCollection(deleteTaskId, {
+      onError: () => {
+        addTaskCollection(prevSnapshot);
       },
     });
   };
   const handleCreateTaskCollection = (data: POSTTasksCollectionRequestT) => {
     createTaskCollection(data, {
       onSuccess: (d) => {
-        queryClient.invalidateQueries({
-          queryKey: QueryKeys.TasksQueryKeys.parent("get-task-collection"),
-        });
-        logger.trace("HandleCreateTaskCollection: ", d);
-        router.push([ROUTES_CLIENT.PRIVATE.TASKS, d.data.tasksId].join("?id="));
+        addTaskCollection(d!);
       },
     });
   };
 
   const handleToggleStatus = (task: Task) => {
     const nextStatus = getNextStatus(task.status);
-
-    setTasks((prev) =>
-      prev.map((t) =>
-        t.taskId === task.taskId ? { ...t, status: nextStatus } : t
-      )
-    );
-
-    patchTask(
-      { taskId: task.taskId, status: nextStatus },
-      {
-        onSuccess: () => {
-          if (
-            nextStatus === TaskStatus.PENDING ||
-            nextStatus === TaskStatus.DONE
-          ) {
-            queryClient.invalidateQueries({
-              queryKey: QueryKeys.TasksQueryKeys.parent("get-task-collection"),
-            });
-          }
-        },
-        onError: (err) => {
-          logger.error(err);
-          queryClient.invalidateQueries({
-            queryKey: QueryKeys.TasksQueryKeys.parent(
-              "get-task-collection-by-id"
-            ),
-          });
-        },
-      }
-    );
+    updateTask({ taskId: task.taskId, status: nextStatus });
+    patchTask({ taskId: task.taskId, status: nextStatus });
   };
 
-  const handlePatchTasks = (task: Partial<Task>) => {
-    patchTask(
-      { taskId: task.taskId!, ...task },
-      {
-        onSuccess: () => {
-          setTasks((prev) =>
-            prev.map((t) => (t.taskId === task.taskId ? { ...t, ...task } : t))
-          );
-        },
-        onError: (err) => {
-          logger.error(err);
-          queryClient.invalidateQueries({
-            queryKey: QueryKeys.TasksQueryKeys.parent(
-              "get-task-collection-by-id"
-            ),
-          });
-        },
-      }
-    );
+  const handlePatchTasks = (task: Partial<Task> & { taskId: string }) => {
+    const prev = getTaskById(task.taskId);
+
+    if (!prev) return;
+    const prevSnapshot: Task = structuredClone(prev);
+
+    patchTask(task, {
+      onError: () => {
+        updateTask(prevSnapshot);
+      },
+    });
   };
 
   const handleDeleteTask = (taskId: string) => {
-    setTasks((prev) => prev.filter((t) => t.taskId !== taskId));
-
-    deleteTask(taskId, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: QueryKeys.TasksQueryKeys.parent("get-task-collection"),
-        });
-      },
-    });
+    removeTask(taskId);
+    deleteTask(taskId);
   };
 
   const handleCreateTask = (form: TaskCreateFormValues & { id: string }) => {
@@ -204,35 +171,50 @@ export function TasksProvider({ children }: TasksProviderProps) {
         details: form.details ?? "",
       },
       {
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: QueryKeys.TasksQueryKeys.parent("get-task-collection"),
-          });
-          refetchTasks(form.id);
+        onSuccess: (d) => {
+          addTaskToCollection(form.id, d!);
         },
       }
     );
   };
 
-  /* =======================
-     Provider Value
-  ======================= */
+  const handlePatchTaskCollection = (
+    d: Partial<PATCHTasksCollectionRequestT> & { tasksId: string }
+  ) => {
+    const prev = getTaskCollectionById(d.tasksId);
+
+    if (!prev) return;
+    const prevSnapshot: PATCHTasksCollectionRequestT = structuredClone(prev);
+    updateTaskCollection(d);
+
+    patchTaskCollection(d, {
+      onError: () => {
+        updateTaskCollection(prevSnapshot);
+      },
+    });
+  };
 
   return (
     <TasksContext.Provider
       value={{
-        tasks,
-        setTasks,
-        taskCollectionData: data?.data,
+        tasksCollection,
         handleToggleStatus,
         handleDeleteTask,
         handleCreateTask,
         handlePatchTasks,
-        patchTaskCollection,
+        handlePatchTaskCollection,
         queryClient,
         handleCreateTaskCollection,
         handleDeleteTaskCollection,
-        getTaskCollectionByIdError,
+        getTaskCollectionById,
+        getTaskById,
+        isCreatingTaskCollectionLoading,
+        isPatchingTaskCollectionLoading,
+        isCreatingTaskLoading,
+        isPatchingTaskLoading,
+        isDeletingTaskLoading,
+        isDeletingTaskCollectionLoading,
+        isTaskCollectionLoading,
       }}
     >
       {children}

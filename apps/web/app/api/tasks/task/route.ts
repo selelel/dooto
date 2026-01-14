@@ -62,7 +62,8 @@ export async function DELETE(req: NextRequest) {
   const endpoint = '/task'
   const { searchParams } = new URL(req.url)
   const id = searchParams.get('id')
-  const headers = ParseHeader(req.headers)
+  const cookie = GetCookie(req.headers);
+const headers = { cookie }
   try {
     logger.trace({ id })
 

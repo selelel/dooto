@@ -137,11 +137,11 @@
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+  display: none;
 }
 
 .no-tailwind * {
-  display: revert; /* revert to browser default */
+  display: revert;
   box-sizing: border-box;
   font-family: revert;
   color: revert;
@@ -149,5 +149,46 @@
   margin: 0.5em 0;
   padding: revert;
   border: revert;
-  /* add any other properties you want to reset */
+}
+
+@keyframes unblur {
+  from {
+    filter: blur(5px);
+    opacity: 0;
+  }
+  to {
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
+@keyframes popUpScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.pop-up-scale-animation {
+  animation: popUpScale 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    filter: blur(4px);
+  }
+}
+
+.unblur-animation-exit {
+  animation: fadeOut 0.3s ease forwards;
+  pointer-events: none;
 }
