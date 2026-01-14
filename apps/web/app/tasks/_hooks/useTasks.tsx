@@ -148,7 +148,7 @@ export function TasksProvider({ children }: TasksProviderProps) {
 
     if (!prev) return;
     const prevSnapshot: Task = structuredClone(prev);
-
+    updateTask(task);
     patchTask(task, {
       onError: () => {
         updateTask(prevSnapshot);
@@ -221,10 +221,6 @@ export function TasksProvider({ children }: TasksProviderProps) {
     </TasksContext.Provider>
   );
 }
-
-/* =======================
-   Consumer Hook
-======================= */
 
 export function useTasks() {
   const context = useContext(TasksContext);

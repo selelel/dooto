@@ -9,18 +9,10 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { CalendarIcon } from "lucide-react";
 import {
   Popover,
@@ -29,17 +21,13 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Task } from "@/modules/tasks/types";
-import { logger } from "@/lib/logger";
 import { useTasks } from "../_hooks/useTasks";
 import { StatusIconRender } from "./task-row";
 
-/** Define your Zod schema for task creation */
 const taskSchema = z.object({
-  taskName: z.string().min(2, {
-    message: "Task name must be at least 2 characters.",
-  }),
+  taskName: z.string().min(2, "Task name must be at least 2 characters."),
   details: z.string().optional(),
-  due: z.date().optional(),
+  due: z.date().nullable().optional(),
 });
 
 export type TaskFormValues = z.infer<typeof taskSchema>;
@@ -50,239 +38,185 @@ interface TaskDialogProps {
   task: Task;
 }
 
-function TaskDialog({ open, onOpenChange, task }: TaskDialogProps) {
-  const { handlePatchTasks, handleToggleStatus } = useTasks();
+export default function TaskDialog({
+  open,
+  onOpenChange,
+  task: initialTask,
+}: TaskDialogProps) {
+  const { handlePatchTasks, handleToggleStatus, getTaskById } = useTasks();
+  const task = getTaskById(initialTask.taskId)!;
+
   const form = useForm<TaskFormValues>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
-      taskName: task.taskName,
-      details: task.details || "",
-      due: task.due ?? null,
+      taskName: "",
+      details: "",
+      due: null,
     },
   });
+
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  logger.info(task);
+
+  useEffect(() => {
+    if (!task) return;
+
+    form.reset({
+      taskName: task.taskName ?? "",
+      details: task.details ?? "",
+      due: task.due ? new Date(task.due) : null,
+    });
+  }, [task.taskId, task.updated]);
+
+  const startOfDay = (d: Date) =>
+    new Date(d.getFullYear(), d.getMonth(), d.getDate());
+
+  const today = startOfDay(new Date());
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+
+  const handleDueChange = (newDate: Date | null) => {
+    form.setValue("due", newDate);
+
+    const prev = task.due ? new Date(task.due) : null;
+    if (
+      (prev && newDate && prev.getTime() === newDate.getTime()) ||
+      (!prev && !newDate)
+    ) {
+      return;
+    }
+
+    handlePatchTasks({
+      taskId: task.taskId,
+      due: newDate ?? undefined,
+    });
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <Form {...form}>
-        <form className='space-y-6'>
-          <DialogContent className='sm:max-w-lg'>
-            <DialogHeader>
-              <div
-                onClick={() => handleToggleStatus(task)}
-                className='p-1 rounded cursor-pointer hover:opacity-30 duration-300 w-fit'
-              >
-                {StatusIconRender(task.status)}
-              </div>
+        <DialogContent className='sm:max-w-lg space-y-6'>
+          <DialogHeader>
+            <div
+              onClick={() => handleToggleStatus(task)}
+              className='w-fit cursor-pointer rounded p-1 transition hover:opacity-40'
+            >
+              {StatusIconRender(task.status)}
+            </div>
+
+            {task.due && (
               <FormField
                 control={form.control}
                 name='due'
                 render={({ field }) => {
-                  const date =
-                    field.value instanceof Date
-                      ? field.value
-                      : typeof field.value === "string"
-                        ? new Date(field.value)
-                        : undefined;
-
-                  const startOfDay = (d: Date) =>
-                    new Date(d.getFullYear(), d.getMonth(), d.getDate());
-
-                  const today = startOfDay(new Date());
-                  const tomorrow = new Date(today);
-                  tomorrow.setDate(today.getDate() + 1);
+                  const date = field.value;
 
                   return (
-                    <FormItem className='flex flex-col space-y-2'>
-                      {date && (
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <div
-                              className={`flex items-center w-full justify-start text-left text-xs cursor-pointer ${
-                                !date ? "text-muted-foreground" : ""
-                              }`}
-                            >
-                              <CalendarIcon className='mr-2 h-3 w-4' />
-                              <span>
-                                {date.toLocaleDateString("en-US", {
-                                  weekday: "long",
-                                  day: "numeric",
-                                  year: "numeric",
-                                })}
-                              </span>
-                            </div>
-                          </PopoverTrigger>
-                          <PopoverContent className='w-auto p-0' align='start'>
-                            <Calendar
-                              mode='single'
-                              selected={date}
-                              onSelect={(selectedDate) => {
-                                field.onChange(selectedDate ?? undefined);
-                              }}
-                              disabled={(d) => d < startOfDay(new Date())}
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      )}
-                      <FormMessage />
+                    <FormItem>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <div className='flex cursor-pointer items-center text-xs text-muted-foreground'>
+                            <CalendarIcon className='mr-2 h-3 w-4' />
+                            {date?.toLocaleDateString("en-US", {
+                              weekday: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </div>
+                        </PopoverTrigger>
+                        <PopoverContent className='w-auto p-0' align='start'>
+                          <Calendar
+                            mode='single'
+                            selected={date ?? undefined}
+                            onSelect={(d) => handleDueChange(d ?? null)}
+                            disabled={(d) => d < startOfDay(new Date())}
+                          />
+                        </PopoverContent>
+                      </Popover>
                     </FormItem>
                   );
                 }}
               />
-              <FormField
-                control={form.control}
-                name='taskName'
-                render={({ field }) => (
-                  <DialogTitle>
-                    <input
-                      className='w-full'
-                      {...field}
-                      onBlur={() => {
-                        if (field.value !== task?.taskName) {
-                          handlePatchTasks({
-                            taskId: task.taskId!,
-                            taskName: field.value,
-                          });
-                        }
-                      }}
-                    />
-                  </DialogTitle>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='details'
-                render={({ field }) => (
-                  <DialogDescription>
-                    <textarea
-                      className='w-full h-fit min-h-10 resize-none'
-                      {...field}
-                      onBlur={() => {
-                        if (field.value !== task.details) {
-                          handlePatchTasks({
-                            taskId: task.taskId!,
-                            details: field.value,
-                          });
-                        }
-                      }}
-                    />
-                  </DialogDescription>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='due'
-                render={({ field }) => {
-                  const date =
-                    field.value instanceof Date
-                      ? field.value
-                      : typeof field.value === "string"
-                        ? new Date(field.value)
-                        : undefined;
+            )}
 
-                  // Utility to compare two dates (ignoring time)
-                  const isSameDate = (d1?: Date | null, d2?: Date | null) => {
-                    if (!d1 && !d2) return true;
-                    if (!d1 || !d2) return false;
-                    return (
-                      d1.getFullYear() === d2.getFullYear() &&
-                      d1.getMonth() === d2.getMonth() &&
-                      d1.getDate() === d2.getDate()
-                    );
-                  };
-
-                  const handleDueChange = (newDate: Date | undefined) => {
-                    field.onChange(newDate);
-                    if (!isSameDate(newDate ?? null, task.due ?? null)) {
-                      handlePatchTasks({
-                        taskId: task.taskId!,
-                        due: newDate ?? task.due,
-                      });
-                    }
-                  };
-
-                  const startOfDay = (d: Date) =>
-                    new Date(d.getFullYear(), d.getMonth(), d.getDate());
-                  const today = startOfDay(new Date());
-                  const tomorrow = new Date(today);
-                  tomorrow.setDate(today.getDate() + 1);
-
-                  return (
-                    <FormItem className='flex flex-col space-y-2'>
-                      {!date && (
-                        <div className='flex gap-2'>
-                          <Badge
-                            variant='outline'
-                            className='cursor-pointer'
-                            onClick={() => handleDueChange(today)}
-                          >
-                            Today
-                          </Badge>
-                          <Badge
-                            variant='outline'
-                            className='cursor-pointer'
-                            onClick={() => handleDueChange(tomorrow)}
-                          >
-                            Tomorrow
-                          </Badge>
-                          <Popover
-                            open={isPopoverOpen}
-                            onOpenChange={setIsPopoverOpen}
-                          >
-                            <PopoverTrigger asChild>
-                              <Badge
-                                variant='outline'
-                                className='cursor-pointer'
-                                onClick={() => setIsPopoverOpen(true)}
-                              >
-                                Custom
-                              </Badge>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className='w-auto p-0'
-                              align='start'
-                            >
-                              <Calendar
-                                mode='single'
-                                selected={date}
-                                onSelect={(selectedDate) => {
-                                  handleDueChange(selectedDate ?? undefined);
-                                  setIsPopoverOpen(false);
-                                }}
-                                disabled={(d) => d < startOfDay(new Date())}
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-                      )}
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
-            </DialogHeader>
-
-            {/* <FormField
+            <FormField
               control={form.control}
-              name="status"DS
+              name='taskName'
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Status</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g. pending, in-progress, done" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                <DialogTitle>
+                  <input
+                    {...field}
+                    value={field.value ?? ""}
+                    className='w-full outline-none'
+                    onBlur={() => {
+                      const trimmed = field.value.trim();
+                      if (!trimmed || trimmed === task.taskName) return;
+
+                      handlePatchTasks({
+                        taskId: task.taskId,
+                        taskName: trimmed,
+                      });
+                    }}
+                  />
+                </DialogTitle>
               )}
-            /> */}
-          </DialogContent>
-        </form>
+            />
+
+            <FormField
+              control={form.control}
+              name='details'
+              render={({ field }) => (
+                <DialogDescription>
+                  <textarea
+                    {...field}
+                    value={field.value ?? ""}
+                    className='min-h-10 w-full resize-none outline-none'
+                    onBlur={() => {
+                      if (field.value === task.details) return;
+
+                      handlePatchTasks({
+                        taskId: task.taskId,
+                        details: field.value ?? "",
+                      });
+                    }}
+                  />
+                </DialogDescription>
+              )}
+            />
+
+            {!task.due && (
+              <div className='flex gap-2 *:cursor-pointer'>
+                <Badge variant='outline' onClick={() => handleDueChange(today)}>
+                  Today
+                </Badge>
+                <Badge
+                  variant='outline'
+                  onClick={() => handleDueChange(tomorrow)}
+                >
+                  Tomorrow
+                </Badge>
+
+                <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <Badge variant='outline' className='cursor-pointer'>
+                      Custom
+                    </Badge>
+                  </PopoverTrigger>
+                  <PopoverContent className='w-auto p-0'>
+                    <Calendar
+                      mode='single'
+                      onSelect={(d) => {
+                        handleDueChange(d ?? null);
+                        setIsPopoverOpen(false);
+                      }}
+                      disabled={(d) => d < startOfDay(new Date())}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            )}
+          </DialogHeader>
+        </DialogContent>
       </Form>
     </Dialog>
   );
 }
-
-export default TaskDialog;

@@ -1,125 +1,148 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField } from "@/components/ui/form";
-import { QueryKeys } from "@/constant/queryKeys";
-import { logger } from "@/lib/logger";
 import { Ellipsis, Plus } from "lucide-react";
-import { useForm, UseFormReturn } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useTasks } from "../_hooks/useTasks";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { POSTTasksCollectionResponseT } from "@/modules/tasks/types";
 import { useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function TaskHeader({
-  data,
+  id,
   onOpenDialog,
 }: {
-  data: POSTTasksCollectionResponseT;
+  id: string;
   onOpenDialog: () => void;
 }) {
+  const {
+    getTaskCollectionById,
+    isTaskCollectionLoading,
+    handlePatchTaskCollection,
+    handleDeleteTaskCollection,
+  } = useTasks();
+
+  const data = getTaskCollectionById(id);
+
   const form = useForm({
     defaultValues: {
-      taskName: data?.tasksName ?? "",
-      details: data?.details ?? "",
+      taskName: "",
+      details: "",
     },
   });
 
   useEffect(() => {
+    if (!data) return;
+
     form.reset({
-      taskName: data?.tasksName,
-      details: data?.details,
+      taskName: data.tasksName ?? "",
+      details: data.details ?? "",
     });
-  }, [data]);
+  }, [data?.tasksId, data?.updated]);
 
-  const { handlePatchTaskCollection, handleDeleteTaskCollection } = useTasks();
-
-  const handleDelete = () => {
-    handleDeleteTaskCollection(data.tasksId);
-  };
   return (
-    <div className='flex justify-center gap-2 mb-6'>
+    <div className='mb-6 flex items-start gap-3'>
       <Form {...form}>
-        <form className='w-full'>
-          <div className='w-full flex flex-col -space-y-20'>
-            <FormField
-              control={form.control}
-              name='taskName'
-              render={({ field }) => (
-                <FormControl>
+        <form className='flex-1 space-y-1'>
+          <FormField
+            control={form.control}
+            name='taskName'
+            render={({ field }) => (
+              <FormControl>
+                {isTaskCollectionLoading ? (
+                  <Skeleton className='h-8 w-2/3' />
+                ) : (
                   <input
-                    className='text-2xl mb-2'
                     {...field}
                     value={field.value ?? ""}
+                    className='w-full text-2xl font-semibold outline-none'
                     onBlur={() => {
-                      if (field.value !== data?.tasksName) {
+                      if (
+                        field.value.trim() &&
+                        field.value !== data?.tasksName
+                      ) {
                         handlePatchTaskCollection({
-                          tasksId: data.tasksId!,
-                          tasksName: field.value,
+                          tasksId: data!.tasksId,
+                          tasksName: field.value.trim(),
                         });
                       }
                     }}
                   />
-                </FormControl>
-              )}
-            />
+                )}
+              </FormControl>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name='details'
-              render={({ field }) => (
+          <FormField
+            control={form.control}
+            name='details'
+            render={({ field }) =>
+              isTaskCollectionLoading ? (
+                <Skeleton className='h-4 w-1/2' />
+              ) : (
                 <input
-                  className='text-sm text-muted-foreground'
                   {...field}
+                  value={field.value ?? ""}
+                  className='w-full text-sm text-muted-foreground outline-none'
                   onBlur={() => {
                     if (field.value !== data?.details) {
                       handlePatchTaskCollection({
-                        tasksId: data.tasksId!,
+                        tasksId: data!.tasksId,
                         details: field.value,
                       });
                     }
                   }}
                 />
-              )}
-            />
-          </div>
+              )
+            }
+          />
         </form>
       </Form>
-      <Button onClick={onOpenDialog}>
-        <Plus className='w-4 h-4 mr-2' />
-        Add Task
-      </Button>
 
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant='no-style'>
-            <Ellipsis className='rotate-90' />
-          </Button>
-        </PopoverTrigger>
-
-        <PopoverContent className='w-40 p-2'>
-          <div className='flex flex-col gap-1'>
-            <Button
-              variant='ghost'
-              className='justify-start'
-              // onClick={handleEdit}
-            >
-              Edit
+      <div className='flex items-center gap-2'>
+        {isTaskCollectionLoading ? (
+          <>
+            <Skeleton className='h-9 w-28 rounded-md' />
+            <Skeleton className='h-9 w-9 rounded-md' />
+          </>
+        ) : (
+          <>
+            <Button onClick={onOpenDialog}>
+              <Plus className='mr-2 h-4 w-4' />
+              Add Task
             </Button>
 
-            <Button
-              variant='ghost'
-              className='justify-start text-destructive hover:text-destructive'
-              onClick={handleDelete}
-            >
-              Delete
-            </Button>
-          </div>
-        </PopoverContent>
-      </Popover>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant='no-style'>
+                  <Ellipsis className='rotate-90' />
+                </Button>
+              </PopoverTrigger>
+
+              <PopoverContent className='w-40 p-2'>
+                <div className='flex flex-col gap-1'>
+                  <Button variant='ghost' className='justify-start'>
+                    Edit
+                  </Button>
+
+                  <Button
+                    variant='ghost'
+                    className='justify-start text-destructive'
+                    onClick={() => handleDeleteTaskCollection(id)}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </>
+        )}
+      </div>
     </div>
   );
 }
