@@ -1,5 +1,6 @@
 "use client";
-import { QueryKeys } from "@/constant/queryKeys";
+
+import React, { createContext, useContext, useEffect } from "react";
 import {
   useCreateTimer,
   useDeleteTimer,
@@ -7,64 +8,117 @@ import {
   useRelapseTimer,
   useUpdateTimer,
 } from "@/modules/timer/hooks";
+import { useTimerStore } from "@/modules/timer/store";
 import {
   POSTTimerRequest,
   POSTTimerResponse,
   UpdateTimerT,
 } from "@/modules/timer/types";
-import { useQueryClient } from "@tanstack/react-query";
-import React, { createContext, useContext, useState } from "react";
 
 interface TimerContextValue {
   data: POSTTimerResponse[];
-  handleCreateTimer: (d: POSTTimerRequest) => void;
-  handleRelapseTimer: (d: string) => void;
-  handleDeleteTimer: (d: string) => void;
-  handleUpdateTimer: (d: UpdateTimerT) => void;
+  loading: boolean;
+  handleCreateTimer: (data: POSTTimerRequest) => void;
+  handleRelapseTimer: (id: string) => void;
+  handleDeleteTimer: (id: string) => void;
+  handleUpdateTimer: (data: UpdateTimerT) => void;
+  isFetching: boolean;
+  isCreating: boolean;
+  isDeleting: boolean;
+  isRelapsing: boolean;
 }
 
 const TimerContext = createContext<TimerContextValue | null>(null);
 
 export function TimerProvider({ children }: { children: React.ReactNode }) {
-  const queryClient = useQueryClient();
-  const { data: timerData } = useGetTimers();
-  const { mutate: relpaseTimer } = useRelapseTimer();
-  const { mutate: deleteTimer } = useDeleteTimer();
-  const { mutate: updateTimer } = useUpdateTimer();
-  const { mutate: createTimer } = useCreateTimer();
+  const {
+    timers,
+    setTimers,
+    addTimer,
+    removeTimer,
+    getTimerById,
+    updateTimer: updateTimerStore,
+    relapseTimer: relapseTimerStore,
+  } = useTimerStore();
 
-  const onSuccessRefetch = {
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: QueryKeys.TimerQueryKeys.parent("get-timers"),
-      });
-    },
-  };
+  const { data: timerData, isFetching } = useGetTimers();
+  const { mutate: createTimer, isPending: isCreating } = useCreateTimer();
+  const { mutate: deleteTimer, isPending: isDeleting } = useDeleteTimer();
+  const { mutate: updateTimer, isPending: isUpdating } = useUpdateTimer();
+  const { mutate: relapseTimer, isPending: isRelapsing } = useRelapseTimer();
+
+  useEffect(() => {
+    if (timerData) {
+      setTimers(timerData);
+    }
+  }, [timerData, setTimers]);
+
+  const loading =
+    isFetching || isCreating || isDeleting || isUpdating || isRelapsing;
 
   const handleCreateTimer = (data: POSTTimerRequest) => {
-    createTimer(data, onSuccessRefetch);
+    createTimer(data, {
+      onSuccess: (newTimer) => {
+        addTimer(newTimer);
+      },
+    });
   };
 
   const handleDeleteTimer = (id: string) => {
-    deleteTimer(id, onSuccessRefetch);
+    const prev = getTimerById(id);
+    if (!prev) return;
+
+    const prevSnapshot: POSTTimerResponse = structuredClone(prev);
+    removeTimer(id);
+
+    deleteTimer(id, {
+      onError: () => {
+        addTimer(prevSnapshot);
+      },
+    });
   };
 
   const handleUpdateTimer = (data: UpdateTimerT) => {
-    updateTimer(data, onSuccessRefetch);
+    const prev = getTimerById(data.id);
+    if (!prev) return;
+
+    const prevSnapshot: POSTTimerResponse = structuredClone(prev);
+    updateTimerStore(data);
+
+    updateTimer(data, {
+      onError: () => {
+        addTimer(prevSnapshot);
+      },
+    });
   };
 
   const handleRelapseTimer = (id: string) => {
-    relpaseTimer(id, onSuccessRefetch);
+    const prev = getTimerById(id);
+    if (!prev) return;
+
+    const prevSnapshot: POSTTimerResponse = structuredClone(prev);
+    relapseTimerStore(id);
+
+    relapseTimer(id, {
+      onError: () => {
+        updateTimerStore(prevSnapshot);
+      },
+    });
   };
 
   return (
     <TimerContext.Provider
       value={{
-        data: timerData || [],
+        data: timers,
+        loading,
         handleCreateTimer,
         handleRelapseTimer,
         handleDeleteTimer,
         handleUpdateTimer,
+        isCreating,
+        isDeleting,
+        isFetching,
+        isRelapsing,
       }}
     >
       {children}

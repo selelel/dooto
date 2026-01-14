@@ -51,7 +51,9 @@ function TimerCreateDialog({
   });
 
   const onSubmit = (d: CreateTimerSchema) => {
+    onOpenChange(false);
     handleCreateTimer(d);
+    form.reset();
   };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -66,7 +68,6 @@ function TimerCreateDialog({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-            {/* Habit Name */}
             <FormField
               name='habitName'
               control={form.control}
@@ -81,8 +82,6 @@ function TimerCreateDialog({
                 </FormItem>
               )}
             />
-
-            {/* Details */}
             <FormField
               name='details'
               control={form.control}

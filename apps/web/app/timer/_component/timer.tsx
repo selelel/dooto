@@ -23,7 +23,7 @@ function Timer({ data }: { data: POSTTimerResponse }) {
   return (
     <>
       <TimerViewDialog open={open} onOpenChange={openOnChange} data={data} />
-      <Card className='shadow-md border-l-4 bg-success/50 border border-success group justify-between'>
+      <Card className='pop-up-scale-animation shadow-md border-l-4 bg-success/50 border border-success group justify-between'>
         <CardHeader className='pb-3'>
           <div className='flex items-start justify-between'>
             <div className='flex-1'>

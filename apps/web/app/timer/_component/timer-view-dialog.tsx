@@ -1,7 +1,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -13,10 +12,7 @@ import {
   Clock,
   Calendar,
   Trophy,
-  Target,
-  TrendingUp,
   RotateCcw,
-  Edit2,
   Trash2,
 } from "lucide-react";
 import React from "react";
@@ -153,8 +149,6 @@ function TimerViewDialog({
                   )}
                 </div>
               </div>
-
-              {/* Stats Grid */}
               <div className='grid grid-cols-2 gap-4'>
                 <div className='p-4 rounded-lg bg-muted/50 border border-border'>
                   <div className='flex items-center gap-2 mb-2'>
@@ -175,7 +169,6 @@ function TimerViewDialog({
                 </div>
               </div>
 
-              {/* Milestones */}
               <div>
                 <Label className='mb-3 flex items-center gap-2'>
                   <Trophy className='w-4 h-4' />
@@ -230,29 +223,28 @@ function TimerViewDialog({
                 </div>
               )}
             </div>
-
-            <DialogFooter className='gap-2 sm:gap-2 mt-10'>
-              <Button
-                onClick={() => {
-                  handleRelapseTimer(data.id);
-                }}
-                variant='outline'
-                className='flex-1'
-              >
-                <RotateCcw className='w-4 h-4 mr-2' />
-                Reset
-              </Button>
-              <Button
-                onClick={() => {
-                  handleDeleteTimer(data.id);
-                }}
-                variant='destructive'
-              >
-                <Trash2 className='w-4 h-4' />
-              </Button>
-            </DialogFooter>
           </form>
         </Form>
+
+        <div className='flex gap-2 sm:gap-2 mt-10'>
+          <Button
+            onClick={() => {
+              handleRelapseTimer(data.id);
+            }}
+            variant='outline'
+            className='flex-1'
+          >
+            Reset
+          </Button>
+          <Button
+            onClick={() => {
+              handleDeleteTimer(data.id);
+            }}
+            variant='destructive'
+          >
+            <Trash2 className='w-4 h-4' />
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );
