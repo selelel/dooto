@@ -1,27 +1,10 @@
 "use client";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import {
-  CircleCheck,
-  Circle,
-  Flame,
-  CircleQuestionMark,
-  Timer,
-} from "lucide-react";
+import { Card, CardContent } from "../components/ui/card";
+import { CircleCheck, Flame, CircleQuestionMark, Timer } from "lucide-react";
 import DashboardHeader from "./_component/dashboard-header";
 import StatusCard from "./_component/status-card";
 import DashboardTodoCarousel from "./_component/dashboard-todo-carousel";
-import { useGetTaskCollection } from "@/modules/tasks/hooks";
-import {
-  POSTTasksCollectionResponseT,
-  TaskStatus,
-} from "@/modules/tasks/types";
-import { logger } from "@/lib/logger";
+import { TaskStatus } from "@/modules/tasks/types";
 import { useGetTimers } from "@/modules/timer/hooks";
 import { getTimeSince, hoursToDay } from "./timer/_utils";
 import { isCompletedToday } from "./habits/_utils";
@@ -33,6 +16,7 @@ import { TasksProvider, useTasks } from "./tasks/_hooks/useTasks";
 import { Skeleton } from "@/components/ui/skeleton";
 import { HabitProvider, useHabits } from "./habits/_context/habit-context";
 import DashboardHabitList from "./_component/dashboard-habit-list";
+import { TimerProvider, useTimer } from "./timer/_context/timer-context";
 
 const today = new Date();
 const dateRange = {
@@ -46,9 +30,13 @@ const dateRange = {
 
 function Dashboard() {
   const { tasksCollection, isTaskCollectionLoading } = useTasks();
-  const { habitsData } = useHabits();
-  const { data: timerData } = useGetTimers();
-  const { data: todayMoodJournal } = useGetMoodJournalByDate(dateRange);
+  const { habitsData, isHabitsFetching } = useHabits();
+  const { data: timerData, isFetching: isFetchingTimerData } = useTimer();
+  const { data: todayMoodJournal, isFetching: isFetchingMoodJournal } =
+    useGetMoodJournalByDate(dateRange);
+
+  const isLoading =
+    isHabitsFetching || isFetchingTimerData || isFetchingMoodJournal;
 
   const overAllTaskCount = tasksCollection
     .map((d) => {
@@ -81,7 +69,7 @@ function Dashboard() {
             <div>
               <p className='text-sm text-muted-foreground mb-1'>Tasks Today</p>
 
-              {isTaskCollectionLoading ? (
+              {isLoading ? (
                 <Skeleton className='h-10 w-15' />
               ) : (
                 <p className='text-3xl'>
@@ -100,7 +88,11 @@ function Dashboard() {
                 <span>Since Timer </span>
                 <span>Longest Streak (days)</span>
               </p>
-              <p className='text-3xl'>{totalHoursData}</p>
+              {isLoading ? (
+                <Skeleton className='h-10 w-10 bg-secondary/20' />
+              ) : (
+                <p className='text-3xl'>{totalHoursData}</p>
+              )}
             </div>
             <div className='w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center'>
               <Timer className='w-6 h-6 text-secondary' />
@@ -112,9 +104,13 @@ function Dashboard() {
               <p className='text-sm text-muted-foreground mb-1'>
                 Completed Habit
               </p>
-              <p className='text-3xl'>
-                {completedTodayCount}/{(habitsData || []).length}
-              </p>
+              {isLoading ? (
+                <Skeleton className='h-10 w-10 bg-success/20' />
+              ) : (
+                <p className='text-3xl'>
+                  {completedTodayCount}/{(habitsData || []).length}
+                </p>
+              )}
             </div>
             <div className='w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center'>
               <Flame className='w-6 h-6 text-success' />
@@ -124,9 +120,13 @@ function Dashboard() {
           <StatusCard className='border-l-accent'>
             <div>
               <p className='text-sm text-muted-foreground mb-1'>Mood Today</p>
-              <p className='text-3xl'>
-                {moodConfig?.label ? moodConfig?.label : "N / A"}
-              </p>
+              {isLoading ? (
+                <Skeleton className='h-10 w-10 bg-accent/20' />
+              ) : (
+                <p className='text-3xl'>
+                  {moodConfig?.label ? moodConfig?.label : "N / A"}
+                </p>
+              )}
             </div>
             <div
               className={cn(
@@ -161,10 +161,12 @@ function Dashboard() {
 
 export default function CONTEXTED() {
   return (
-    <HabitProvider>
-      <TasksProvider>
-        <Dashboard />
-      </TasksProvider>
-    </HabitProvider>
+    <TimerProvider>
+      <HabitProvider>
+        <TasksProvider>
+          <Dashboard />
+        </TasksProvider>
+      </HabitProvider>
+    </TimerProvider>
   );
 }

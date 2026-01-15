@@ -24,6 +24,11 @@ interface HabitContextValue {
   handleDelete: (d: string) => void;
   handleUpdate: (d: Partial<POSTHabitRequest> & { habitId: string }) => void;
   getHabitById: (id: string) => POSTHabitResponse | undefined;
+  isHabitsFetching: boolean;
+  isCreatingHabit: boolean;
+  isTogglingHabit: boolean;
+  isDeletingHabit: boolean;
+  isUpdatingHabit: boolean;
 }
 
 const HabitContext = createContext<HabitContextValue | null>(null);
@@ -38,11 +43,12 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
     deleteHabit,
     addHabit,
   } = useHabitStore();
-  const { data: hbitsDt } = useGetHabits();
-  const { mutate: createHabit } = useCreateHabit();
-  const { mutate: toggleHabit } = useToggleHabitContribution();
-  const { mutate: dltHbt } = useDeleteHabit();
-  const { mutate: updtHbt } = useUpdateHabit();
+  const { data: hbitsDt, isFetching: isHabitsFetching } = useGetHabits();
+  const { mutate: createHabit, isPending: isCreatingHabit } = useCreateHabit();
+  const { mutate: toggleHabit, isPending: isTogglingHabit } =
+    useToggleHabitContribution();
+  const { mutate: dltHbt, isPending: isDeletingHabit } = useDeleteHabit();
+  const { mutate: updtHbt, isPending: isUpdatingHabit } = useUpdateHabit();
   const today = normalizeDate(new Date());
 
   useEffect(() => {
@@ -134,6 +140,11 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
         handleDelete,
         handleUpdate,
         getHabitById,
+        isHabitsFetching,
+        isCreatingHabit,
+        isTogglingHabit,
+        isDeletingHabit,
+        isUpdatingHabit,
       }}
     >
       {children}
