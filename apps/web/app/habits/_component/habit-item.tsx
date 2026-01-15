@@ -15,17 +15,14 @@ import {
 import { useHabitStore } from "@/modules/habit/store";
 
 function HabitItem({ id }: { id: string }) {
-  // Subscribe directly to habit from store for reactive updates
-  const habit = useHabitStore((state) =>
-    state.habitsData.find((h) => h.id === id)
-  );
+  const habit = useHabitStore((state) => state.getHabitById(id));
   const handleToggleHabit = useHabitStore(
     (state) => state.toggleHabitContribution
   );
 
   const [openEdit, setOpenEdit] = useState(false);
 
-  if (!habit) return null; // handle case if habit is not found yet
+  if (!habit) return null;
 
   const completedToday = completedTodayFn(habit);
   const jsDay = new Date().getDay();
