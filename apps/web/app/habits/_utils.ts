@@ -44,8 +44,10 @@ export const weekCompletionRate = (d: POSTHabitResponse) => {
 };
 
 
-export    const completedToday = (d: POSTHabitResponse) =>{
-    return d.contributions?.some((c) => normalizeDate(c.date) === today && c.completed) || false};
+export const completedToday = (d: POSTHabitResponse) =>
+  d.contributions?.some(
+    (c) => normalizeDate(c.date) === today && c.completed
+  ) || false;
   
 
 export function computeStreak(contributions: Contribution[]): number {

@@ -1,21 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  useGetHabits,
-  useToggleHabitContribution,
-} from "@/modules/habit/hooks";
-import { Flame, CircleCheck, Circle } from "lucide-react";
-import React from "react";
+import { shallow } from "zustand/shallow";
+import { CircleCheck, Circle } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { completedToday, computeStreak } from "../habits/_utils";
-import { POSTHabitResponse } from "@/modules/habit/types";
-import { useQueryClient } from "@tanstack/react-query";
 import { normalizeDate } from "@/lib/utils";
-import { QueryKeys } from "@/constant/queryKeys";
 import { useRouter } from "next/navigation";
 import { ROUTES_CLIENT } from "@/constant/http";
+import { useHabits } from "../habits/_context/habit-context";
+import { useHabitStore } from "@/modules/habit/store";
 
-function DashboardHabitList() {
-  const { data } = useGetHabits();
+export default function DashboardHabitList() {
+  const { habitsData: data } = useHabits();
   const habitsData = data || [];
   const navigate = useRouter();
   return (
@@ -25,7 +21,7 @@ function DashboardHabitList() {
       </CardHeader>
       <CardContent className='space-y-4'>
         {habitsData.map((habit) => (
-          <DashboardHabitItem key={habit.id} data={habit} />
+          <DashboardHabitItem key={habit.id} id={habit.id} />
         ))}
 
         <Button
@@ -42,62 +38,36 @@ function DashboardHabitList() {
   );
 }
 
-const DashboardHabitItem = ({ data }: { data: POSTHabitResponse }) => {
-  const queryClient = useQueryClient();
-  const { mutate: toggleHabit } = useToggleHabitContribution();
-  const streak = computeStreak(data.contributions);
-  const todayStatus = completedToday(data);
+const DashboardHabitItem = ({ id }: { id: string }) => {
+  const { handleToggleHabit } = useHabits();
+  const habitData = useHabitStore((s) => s.habitsData.find((h) => h.id === id));
+  const todayStatus = !!completedToday(habitData!);
 
-  const handleToggleHabit = function () {
-    toggleHabit(
-      { habitId: data.id, date: normalizeDate(new Date()) },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: QueryKeys.HabitQueryKeys.parent("get-habits"),
-          });
-        },
-      }
-    );
-  };
+  const streak = React.useMemo(
+    () => computeStreak(habitData?.contributions ?? []),
+    [habitData?.contributions]
+  );
 
   return (
-    <div
-      key={data.id}
-      className='flex items-center justify-between p-4 rounded-xl bg-linear-to-r from-muted/50 to-transparent border border-border'
-    >
-      <div className='flex items-center gap-3'>
-        <div className={`w-3 h-3 rounded-full`} />
-        <div>
-          <p className='font-medium'>{data.habitName}</p>
-          {streak > 2 && (
-            <div className='flex items-center gap-2 mt-1'>
-              <Flame className='w-4 h-4 text-orange-500' />
-              <span className='text-sm text-muted-foreground'>
-                {streak} day streak
-              </span>
-            </div>
-          )}
-        </div>
+    <div className='flex items-center justify-between p-4 rounded-xl border'>
+      <div>
+        <p className='font-medium'>{habitData?.habitName}</p>
+        {streak > 2 && <span>{streak} day streak</span>}
       </div>
+
       <div
-        onClick={() => {
-          handleToggleHabit();
-        }}
-        className={`cursor-pointer hover:scale-105 duration-200 hover:opacity-90 w-10 h-10 rounded-lg flex items-center justify-center ${
-          todayStatus
-            ? "bg-success text-success-foreground"
-            : "bg-muted text-muted-foreground"
+        onClick={() =>
+          handleToggleHabit({
+            habitId: id,
+            date: normalizeDate(new Date()),
+          })
+        }
+        className={`w-10 h-10 rounded-lg flex items-center justify-center cursor-pointer ${
+          todayStatus ? "bg-success" : "bg-muted"
         }`}
       >
-        {todayStatus ? (
-          <CircleCheck className='w-5 h-5' />
-        ) : (
-          <Circle className='w-5 h-5' />
-        )}
+        {todayStatus ? <CircleCheck /> : <Circle />}
       </div>
     </div>
   );
 };
-
-export default DashboardHabitList;

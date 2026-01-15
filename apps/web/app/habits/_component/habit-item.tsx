@@ -13,12 +13,11 @@ import {
   weekDates,
 } from "../_utils";
 import { useHabitStore } from "@/modules/habit/store";
+import { useHabits } from "../_context/habit-context";
 
 function HabitItem({ id }: { id: string }) {
   const habit = useHabitStore((state) => state.getHabitById(id));
-  const handleToggleHabit = useHabitStore(
-    (state) => state.toggleHabitContribution
-  );
+  const { handleToggleHabit } = useHabits();
 
   const [openEdit, setOpenEdit] = useState(false);
 
@@ -103,7 +102,12 @@ function HabitItem({ id }: { id: string }) {
                     index >= todayIndex + 1 ? "bg-muted-foreground/10" : "",
                     todayIndex === index ? "border-2 border-red-300" : ""
                   )}
-                  onClick={() => handleToggleHabit(habit.id, weekDates[index]!)}
+                  onClick={() =>
+                    handleToggleHabit({
+                      habitId: habit.id,
+                      date: weekDates[index]!,
+                    })
+                  }
                 />
               );
             })}

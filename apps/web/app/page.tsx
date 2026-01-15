@@ -25,29 +25,30 @@ import { logger } from "@/lib/logger";
 import { useGetTimers } from "@/modules/timer/hooks";
 import { getTimeSince, hoursToDay } from "./timer/_utils";
 import { isCompletedToday } from "./habits/_utils";
-import { useGetHabits } from "@/modules/habit/hooks";
 import { useGetMoodJournalByDate } from "@/modules/mood-journal/hooks";
 import { cn, normalizeDate } from "@/lib/utils";
 import { moodEmojis } from "./mood-journal/_utils";
-import DashboardHabitList from "./_component/dashboard-habit-list";
 import Navigation from "@/components/layout/navigation";
 import { TasksProvider, useTasks } from "./tasks/_hooks/useTasks";
 import { Skeleton } from "@/components/ui/skeleton";
+import { HabitProvider, useHabits } from "./habits/_context/habit-context";
+import DashboardHabitList from "./_component/dashboard-habit-list";
+
+const today = new Date();
+const dateRange = {
+  from: normalizeDate(
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)
+  ),
+  to: normalizeDate(
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
+  ),
+};
 
 function Dashboard() {
-  const today = new Date();
   const { tasksCollection, isTaskCollectionLoading } = useTasks();
-  const dateRange = {
-    from: normalizeDate(
-      new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)
-    ),
-    to: normalizeDate(
-      new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
-    ),
-  };
+  const { habitsData } = useHabits();
   const { data: timerData } = useGetTimers();
   const { data: todayMoodJournal } = useGetMoodJournalByDate(dateRange);
-  const { data: habitsData } = useGetHabits();
 
   const overAllTaskCount = tasksCollection
     .map((d) => {
@@ -57,8 +58,7 @@ function Dashboard() {
 
   const completedTasks = overAllTaskCount.filter(
     (d) => d.status === TaskStatus.DONE
-  ).length; // O(3n)
-  logger.trace(completedTasks);
+  ).length;
 
   const totalHoursData = (timerData || [])
     .map((d) => hoursToDay(getTimeSince(new Date(d.lastRelapseAt)).totalHours))
@@ -142,8 +142,6 @@ function Dashboard() {
 
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 overflow-hidden'>
           <DashboardTodoCarousel />
-
-          {/* Habit Tracker Preview */}
           <DashboardHabitList />
         </div>
 
@@ -163,8 +161,10 @@ function Dashboard() {
 
 export default function CONTEXTED() {
   return (
-    <TasksProvider>
-      <Dashboard />
-    </TasksProvider>
+    <HabitProvider>
+      <TasksProvider>
+        <Dashboard />
+      </TasksProvider>
+    </HabitProvider>
   );
 }
