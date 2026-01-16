@@ -5,7 +5,7 @@ const INTERVAL = 10_000;
 
 export function useServerHealth() {
   const [health, setHealth] = useState<HealthState>({
-    state: "online",
+    state: "offline",
   });
 
   useEffect(() => {

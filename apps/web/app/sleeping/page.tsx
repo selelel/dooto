@@ -17,7 +17,7 @@ import { Progress } from "@/components/ui/progress";
 import { useServerHealth } from "@/modules/server/hooks";
 
 export default function ServerWakingUp() {
-  const estimatedTime = 50;
+  const estimatedTime = 120;
   const health = useServerHealth();
   const router = useRouter();
 

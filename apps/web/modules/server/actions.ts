@@ -5,7 +5,6 @@ export type HealthState =
   | { state: "online" }
   | { state: "offline" };
 
-const API_URL = process.env.API_URL
 
 export const getHealth = async (): Promise<HealthState> => {
   try {
