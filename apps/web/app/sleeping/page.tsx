@@ -1,12 +1,13 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Cloud,
-  Zap,
   Coffee,
-  Sun,
+  Zap,
+  Cloud,
   Sparkles,
+  Sun,
   CheckCircle2,
   RefreshCw,
 } from "lucide-react";
@@ -35,18 +36,23 @@ export default function ServerWakingUp() {
   useEffect(() => {
     if (status !== "waking") return;
 
+    if (timeRemaining === 0) {
+      return;
+    }
+
     const interval = setInterval(() => {
       setTimeRemaining((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [status]);
+  }, [status, timeRemaining]);
 
   useEffect(() => {
     if (status !== "waking") return;
 
     const progressPercent =
       ((estimatedTime - timeRemaining) / estimatedTime) * 100;
+
     setProgress(Math.min(progressPercent, 95));
   }, [timeRemaining, estimatedTime, status]);
 
@@ -58,6 +64,7 @@ export default function ServerWakingUp() {
       Math.floor((estimatedTime - timeRemaining) / phaseInterval),
       phases.length - 1
     );
+
     setCurrentPhase(newPhase);
   }, [timeRemaining, estimatedTime, phases.length, status]);
 
@@ -65,7 +72,10 @@ export default function ServerWakingUp() {
     if (health.state === "online" && status !== "ready") {
       setStatus("ready");
       setProgress(100);
-      router.replace("/");
+
+      setTimeout(() => {
+        router.replace("/");
+      }, 1000);
     }
   }, [health.state, router, status]);
 
@@ -151,7 +161,14 @@ export default function ServerWakingUp() {
             )}
           </div>
 
-          {/* Progress Section */}
+          {status === "waking" && (
+            <div className='text-center mb-6'>
+              <p className='text-xl font-semibold'>
+                Time remaining: {formatTime(timeRemaining)}
+              </p>
+            </div>
+          )}
+
           {status !== "ready" && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -159,7 +176,6 @@ export default function ServerWakingUp() {
               transition={{ delay: 0.3 }}
               className='space-y-6'
             >
-              {/* Progress Bar */}
               <div className='space-y-2'>
                 <div className='flex items-center justify-between text-sm'>
                   <span className='text-muted-foreground'>Progress</span>
@@ -167,8 +183,6 @@ export default function ServerWakingUp() {
                 </div>
                 <Progress value={progress} className='h-3' />
               </div>
-
-              {/* Time Estimate */}
               <div className='p-4 rounded-lg bg-linear-to-br from-accent/10 to-accent/5 border border-accent/20'>
                 <div className='flex items-center justify-center gap-3'>
                   <Sun className='w-5 h-5 text-accent' />
@@ -185,7 +199,6 @@ export default function ServerWakingUp() {
             </motion.div>
           )}
 
-          {/* Ready State */}
           {status === "ready" && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -201,7 +214,6 @@ export default function ServerWakingUp() {
             </motion.div>
           )}
 
-          {/* Info Section */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -239,7 +251,6 @@ export default function ServerWakingUp() {
             </div>
           </motion.div>
 
-          {/* Reassurance */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -253,7 +264,6 @@ export default function ServerWakingUp() {
           </motion.div>
         </motion.div>
 
-        {/* Floating decorative elements */}
         <div className='fixed inset-0 pointer-events-none overflow-hidden'>
           <motion.div
             animate={{

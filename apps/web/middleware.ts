@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
-import { ROUTES_CLIENT } from './constant/http'
+import { ENDPOINT, ROUTES_CLIENT } from './constant/http'
+import { logger } from './lib/logger'
 
 export async function middleware(req: NextRequest) {
   const healthCheck = await ServerHealthMiddleware(req)
@@ -73,10 +74,12 @@ async function isServerDown(): Promise<boolean> {
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 2000)
 
-    const res = await fetch(`${process.env.API_BASE_URL}/health`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/server`, {
       cache: 'no-store',
       signal: controller.signal,
     })
+
+    logger.trace(res)
 
     clearTimeout(timeout)
     return !res.ok
