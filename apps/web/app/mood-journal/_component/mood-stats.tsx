@@ -28,7 +28,6 @@ function MoodStats() {
 
   return (
     <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-      {/* Total Entries */}
       <StatusCard className='border-l-primary'>
         <div className='flex items-center gap-3'>
           <div className='w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center'>

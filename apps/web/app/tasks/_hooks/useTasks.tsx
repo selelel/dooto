@@ -6,9 +6,6 @@ import {
   ReactNode,
 } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-
-import { QueryKeys } from "@/constant/queryKeys";
-import { logger } from "@/lib/logger";
 import {
   usePatchTasksCollection,
   usePatchTask,
@@ -74,7 +71,6 @@ export function TasksProvider({ children }: TasksProviderProps) {
     removeTask,
     updateTask,
   } = useTasksStore();
-  const router = useRouter();
   const queryClient = useQueryClient();
   const {
     mutate: createTaskCollection,

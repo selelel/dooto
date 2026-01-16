@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import {
-  POSTTimerRequest,
   POSTTimerResponse,
   UpdateTimerT,
 } from "@/modules/timer/types";

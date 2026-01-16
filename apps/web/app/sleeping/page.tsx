@@ -20,7 +20,6 @@ export default function ServerWakingUp() {
   const health = useServerHealth();
   const router = useRouter();
 
-  // States
   const [timeRemaining, setTimeRemaining] = useState(estimatedTime);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState<"waking" | "ready">("waking");
@@ -33,7 +32,6 @@ export default function ServerWakingUp() {
     { icon: Sparkles, label: "Almost there...", color: "text-accent" },
   ];
 
-  // Countdown timer for waking phase
   useEffect(() => {
     if (status !== "waking") return;
 
@@ -44,16 +42,14 @@ export default function ServerWakingUp() {
     return () => clearInterval(interval);
   }, [status]);
 
-  // Progress bar updates
   useEffect(() => {
     if (status !== "waking") return;
 
     const progressPercent =
       ((estimatedTime - timeRemaining) / estimatedTime) * 100;
-    setProgress(Math.min(progressPercent, 95)); // Cap at 95% until ready
+    setProgress(Math.min(progressPercent, 95));
   }, [timeRemaining, estimatedTime, status]);
 
-  // Phase progression updates
   useEffect(() => {
     if (status !== "waking") return;
 
@@ -65,7 +61,6 @@ export default function ServerWakingUp() {
     setCurrentPhase(newPhase);
   }, [timeRemaining, estimatedTime, phases.length, status]);
 
-  // React to server health state changes
   useEffect(() => {
     if (health.state === "online" && status !== "ready") {
       setStatus("ready");
@@ -74,7 +69,6 @@ export default function ServerWakingUp() {
     }
   }, [health.state, router, status]);
 
-  // Format seconds to mm:ss or seconds
   const formatTime = (seconds: number) => {
     if (seconds < 60) {
       return `${seconds} second${seconds !== 1 ? "s" : ""}`;
@@ -92,7 +86,7 @@ export default function ServerWakingUp() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 1 }}
         >
           <div className='text-center mb-8'>
             <motion.div

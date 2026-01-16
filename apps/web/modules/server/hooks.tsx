@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getHealth, HealthState } from "./actions";
 
-const INTERVAL = 60_000;
+const INTERVAL = 10_000;
 
 export function useServerHealth() {
   const [health, setHealth] = useState<HealthState>({

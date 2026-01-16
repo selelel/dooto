@@ -1,12 +1,7 @@
 import axios from "axios";
 import { ENDPOINT } from "@/constant/http";
 import { normalizeAxiosError } from "@/lib/utils";
-import { logger } from "@/lib/logger";
 import { PATCHMoodJournal, POSTMoodJournalRequest, POSTMoodJournalResponse } from "./types";
-
-/* =========================
-   Create Habit
-========================= */
 
 export const createMoodJournal = async (
   payload: POSTMoodJournalRequest

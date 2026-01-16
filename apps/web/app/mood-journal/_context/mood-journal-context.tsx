@@ -6,17 +6,18 @@ import {
   useGetMoodJournals,
   useUpdateMoodJournal,
 } from "@/modules/mood-journal/hooks";
+import { useMoodJournalStore } from "@/modules/mood-journal/store";
 import {
   PATCHMoodJournal,
   POSTMoodJournalRequest,
   POSTMoodJournalResponse,
 } from "@/modules/mood-journal/types";
-import { useQueryClient } from "@tanstack/react-query";
 import {
   createContext,
   Dispatch,
   SetStateAction,
   useContext,
+  useEffect,
   useState,
 } from "react";
 
@@ -38,32 +39,59 @@ export function MoodJournalProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const queryClient = useQueryClient();
-  const { data: moodJournalData } = useGetMoodJournals();
+  const {
+    setJournals,
+    addJournal,
+    updateJournal,
+    getJournalById,
+    removeJournal,
+    journals: moodJournalData,
+  } = useMoodJournalStore();
+  const { data } = useGetMoodJournals();
   const { mutate: createMoodJournal } = useCreateMoodJournal();
   const { mutate: updateMoodJournal } = useUpdateMoodJournal();
   const { mutate: deleteMoodJournal } = useDeleteMoodJournal();
   const [view, setView] = useState<"list" | "calendar">("list");
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  const onSuccessRefetch = {
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: QueryKeys.MoodJournalQueryKeys.parent("get-mood-journals"),
-      });
-    },
-  };
+  useEffect(() => {
+    if (!!data) {
+      setJournals(data);
+    }
+  }, [data]);
 
   const handleCreateMoodJournal = (data: POSTMoodJournalRequest) => {
-    createMoodJournal(data, onSuccessRefetch);
+    createMoodJournal(data, {
+      onSuccess: (d) => {
+        addJournal(d);
+      },
+    });
   };
 
   const handleUpdateMoodJournal = (data: PATCHMoodJournal) => {
-    updateMoodJournal(data, onSuccessRefetch);
+    const prev = getJournalById(data.id);
+
+    if (!prev) return;
+    const prevSnapshot: POSTMoodJournalResponse = structuredClone(prev);
+    updateJournal(data);
+    updateMoodJournal(data, {
+      onError: () => {
+        updateJournal(prevSnapshot);
+      },
+    });
   };
 
   const handleDeleteMoodJournal = (id: string) => {
-    deleteMoodJournal(id, onSuccessRefetch);
+    const prev = getJournalById(id);
+
+    if (!prev) return;
+    const prevSnapshot: POSTMoodJournalResponse = structuredClone(prev);
+    removeJournal(id);
+    deleteMoodJournal(id, {
+      onError: () => {
+        updateJournal(prevSnapshot);
+      },
+    });
   };
 
   return (

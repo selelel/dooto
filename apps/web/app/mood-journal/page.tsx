@@ -21,10 +21,6 @@ function MoodJournal() {
   );
 }
 
-/* ---------------------------------- */
-/* Provider Wrapper */
-/* ---------------------------------- */
-
 export default function CONTEXTED() {
   return (
     <MoodJournalProvider>

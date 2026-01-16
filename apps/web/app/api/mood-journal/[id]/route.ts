@@ -1,4 +1,4 @@
-import { ParseHeader } from "@/lib/header";
+import { GetCookie, ParseHeader } from "@/lib/header";
 import { logger } from "@/lib/logger";
 import { ServerApiClient } from "@/lib/serverApiClient";
 import { POSTHabitRequest, POSTHabitResponse } from "@/modules/habit/types";
@@ -10,7 +10,8 @@ const endpoint = "/mood-journal";
 const endpointAddedId = (id:string) => `${endpoint}/${id}`
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+  const headers = { cookie }
   const { id } = await params
   try {
     
@@ -34,7 +35,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+  const headers = { cookie }
   const {id} = await params
 
   try {
@@ -58,7 +60,8 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const headers = ParseHeader(req.headers);
+  const cookie = GetCookie(req.headers);
+  const headers = { cookie }
   const body = await req.json();
   const { id } = await params 
 

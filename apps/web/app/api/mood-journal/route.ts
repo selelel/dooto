@@ -1,10 +1,7 @@
-import { GetCookie, ParseHeader } from "@/lib/header";
+import { GetCookie } from "@/lib/header";
 import { logger } from "@/lib/logger";
 import { ServerApiClient } from "@/lib/serverApiClient";
-import { POSTHabitRequest, POSTHabitResponse } from "@/modules/habit/types";
 import { POSTMoodJournalRequest, POSTMoodJournalResponse } from "@/modules/mood-journal/types";
-import { Task, POSTTaskRequest } from "@/modules/tasks/types";
-import { POSTTimerRequest, POSTTimerResponse } from "@/modules/timer/types";
 import { AxiosError } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
