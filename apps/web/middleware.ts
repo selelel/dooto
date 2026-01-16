@@ -1,30 +1,34 @@
-// middleware.ts
-import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import { ROUTES_CLIENT } from './constant/http'
 
+export async function middleware(req: NextRequest) {
+  const healthCheck = await ServerHealthMiddleware(req)
+  if (healthCheck) return healthCheck
 
-export function middleware(req: NextRequest) {
-  return AuthMiddleWare(req)
+  const authCheck = await AuthMiddleware(req)
+  if (authCheck) return authCheck
+
+  return NextResponse.next()
 }
 
 export const config = {
   matcher: ['/', '/auth/signin', '/auth/register'],
 }
 
-const privateRoute = Object.values(ROUTES_CLIENT.PRIVATE)
-const publicRoutes = Object.values(ROUTES_CLIENT.PUBLIC)
 
 const SESSION_COOKIE_NAME = 'connect.sid'
 
-function AuthMiddleWare(req: NextRequest) {
+const privateRoutes = Object.values(ROUTES_CLIENT.PRIVATE)
+const publicRoutes = Object.values(ROUTES_CLIENT.PUBLIC)
+
+export async function AuthMiddleware(req: NextRequest) {
   const url = req.nextUrl.clone()
   const cookies = parseCookies(req.headers.get('cookie'))
 
-  const sessionCookie = cookies[SESSION_COOKIE_NAME]
+  const isAuthenticated = !!cookies[SESSION_COOKIE_NAME]
 
-  const isAuthenticated = !!sessionCookie
-  if (privateRoute.includes(url.pathname) && !isAuthenticated) {
+  if (privateRoutes.includes(url.pathname) && !isAuthenticated) {
     url.pathname = ROUTES_CLIENT.PUBLIC.SIGNIN
     return NextResponse.redirect(url)
   }
@@ -34,7 +38,7 @@ function AuthMiddleWare(req: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  return NextResponse.next()
+  return null
 }
 
 function parseCookies(cookieHeader: string | null): Record<string, string> {
@@ -42,8 +46,41 @@ function parseCookies(cookieHeader: string | null): Record<string, string> {
   return Object.fromEntries(
     cookieHeader.split(';').map(cookie => {
       const [name, ...rest] = cookie.trim().split('=')
-      const value = rest.join('=')
-      return [name, decodeURIComponent(value)]
+      return [name, decodeURIComponent(rest.join('='))]
     })
   )
+}
+
+export async function ServerHealthMiddleware(req: NextRequest) {
+  const redirect = '/sleeping'
+  const url = req.nextUrl.clone()
+
+  if (url.pathname === redirect) {
+    return null
+  }
+
+  const isDown = await isServerDown()
+  if (isDown) {
+    url.pathname = redirect
+    return NextResponse.redirect(url)
+  }
+
+  return null
+}
+
+async function isServerDown(): Promise<boolean> {
+  try {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 2000)
+
+    const res = await fetch(`${process.env.API_BASE_URL}/health`, {
+      cache: 'no-store',
+      signal: controller.signal,
+    })
+
+    clearTimeout(timeout)
+    return !res.ok
+  } catch {
+    return true
+  }
 }

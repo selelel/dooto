@@ -1,41 +1,20 @@
-/**
- * ============================
- * ENVIRONMENT CONFIGURATION
- * ============================
- */
 require('dotenv-flow').config({
   node_env: process.argv[2] || '',
 });
 import * as cors from "cors";
 import { CorsOptionsDelegate } from "cors";
 import 'dotenv/config';
-
-/**
- * ============================
- * IMPORTS
- * ============================
- * 
- */
 import express = require('express');
 import path = require('path');
 const expressSession = require('express-session');
 const pgSession = require('connect-pg-simple')(expressSession);
 import { Pool } from 'pg';
 import { passportLocal } from './config/passport-local';
+import { errorMiddleware } from "./middleware/error.middleware";
 
-/**
- * ============================
- * APP INITIALIZATION
- * ============================
- */
 const app = express();
 const port = process.env.PORT || 9090;
 
-/**
- * ============================
- * POSTGRESQL CONNECTION
- * ============================
- */
 const poolConfigOpts = {
   connectionString: process.env.DATABASE_URL,
 }
@@ -47,11 +26,6 @@ const postgreStore = new pgSession({
   createTableIfMissing: true,
 });
 
-/**
- * ============================
- * CORS - MUST BE FIRST
- * ============================
- */
 const allowedOrigins = [
   "https://dooto.onrender.com",
   "http://localhost:3000",
@@ -64,72 +38,28 @@ const corsOptions: CorsOptionsDelegate = (req, callback) => {
   if (!origin || allowedOrigins.includes(origin)) {
     callback(null, {
       origin: true,
-      credentials: true,  // important for session cookies
+      credentials: true,
     });
   } else {
     callback(new Error("Not allowed by CORS"));
   }
 };
-app.use(cors(corsOptions)); // <-- FIRST THING: use CORS middleware BEFORE sessions!
+app.use(cors(corsOptions));
 
-/**
- * ============================
- * SESSION STORE CONFIGURATION
- * ============================
- */
 app.use(expressSession({
     store: postgreStore,
     cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 },
     secret: 'secret',
     resave: false,
     saveUninitialized: false,
-    // optionally set these for production secure cookies:
-    // cookie: {
-    //   secure: process.env.NODE_ENV === 'production', 
-    //   sameSite: 'lax',
-    // },
 }));
 
 app.use(passportLocal.initialize());
 app.use(passportLocal.session());
 
-/**
- * ============================
- * BODY PARSERS
- * ============================
- */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/**
- * ============================
- * LOGGING SESSION & REQUESTS (OPTIONAL DEBUG)
- * ============================
- */
-app.use((req, res, next) => {
-  const ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
-  console.log("Address", ip)
-  next();
-});
-
-/**
- * ============================
- * AUTHENTICATION GUARD (OPTIONAL)
- * ============================
- */
-// Uncomment and place here to protect all routes below:
-// app.use((req, res, next) => {
-//   if (req.session?.passport?.user) {
-//     return next();
-//   }
-//   res.status(401).json({ message: 'Unauthorized' });
-// });
-
-/**
- * ============================
- * ROUTES
- * ============================
- */
 app.use('/', require('./lib/swagger'));
 app.use('/', require('./routes/client.routes'));
 app.use('/users', require('./routes/user.routes'));
@@ -138,19 +68,10 @@ app.use('/task', require('./routes/task.routes'));
 app.use('/habit', require('./routes/habit.routes'));
 app.use('/badhabit-timer', require('./routes/badhabit.routes'));
 app.use('/mood-journal', require('./routes/moodjournal.routes'));
+app.use(errorMiddleware)
 
-/**
- * ============================
- * STATIC FILES
- * ============================
- */
 app.use(express.static(path.join(__dirname, '/public')));
 
-/**
- * ============================
- * SESSION TEST ROUTE
- * ============================
- */
 app.get('/session-test', (req: any, res: any) => {
   res.json({
     sessionID: req.sessionID,
@@ -158,11 +79,6 @@ app.get('/session-test', (req: any, res: any) => {
   });
 });
 
-/**
- * ============================
- * SERVER START
- * ============================
- */
 app.listen(port, () => {
   poolInstance
     .query('SELECT 1')
