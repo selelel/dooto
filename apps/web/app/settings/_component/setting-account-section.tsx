@@ -1,8 +1,26 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ROUTES_CLIENT } from "@/constant/http";
+import { useSignOut } from "@/modules/user/hooks";
 import { LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function AccountSection() {
+  const router = useRouter();
+  const { mutate: signOut } = useSignOut();
+
+  const handleSignOut = () => {
+    signOut(undefined, {
+      onSuccess(data) {
+        console.log(data);
+        router.push(ROUTES_CLIENT.PUBLIC.SIGNIN);
+      },
+      onError: (e) => {
+        console.log(e);
+      },
+    });
+  };
   return (
     <Card className='shadow-sm'>
       <CardHeader>
@@ -17,7 +35,7 @@ export default function AccountSection() {
           <p className='text-sm text-muted-foreground mb-4'>
             Sign out of your BrightSide account
           </p>
-          <Button variant='outline' className='gap-2'>
+          <Button onClick={handleSignOut} variant='outline' className='gap-2'>
             <LogOut className='w-4 h-4' />
             Logout
           </Button>

@@ -15,6 +15,18 @@ export const signIn = async (payload: POSTSigninRequestT) => {
   }
 };
 
+export const signOut = async () => {
+  try {
+    const endpoint = ENDPOINT.USER.logout;
+    const response = await axios.post(endpoint);
+
+    return response;
+  } catch (e:any) {
+    logger.trace(e)
+    throw e;
+  }
+};
+
 export const register = async (payload: POSTRegisterRequestT) => {
   try {
     const endpoint = ENDPOINT.USER.register;

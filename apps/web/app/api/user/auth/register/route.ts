@@ -1,4 +1,4 @@
-import { logger } from "@/lib/logger";
+import { GetCookie } from "@/lib/header";
 import { ServerApiClient } from "@/lib/serverApiClient";
 import { Message, POSTRegisterRequestT } from "@/modules/user/types";
 import { AxiosError } from "axios";
@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const endpoint = "/users/register";
+  const cookie = GetCookie(req.headers);
+      const headers = { cookie }
 
   try {
     const body: POSTRegisterRequestT = await req.json();
