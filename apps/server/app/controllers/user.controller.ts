@@ -36,6 +36,7 @@ export const logout = (req: Request, res: Response, next: any) =>  {
     if (!!err) { return next(err); }
     res.status(200).json({status: 'success'});
   });
+  res.status(200).json({status: 'success'});
 }
 
 export const profile = (req: Request, res: Response) => {
