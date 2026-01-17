@@ -18,6 +18,73 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+export const deleteAccount = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const req = _req as CustomRequest
+    const id = req.user?.id
+    const user = await UserService.deleteAccount(id || '');
+    res.status(201).json({ user });
+  } catch (error: any) {
+    let message = "Internal Server Error";
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    res.status(500).json({ message });
+  }
+};
+
+export const patchAccount = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const req = _req as CustomRequest
+    const id = req.user?.id
+    const body = req.body
+    const user = await UserService.updateAccount(id || '', body);
+    res.status(201).json({ user });
+  } catch (error: any) {
+    let message = "Internal Server Error";
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    res.status(500).json({ message });
+  }
+};
+
+export const exportAllData = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const req = _req as CustomRequest
+    const id = req.user?.id
+    const data = await UserService.exportAllData(id || '');
+    res.status(201).json({ data });
+  } catch (error: any) {
+    let message = "Internal Server Error";
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    res.status(500).json({ message });
+  }
+};
+
+export const me = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const req = _req as CustomRequest
+    const id = req.user?.id
+    const user = await UserService.getById(id || '');
+    res.status(201).json({ user });
+  } catch (error: any) {
+    let message = "Internal Server Error";
+    if (error instanceof Error) {
+      message = error.message;
+    }
+    res.status(500).json({ message });
+  }
+};
+
 export const update = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = await UserService.register(req.body);

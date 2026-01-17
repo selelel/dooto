@@ -9,6 +9,15 @@ export const registerDTO = z.object({
   }),
 })
 
+export const patchDTO = z.object({
+  body: z.object({
+    name: z.string().min(2).optional(),
+    username: z.string().min(3).optional(),
+    email: z.email().optional(),
+    password: z.string().min(6).optional(),
+  }),
+})
+
 export const signinDTO = z.object({
   body: z.object({
     email: z.email(),
@@ -30,4 +39,5 @@ export const POSTCreateCategoryDTO = z.object({
   }),
 })
 
+export type POSTCreateUserT = z.infer<typeof registerDTO>['body']
 export type POSTCreateCategoryT = z.infer<typeof POSTCreateCategoryDTO>

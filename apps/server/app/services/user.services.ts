@@ -5,6 +5,70 @@ import { POSTCreateCategoryT } from "../dtos";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 
 export const UserService = {
+  async deleteAccount(id: string) {
+  try {
+    await prisma.user.delete({ where: { id } })
+  } catch (error) {
+    throw error;
+  }
+},
+async updateAccount(id: string, data: Partial<{ name: string; username: string; email: string; password: string }>) {
+  try {
+    const updateData: any = { ...data };
+
+    if (data.password) {
+      updateData.password = await bcrypt.hash(data.password, 10);
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: updateData,
+    });
+
+    const { password, ...safeUser } = updatedUser;
+
+    return safeUser;
+  } catch (error) {
+    throw error;
+  }
+},
+async exportAllData(id: string) {
+  try {
+    const userData = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        tasksCollections: {
+          include: {
+            tasks: {
+              include: {
+                subTasks: true,
+              },
+            },
+          },
+        },
+        habits: {
+          include: {
+            contributions: true,
+            category: true,
+          },
+        },
+        badHabits: true,
+        categories: true,
+        moodJournal: true,
+      },
+    });
+
+    if (!userData) {
+      throw new Error("User not found");
+    }
+
+    const { password, ...safeUserData } = userData;
+    return safeUserData;
+  } catch (error) {
+    throw error;
+  }
+},
+
 
   
 async register(data: any) {
@@ -33,8 +97,6 @@ async register(data: any) {
 
   async createCategory(data:POSTCreateCategoryT['body'] & {userId : string}) {
     const { category, userId } = data;
-
-    // Check if user already has this category
     const existing = await prisma.category.findFirst({
       where: {
         userId,
@@ -103,17 +165,20 @@ async register(data: any) {
 //     });
 //   },
 
-//   async getById(id: string) {
-//     return prisma.user.findUnique({
-//       where: { id },
-//       select: {
-//         id: true,
-//         name: true,
-//         username: true,
-//         email: true,
-//         provider: true,
-//         createdAt: true,
-//       },
-//     });
-//   }
-};
+  async getById(id: string) {
+  try {
+    const userData = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!userData) {
+      throw new Error("User not found");
+    }
+
+    const { password, ...safeUserData } = userData;
+    return safeUserData;
+  } catch (error) {
+    throw error;
+  }
+}
+}

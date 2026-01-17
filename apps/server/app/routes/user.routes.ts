@@ -53,10 +53,10 @@
  *           example: strongPassword123
  */
 import express = require('express')
-import { GetCategory, CreateCategory, logout, register } from '../controllers/user.controller';
+import { GetCategory, CreateCategory, logout, register, deleteAccount, exportAllData, me, patchAccount } from '../controllers/user.controller';
 import { validate } from '../middleware/validate.dto';
 import { registerDTO } from '../dtos';
-import { POSTCreateCategoryDTO, signinDTO } from '../dtos/user.controller.dto';
+import { patchDTO, POSTCreateCategoryDTO, signinDTO } from '../dtos/user.controller.dto';
 import { isAuth } from '../lib/auth';
 
 const router = express.Router()
@@ -112,6 +112,122 @@ router.get('/authenticated', isAuth, (_, res) => {
  *         description: Validation error
  */
 router.post("/register", validate(registerDTO), register);
+/**
+ * @swagger
+ * /users:
+ *   delete:
+ *     summary: Delete the authenticated user's account
+ *     tags: [Users]
+ *     responses:
+ *       201:
+ *         description: User account deleted successfully
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
+ */
+router.delete("/", isAuth, deleteAccount);
+
+/**
+ * @swagger
+ * /users:
+ *   patch:
+ *     summary: Update the authenticated user's account partially
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       description: Fields to update in the user account
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 minLength: 2
+ *                 example: Alice
+ *               username:
+ *                 type: string
+ *                 minLength: 3
+ *                 example: alice123
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: alice@example.com
+ *               password:
+ *                 type: string
+ *                 minLength: 6
+ *                 example: secret123
+ *     responses:
+ *       201:
+ *         description: User account updated successfully
+ *       401:
+ *         description: Unauthorized - User not authenticated
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
+ */
+router.patch("/", isAuth, validate(patchDTO), patchAccount);
+
+/**
+ * @swagger
+ * /users/export-all-data:
+ *   get:
+ *     summary: Export all data related to the authenticated user
+ *     tags: [Users]
+ *     responses:
+ *       201:
+ *         description: User data exported successfully
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
+ */
+router.get("/export-all-data", isAuth, exportAllData);
+
+/**
+ * @swagger
+ * /users/me:
+ *   get:
+ *     summary: Get information about the authenticated user
+ *     tags: [Users]
+ *     responses:
+ *       201:
+ *         description: Authenticated user information retrieved successfully
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
+ */
+router.get("/me", isAuth, me);
+
 
 /**
  * @swagger

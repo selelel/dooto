@@ -12,12 +12,8 @@ export default function AccountSection() {
 
   const handleSignOut = () => {
     signOut(undefined, {
-      onSuccess(data) {
-        console.log(data);
+      onSuccess() {
         router.push(ROUTES_CLIENT.PUBLIC.SIGNIN);
-      },
-      onError: (e) => {
-        console.log(e);
       },
     });
   };

@@ -26,7 +26,6 @@ export async function POST(req: NextRequest) {
 
     return res;
   } catch (error) {
-    logger.trace(error);
 
     if (error instanceof AxiosError) {
       return NextResponse.json(

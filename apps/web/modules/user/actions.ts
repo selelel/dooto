@@ -22,7 +22,6 @@ export const signOut = async () => {
 
     return response;
   } catch (e:any) {
-    logger.trace(e)
     throw e;
   }
 };

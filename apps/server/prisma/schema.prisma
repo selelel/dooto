@@ -35,6 +35,7 @@ model User {
   password       String?
   provider       AuthProvider     @default(EMAIL)
   createdAt      DateTime         @default(now())
+  
   tasksCollections TasksCollection[]
   habits         Habit[]
   badHabits      BadHabitTimer[]
@@ -52,7 +53,7 @@ model TasksCollection {
   due       DateTime
   updated   DateTime @updatedAt
 
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @db.Uuid
 
   tasks     Task[]
@@ -102,10 +103,10 @@ model Habit {
   id          String    @id @default(uuid()) @db.Uuid
   habitName   String
   details     String?
-  categoryId  String?   @db.Uuid          // <-- foreign key field for relation
+  categoryId  String?   @db.Uuid
   createdAt   DateTime  @default(now())
 
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String    @db.Uuid
 
   category  Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
@@ -138,7 +139,7 @@ model BadHabitTimer {
   longestStreakSeconds   Int
   relapsesCount          Int
 
-  user                   User     @relation(fields: [userId], references: [id])
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([habitName])
   @@index([userId])
@@ -154,7 +155,7 @@ model MoodJournal {
   updatedAt DateTime @updatedAt
   date      DateTime
 
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([date])
   @@index([userId])
