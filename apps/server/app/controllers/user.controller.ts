@@ -33,8 +33,8 @@ export const update = async (req: Request, res: Response): Promise<void> => {
 
 export const logout = (req: Request, res: Response, next: any) =>  {
   req.logout(function(err) {
-    if (err) { return next(err); }
-    res.redirect('/');
+    if (!!err) { return next(err); }
+    res.status(200).json({status: 'success'});
   });
 }
 

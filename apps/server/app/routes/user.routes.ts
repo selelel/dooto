@@ -169,6 +169,8 @@ router.post(
  *     summary: Log out the current session
  *     tags: [Users]
  *     responses:
+ *       200:
+ *         description: Successfuly redirected
  *       302:
  *         description: Redirects to root after logout
  *       500:
