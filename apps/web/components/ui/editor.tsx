@@ -1,15 +1,14 @@
-import { getCommands } from "@uiw/react-md-editor";
+"use client";
+
+import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import React from "react";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
-function Editor(
-  props: React.ComponentProps<typeof MDEditor> & {
-    colorMode?: "light" | "dark";
-  }
-) {
-  const disabledCommands = [
+export default function Editor(props: React.ComponentProps<typeof MDEditor>) {
+  const { resolvedTheme } = useTheme();
+
+  const disabled = [
     "image",
     "divider",
     "table",
@@ -21,17 +20,11 @@ function Editor(
   ];
 
   return (
-    <MDEditor
-      {...props}
-      data-color-mode={props.colorMode || "light"}
-      commandsFilter={(command) => {
-        if (disabledCommands.includes(command.name!)) {
-          return false;
-        }
-        return command;
-      }}
-    />
+    <div data-color-mode={resolvedTheme ?? "light"}>
+      <MDEditor
+        {...props}
+        commandsFilter={(cmd) => (disabled.includes(cmd.name!) ? false : cmd)}
+      />
+    </div>
   );
 }
-
-export default Editor;

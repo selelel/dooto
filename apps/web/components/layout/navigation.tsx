@@ -25,6 +25,12 @@ function Navigation({ children }: { children: ReactNode }) {
       path: ROUTES_CLIENT.PRIVATE.HOME,
     },
     {
+      id: "mood",
+      label: "Mood Journal",
+      icon: BookHeart,
+      path: ROUTES_CLIENT.PRIVATE.MOOD,
+    },
+    {
       id: "tasks",
       label: "Tasks",
       icon: SquareCheck,
@@ -43,12 +49,6 @@ function Navigation({ children }: { children: ReactNode }) {
       path: ROUTES_CLIENT.PRIVATE.HABITS,
     },
     {
-      id: "mood",
-      label: "Mood Journal",
-      icon: BookHeart,
-      path: ROUTES_CLIENT.PRIVATE.MOOD,
-    },
-    {
       id: "settings",
       label: "Settings",
       icon: Settings,
@@ -60,7 +60,6 @@ function Navigation({ children }: { children: ReactNode }) {
 
   return (
     <div className='flex h-screen bg-background overflow-hidden'>
-      {/* Sidebar Navigation */}
       {!publicRoutes.includes(pathname) && (
         <aside className='w-64 bg-sidebar border-r border-sidebar-border flex flex-col'>
           <div className='p-6 border-b border-sidebar-border'>
@@ -79,7 +78,7 @@ function Navigation({ children }: { children: ReactNode }) {
                 onClick={() => router.push(item.path)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                   pathname === item.path
-                    ? "bg-orange-50 text-orange-600 shadow-sm"
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
                     : "text-sidebar-foreground hover:bg-rose-50/50"
                 }`}
               >

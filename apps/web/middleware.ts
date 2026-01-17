@@ -79,8 +79,6 @@ async function isServerDown(): Promise<boolean> {
       signal: controller.signal,
     })
 
-    logger.trace(res)
-
     clearTimeout(timeout)
     return !res.ok
   } catch {
