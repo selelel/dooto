@@ -14,6 +14,15 @@ export type POSTRegisterRequestT = {
   password: string
 }
 
+export type POSTRegisterResponseT = {
+  user: {
+    name: string,
+    username: string,
+    email: string,
+    password: string
+  }
+}
+
 export type Category = {
       id: string,
       userId: string,

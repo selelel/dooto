@@ -1,5 +1,6 @@
 import AccountSection from "./_component/setting-account-section";
 import AppearanceSection from "./_component/setting-appearance-section";
+import ChangePasswordSection from "./_component/setting-change-password-section";
 import DataPrivacySection from "./_component/setting-data-privacy-section";
 import NotificationsSection from "./_component/setting-notification-section";
 import ProfileSection from "./_component/setting-profile-section";
@@ -15,6 +16,7 @@ export default function SettingsPage() {
       </div>
 
       <ProfileSection />
+      <ChangePasswordSection />
       <NotificationsSection />
       <AppearanceSection />
       <DataPrivacySection />

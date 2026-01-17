@@ -2,10 +2,14 @@ export const PREFIX = "";
 
 export const ENDPOINT = {
     USER: {
+        user: "/api/user/",
         signin: '/api/user/auth/signin/',
         register: '/api/user/auth/register/',
         logout: '/api/user/auth/logout/',
-        category: '/api/user/category/'
+        category: '/api/user/category/',
+        me: '/api/user/me/',
+        exportAllData: '/api/user/export-all-data/'
+
     },
     TASKS : {
       tasks_collection: '/api/tasks/tasks-collection/',

@@ -42,7 +42,7 @@ const get = async <TResponse = unknown, TParams = unknown>(
     params: buildQueryParams(options.req, options.params),
     headers: options.headers,
     httpsAgent,
-    withCredentials: true,  // <-- Added here
+    withCredentials: true,
     ...options.config,
   });
 };
