@@ -23,8 +23,6 @@ import {
   TaskStatus,
 } from "@/modules/tasks/types";
 import { TaskCreateFormValues } from "../_component/task-create-dialog";
-import { ROUTES_CLIENT } from "@/constant/http";
-import { useRouter } from "next/navigation";
 import { useTasksStore } from "@/modules/tasks/store";
 
 interface TasksContextValue {
@@ -52,6 +50,7 @@ interface TasksContextValue {
   isDeletingTaskLoading: boolean;
   isDeletingTaskCollectionLoading: boolean;
   isTaskCollectionLoading: boolean;
+  getSubTaskById: (tasksId: string) => Task[];
 }
 
 const TasksContext = createContext<TasksContextValue | null>(null);
@@ -72,6 +71,7 @@ export function TasksProvider({ children }: TasksProviderProps) {
     addTaskToCollection,
     removeTask,
     updateTask,
+    getSubTaskById,
   } = useTasksStore();
   const queryClient = useQueryClient();
   const {
@@ -168,7 +168,9 @@ export function TasksProvider({ children }: TasksProviderProps) {
     deleteTask(taskId);
   };
 
-  const handleCreateTask = (form: TaskCreateFormValues & { id: string }) => {
+  const handleCreateTask = (
+    form: TaskCreateFormValues & { id: string; subClassId?: string | null },
+  ) => {
     createTask(
       {
         tasksId: form.id,
@@ -176,9 +178,11 @@ export function TasksProvider({ children }: TasksProviderProps) {
         taskName: form.taskName,
         due: form.due?.toISOString(),
         details: form.details ?? "",
+        subClassId: form.subClassId,
       },
       {
         onSuccess: (d) => {
+          console.log(d);
           addTaskToCollection(form.id, d!);
         },
       },
@@ -222,6 +226,7 @@ export function TasksProvider({ children }: TasksProviderProps) {
         isDeletingTaskLoading,
         isDeletingTaskCollectionLoading,
         isTaskCollectionLoading,
+        getSubTaskById,
       }}
     >
       {children}

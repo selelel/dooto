@@ -36,7 +36,7 @@ function TasksList({ id }: { id: string }) {
   } = useTasks();
 
   const taskCollectionData = getTaskCollectionById(id);
-  const tasks = taskCollectionData?.tasks ?? [];
+  const tasks = (taskCollectionData?.tasks ?? []).filter((d) => !d.subClassId);
 
   const collectionForm = useForm({
     defaultValues: {

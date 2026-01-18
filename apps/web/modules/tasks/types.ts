@@ -43,4 +43,5 @@ export type POSTTaskRequest = {
   due?: string,
   tasksId: string,
   status: string
+  subClassId?: string | null
 }

@@ -8,7 +8,7 @@ interface TasksState {
   updateTaskCollection: (
     updatedCollection: Partial<POSTTasksCollectionResponseT> & {
       tasksId: string;
-    }
+    },
   ) => void;
 
   addTaskToCollection: (tasksId: string, task: Task) => void;
@@ -16,12 +16,13 @@ interface TasksState {
   removeTask: (taskId: string) => void;
 
   removeTasksCollectionById: (tasksId: string) => void;
+  getSubTaskById: (tasksId: string) => Task[];
 }
 
 export const useTasksStore = create<
   TasksState & {
     getTaskCollectionById: (
-      tasksId: string
+      tasksId: string,
     ) => POSTTasksCollectionResponseT | undefined;
     getTaskById: (taskId: string) => Task | undefined;
   }
@@ -40,7 +41,7 @@ export const useTasksStore = create<
       tasksCollection: state.tasksCollection.map((collection) =>
         collection.tasksId === updatedCollection.tasksId
           ? { ...collection, ...updatedCollection }
-          : collection
+          : collection,
       ),
     })),
 
@@ -49,7 +50,7 @@ export const useTasksStore = create<
       tasksCollection: state.tasksCollection.map((collection) =>
         collection.tasksId === tasksId
           ? { ...collection, tasks: [...collection.tasks, task] }
-          : collection
+          : collection,
       ),
     })),
 
@@ -58,7 +59,7 @@ export const useTasksStore = create<
       tasksCollection: state.tasksCollection.map((collection) => ({
         ...collection,
         tasks: collection.tasks.map((t) =>
-          t.taskId === task.taskId ? { ...t, ...task } : t
+          t.taskId === task.taskId ? { ...t, ...task } : t,
         ),
       })),
     })),
@@ -74,7 +75,7 @@ export const useTasksStore = create<
   removeTasksCollectionById: (tasksId) =>
     set((state) => ({
       tasksCollection: state.tasksCollection.filter(
-        (collection) => collection.tasksId !== tasksId
+        (collection) => collection.tasksId !== tasksId,
       ),
     })),
 
@@ -90,5 +91,17 @@ export const useTasksStore = create<
       if (task) return task;
     }
     return undefined;
+  },
+
+  getSubTaskById: (taskId: string): Task[] => {
+    const { tasksCollection } = get();
+    let result: Task[] = [];
+    // O(n2)
+    for (const collection of tasksCollection) {
+      const task = collection.tasks.forEach((t) => {
+        if (t.subClassId === taskId) result.push(t);
+      });
+    }
+    return result;
   },
 }));

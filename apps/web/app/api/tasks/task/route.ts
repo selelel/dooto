@@ -12,8 +12,9 @@ const headers = { cookie }
   const body = await req.json();
   
   try {
-    
-    const response = await ServerApiClient.post<Partial<Task | POSTTaskRequest>>(endpoint, body, {headers});
+    logger.trace(body)
+    const response = await ServerApiClient.post<Partial<Task | any>>(endpoint, body, {headers});
+    logger.trace(response)
     return NextResponse.json(response.data, { status: 200 });
   } catch (error) {
     logger.trace(error)

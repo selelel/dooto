@@ -42,6 +42,7 @@ export const deleteTasksCollection = async (id?: string) => {
 
 export const createTask= async (payload: POSTTaskRequest): Promise<Task > => {
   try {
+    logger.trace(payload)
     const endpoint = ENDPOINT.TASKS.task;
     const response = await axios.post(endpoint, payload);
 

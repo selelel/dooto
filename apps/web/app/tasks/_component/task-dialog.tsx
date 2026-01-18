@@ -54,6 +54,8 @@ export default function TaskDialog({
     handleToggleStatus,
     getTaskById,
     handleCreateTask,
+    getSubTaskById,
+    handleDeleteTask,
   } = useTasks();
   const task = getTaskById(initialTask.taskId)!;
 
@@ -62,7 +64,7 @@ export default function TaskDialog({
       subTaskName: "",
     },
   });
-
+  const subTasks = getSubTaskById(task.taskId) || [];
   const form = useForm<TaskFormValues>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
@@ -105,11 +107,12 @@ export default function TaskDialog({
   const handleSubTaskSubmit = (d: any) => {
     handleCreateTask({
       id: initialTask.tasksId,
-      taskName: d,
+      taskName: d.subTaskName,
       details: "",
       due: undefined,
-      subClassId: task.subClassId,
+      subClassId: task.taskId,
     });
+    subTaskForm.reset();
   };
 
   const formatDate = (date: Date | null) =>
@@ -120,12 +123,29 @@ export default function TaskDialog({
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className=''>
           <Form {...form}>
-            <div
-              onClick={() => handleToggleStatus(task)}
-              className='w-fit cursor-pointer rounded p-1 transition hover:opacity-70 active:scale-95'
-            >
-              {StatusIconRender(task.status)}
-            </div>
+            <FormField
+              control={form.control}
+              name='taskName'
+              render={({ field }) => (
+                <DialogTitle className='mt-0!'>
+                  <input
+                    {...field}
+                    value={field.value ?? ""}
+                    className='w-full bg-transparent text-xl font-semibold outline-none'
+                    placeholder='Task name'
+                    onBlur={() => {
+                      const trimmed = field.value?.trim() ?? "";
+                      if (trimmed && trimmed !== task.taskName) {
+                        handlePatchTasks({
+                          taskId: task.taskId,
+                          taskName: trimmed,
+                        });
+                      }
+                    }}
+                  />
+                </DialogTitle>
+              )}
+            />
             <div className='flex items-center gap-2 text-sm'>
               <CalendarIcon className='h-4 w-4 text-muted-foreground' />
               <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
@@ -177,30 +197,6 @@ export default function TaskDialog({
 
             <FormField
               control={form.control}
-              name='taskName'
-              render={({ field }) => (
-                <DialogTitle className='mt-0!'>
-                  <input
-                    {...field}
-                    value={field.value ?? ""}
-                    className='w-full bg-transparent text-xl font-semibold outline-none'
-                    placeholder='Task name'
-                    onBlur={() => {
-                      const trimmed = field.value?.trim() ?? "";
-                      if (trimmed && trimmed !== task.taskName) {
-                        handlePatchTasks({
-                          taskId: task.taskId,
-                          taskName: trimmed,
-                        });
-                      }
-                    }}
-                  />
-                </DialogTitle>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name='details'
               render={({ field }) => (
                 <div className='rounded-lg border bg-muted/40 p-4 mt-2'>
@@ -228,65 +224,97 @@ export default function TaskDialog({
         </DialogHeader>
 
         {!task.subClassId && (
-          <div className='space-y-3 pt-2'>
-            <p className='text-sm font-medium flex items-center gap-2'>
-              <CheckSquare className='h-4 w-4 text-primary' />
+          <div className='pt-4'>
+            <div className='flex items-center gap-2 mb-3 text-sm font-medium text-muted-foreground'>
+              <CheckSquare className='h-4 w-4' />
               Subtasks
-            </p>
-
-            <div className='space-y-2'>
-              {/* Example: placeholder for existing subtasks */}
-              {/* You can map real subtasks here later */}
-              {/* {(task.subtasks ?? []).map(...)} */}
-
-              {/* Empty state (optional) */}
-              {/* {task.subtasks?.length === 0 && (
-              <p className="text-xs text-center text-muted-foreground py-4">
-                No subtasks yet — add one below
-              </p>
-            )} */}
-
-              {/* Add new subtask form */}
-              <Form {...subTaskForm}>
-                <form
-                  onSubmit={subTaskForm.handleSubmit(handleSubTaskSubmit)}
-                  className='flex items-center gap-2 pl-8'
-                >
-                  <FormField
-                    control={subTaskForm.control}
-                    name='subTaskName'
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        placeholder='Add subtask...'
-                        className='h-9 flex-1 text-sm'
-                        autoComplete='off'
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" && !e.shiftKey) {
-                            e.preventDefault();
-                            subTaskForm.handleSubmit(handleSubTaskSubmit)();
-                          }
-                        }}
-                      />
-                    )}
-                  />
-
-                  <Button
-                    type='submit'
-                    size='sm'
-                    variant='secondary'
-                    className='h-9 px-3'
-                    disabled={
-                      subTaskForm.formState.isSubmitting ||
-                      !subTaskForm.watch("subTaskName").trim()
-                    }
-                  >
-                    <Plus className='h-4 w-4 mr-1' />
-                    Add
-                  </Button>
-                </form>
-              </Form>
             </div>
+
+            {(subTasks ?? []).length === 0 ? (
+              <div className='rounded-lg border border-dashed bg-muted/30 px-6 py-10 text-center'>
+                <div className='mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-muted'>
+                  <CheckSquare className='h-5 w-5 text-muted-foreground/70' />
+                </div>
+                <p className='text-sm font-medium text-muted-foreground'>
+                  No subtasks yet
+                </p>
+                <p className='mt-1 text-xs text-muted-foreground/70'>
+                  Break this task into smaller steps
+                </p>
+              </div>
+            ) : (
+              <div className='space-y-1 rounded-lg border bg-card/60 p-1 max-h-50 overflow-y-auto scrollbar-hide'>
+                {subTasks.map((subtask) => (
+                  <div
+                    key={subtask.taskId}
+                    onClick={() => handleToggleStatus(subtask)}
+                    className={cn(
+                      "group flex cursor-pointer items-center gap-3 rounded-md px-3 py-2",
+                      "transition-colors hover:bg-muted/60",
+                    )}
+                  >
+                    <div className='scale-75 text-muted-foreground'>
+                      {StatusIconRender(subtask.status)}
+                    </div>
+
+                    <p className='flex-1 truncate text-sm'>
+                      {subtask.taskName}
+                    </p>
+
+                    <Button
+                      variant='ghost'
+                      size='icon'
+                      className='opacity-0 group-hover:opacity-100 transition-opacity'
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteTask(subtask.taskId);
+                      }}
+                    >
+                      <Trash2 className='h-4 w-4 text-destructive' />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <Form {...subTaskForm}>
+              <form
+                onSubmit={subTaskForm.handleSubmit(handleSubTaskSubmit)}
+                className='mt-3 flex items-center gap-2 pl-1'
+              >
+                <FormField
+                  control={subTaskForm.control}
+                  name='subTaskName'
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder='Add a subtask…'
+                      className='h-9 flex-1 text-sm'
+                      autoComplete='off'
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          subTaskForm.handleSubmit(handleSubTaskSubmit)();
+                        }
+                      }}
+                    />
+                  )}
+                />
+
+                <Button
+                  type='submit'
+                  size='sm'
+                  variant='secondary'
+                  className='h-9 px-3'
+                  disabled={
+                    subTaskForm.formState.isSubmitting ||
+                    !subTaskForm.watch("subTaskName").trim()
+                  }
+                >
+                  <Plus className='h-4 w-4' />
+                </Button>
+              </form>
+            </Form>
           </div>
         )}
         <div className='flex gap-2 sm:gap-3'>
