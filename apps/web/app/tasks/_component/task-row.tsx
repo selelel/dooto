@@ -1,22 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Task, TaskStatus } from "@/modules/tasks/types";
-import { CircleCheck, Circle, Calendar, Trash2 } from "lucide-react";
+import { Calendar, Trash2 } from "lucide-react";
 import { useState } from "react";
 import TaskDialog from "./task-dialog";
 import { useTasks } from "../_hooks/useTasks";
-
-export const StatusIconRender = (status: TaskStatus) => {
-  switch (status) {
-    case TaskStatus.DONE:
-      return <CircleCheck className='text-success' />;
-    case TaskStatus.IN_PROGRESS:
-      return <Circle className='animate-pulse text-primary' />;
-    case TaskStatus.PENDING:
-    default:
-      return <Circle className='text-muted-foreground' />;
-  }
-};
+import { StatusIconRender } from "../utils";
 
 export default function TaskRow({
   task,
@@ -51,7 +40,7 @@ export default function TaskRow({
               task.status === TaskStatus.DONE
                 ? "line-through text-muted-foreground"
                 : "",
-              "select-none"
+              "select-none",
             )}
           >
             {task.taskName}
@@ -61,7 +50,7 @@ export default function TaskRow({
               task.status === TaskStatus.DONE
                 ? "line-through text-muted-foreground"
                 : "",
-              "text-xs"
+              "text-xs",
             )}
           >
             {task.details}

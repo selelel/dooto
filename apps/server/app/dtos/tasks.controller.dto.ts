@@ -6,6 +6,7 @@ export const POSTtasksDTO = z.object({
     details: z.string(),
     due: z.string().optional(),
     task: z.any().optional(),
+    subClassId: z.string().optional(),
   })
 })
 

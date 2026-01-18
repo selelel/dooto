@@ -33,14 +33,16 @@ interface TasksContextValue {
   handleCreateTaskCollection: (task: POSTTasksCollectionRequestT) => void;
   handleToggleStatus: (task: Task) => void;
   handleDeleteTask: (taskId: string) => void;
-  handleCreateTask: (form: TaskCreateFormValues & { id: string }) => void;
+  handleCreateTask: (
+    form: TaskCreateFormValues & { id: string; subClassId?: string | null },
+  ) => void;
   handlePatchTasks: (task: Partial<Task> & { taskId: string }) => void;
   handlePatchTaskCollection: (
-    task: Partial<PATCHTasksCollectionRequestT> & { tasksId: string }
+    task: Partial<PATCHTasksCollectionRequestT> & { tasksId: string },
   ) => void;
   queryClient: ReturnType<typeof useQueryClient>;
   getTaskCollectionById: (
-    tasksId: string
+    tasksId: string,
   ) => POSTTasksCollectionResponseT | undefined;
   getTaskById: (taskId: string) => Task | undefined;
   isCreatingTaskCollectionLoading: boolean;
@@ -135,8 +137,17 @@ export function TasksProvider({ children }: TasksProviderProps) {
 
   const handleToggleStatus = (task: Task) => {
     const nextStatus = getNextStatus(task.status);
-    updateTask({ taskId: task.taskId, status: nextStatus });
-    patchTask({ taskId: task.taskId, status: nextStatus });
+    const payload = { taskId: task.taskId, status: nextStatus };
+    const prev = getTaskById(task.taskId);
+
+    if (!prev) return;
+    const prevSnapshot: Task = structuredClone(prev);
+    updateTask(payload);
+    patchTask(payload, {
+      onError: () => {
+        updateTask(prevSnapshot);
+      },
+    });
   };
 
   const handlePatchTasks = (task: Partial<Task> & { taskId: string }) => {
@@ -170,12 +181,12 @@ export function TasksProvider({ children }: TasksProviderProps) {
         onSuccess: (d) => {
           addTaskToCollection(form.id, d!);
         },
-      }
+      },
     );
   };
 
   const handlePatchTaskCollection = (
-    d: Partial<PATCHTasksCollectionRequestT> & { tasksId: string }
+    d: Partial<PATCHTasksCollectionRequestT> & { tasksId: string },
   ) => {
     const prev = getTaskCollectionById(d.tasksId);
 
