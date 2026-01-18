@@ -1,3 +1,5 @@
+import { GetQuoteParams } from "@/modules/quotes/types"
+
 const UserQueryKeys = {
     actions: (params:any) => ["user", "actions", params],
     item: (params:any) => ["user", "item", params],
@@ -23,6 +25,11 @@ parent: (key: string | any[]) =>
     ["mood-journal", ...(Array.isArray(key) ? key : [key])],
 }
 
+const QoutesQueryKeys = {
+parent: (key: string | any[], p0: string | GetQuoteParams) =>
+    ["mood-journal", ...(Array.isArray(key) ? key : [key])],
+}
+
 
 
 export const QueryKeys = {
@@ -30,5 +37,6 @@ export const QueryKeys = {
     TasksQueryKeys,
     HabitQueryKeys,
     TimerQueryKeys,
-    MoodJournalQueryKeys
+    MoodJournalQueryKeys,
+    QoutesQueryKeys
 }

@@ -15,8 +15,13 @@ import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useServerHealth } from "@/modules/server/hooks";
+import { useGetQoutes } from "@/modules/quotes/hooks";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ServerWakingUp() {
+  const { data } = useGetQoutes({
+    categories: ["inspirational", "time"],
+  });
   const estimatedTime = 120;
   const health = useServerHealth();
   const router = useRouter();
@@ -62,7 +67,7 @@ export default function ServerWakingUp() {
     const phaseInterval = estimatedTime / phases.length;
     const newPhase = Math.min(
       Math.floor((estimatedTime - timeRemaining) / phaseInterval),
-      phases.length - 1
+      phases.length - 1,
     );
 
     setCurrentPhase(newPhase);
@@ -149,24 +154,36 @@ export default function ServerWakingUp() {
                   : "Our servers are starting up to serve you better"}
               </p>
             </motion.div>
-
-            {status === "waking" && (
-              <Badge
-                variant='outline'
-                className='bg-primary/5 border-primary/20 text-primary'
-              >
-                <RefreshCw className='w-3 h-3 mr-2 animate-spin' />
-                {phases[currentPhase]!.label}
-              </Badge>
-            )}
           </div>
 
-          {status === "waking" && (
-            <div className='text-center mb-6'>
-              <p className='text-xl font-semibold'>
-                Time remaining: {formatTime(timeRemaining)}
-              </p>
-            </div>
+          {status !== "ready" && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+              className='p-6 mb-6 rounded-lg bg-linear-to-br from-primary/10 to-secondary/10 border border-primary/20 max-w-2xl mx-auto text-center'
+            >
+              {!data ? (
+                <div className='space-y-2'>
+                  <Skeleton className='h-4 w-1/3 mx-auto' />
+                </div>
+              ) : data.length === 0 ? (
+                <>
+                  <p className='text-lg italic text-foreground/90 mb-2'>
+                    "Every small step forward is progress worth celebrating."
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className='pop-up-scale-animation text-lg italic text-foreground/90 mb-2'>
+                    "{data[0]?.quote}"
+                  </p>
+                  <p className='text-xs text-right text-muted-foreground italic'>
+                    — {data[0]?.author}
+                  </p>
+                </>
+              )}
+            </motion.div>
           )}
 
           {status !== "ready" && (

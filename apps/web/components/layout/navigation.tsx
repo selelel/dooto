@@ -1,10 +1,9 @@
 "use client";
 import { ROUTES_CLIENT } from "@/constant/http";
-import { logger } from "@/lib/logger";
+import { useGetQoutes } from "@/modules/quotes/hooks";
 import {
   BookHeart,
   LayoutDashboard,
-  Palette,
   Settings,
   SquareCheck,
   Target,
@@ -12,8 +11,12 @@ import {
 } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import React, { ReactNode } from "react";
+import { Skeleton } from "../ui/skeleton";
 
 function Navigation({ children }: { children: ReactNode }) {
+  const { data, isFetching } = useGetQoutes({
+    categories: ["inspirational", "time"],
+  });
   const router = useRouter();
   const pathname = usePathname();
 
@@ -23,12 +26,6 @@ function Navigation({ children }: { children: ReactNode }) {
       label: "Dashboard",
       icon: LayoutDashboard,
       path: ROUTES_CLIENT.PRIVATE.HOME,
-    },
-    {
-      id: "mood",
-      label: "Mood Journal",
-      icon: BookHeart,
-      path: ROUTES_CLIENT.PRIVATE.MOOD,
     },
     {
       id: "tasks",
@@ -47,6 +44,12 @@ function Navigation({ children }: { children: ReactNode }) {
       label: "Habit Tracker",
       icon: Target,
       path: ROUTES_CLIENT.PRIVATE.HABITS,
+    },
+    {
+      id: "mood",
+      label: "Mood Journal",
+      icon: BookHeart,
+      path: ROUTES_CLIENT.PRIVATE.MOOD,
     },
     {
       id: "settings",
@@ -89,10 +92,30 @@ function Navigation({ children }: { children: ReactNode }) {
           </nav>
 
           <div className='p-4 border-t border-sidebar-border'>
-            <div className='bg-linear-to-br from-primary/10 via-secondary/10 to-accent/10 rounded-xl p-4'>
-              <p className='text-sm text-muted-foreground'>
-                "Every small step forward is progress worth celebrating."
-              </p>
+            <div className='bg-linear-to-br from-primary/10 via-secondary/10 to-accent/10 rounded-xl p-4 space-y-2'>
+              {isFetching ? (
+                <div className='space-y-2'>
+                  <Skeleton className='h-4 w-5/6 mx-auto' />
+                  <Skeleton className='h-4 w-4/6 mx-auto' />
+                  <Skeleton className='h-4 w-3/6 mx-auto' />
+                  <Skeleton className='h-4 w-5/6 mx-auto' />
+                  <Skeleton className='h-3 w-3/6 ml-auto mt-5' />
+                </div>
+              ) : data && data.length > 0 ? (
+                <>
+                  <p className='text-sm text-muted-foreground'>
+                    "{data[0]?.quote}"
+                  </p>
+
+                  <p className='text-xs text-right text-muted-foreground italic'>
+                    — {data[0]?.author}
+                  </p>
+                </>
+              ) : (
+                <p className='text-sm text-muted-foreground'>
+                  "Every small step forward is progress worth celebrating."
+                </p>
+              )}
             </div>
           </div>
         </aside>

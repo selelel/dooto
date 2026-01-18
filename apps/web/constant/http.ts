@@ -27,6 +27,9 @@ export const ENDPOINT = {
     },
     SERVER: {
       health: "/api/server",
+    },
+    QOUTES: {
+      qoutes: "/api/qoutes",
     }
 }
 
