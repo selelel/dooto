@@ -12,7 +12,7 @@ function MoodJournal() {
   const { view } = useMoodJournal();
 
   return (
-    <div className='p-8 max-w-6xl mx-auto'>
+    <div>
       <MoodHeader />
       <MoodStats />
       {view === "list" && <MoodListView />}

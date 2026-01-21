@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Geist } from "next/font/google";
+
 import CustomLayout from "./__layout__";
 export const metadata: Metadata = {
-  title: "Dooto",
-  description: "Make every moment count",
+  viewport: {
+    width: 500,
+    initialScale: 1,
+  },
 };
-
 const geist = Geist({
   subsets: ["latin", "cyrillic"],
 });

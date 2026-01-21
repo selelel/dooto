@@ -6,6 +6,10 @@ import Navigation from "@/components/layout/navigation";
 export const metadata: Metadata = {
   title: "Settings",
   description: "Some called this Diary, I won't argue.",
+  viewport: {
+    width: 500,
+    initialScale: 1,
+  },
 };
 
 export default function RootLayout({

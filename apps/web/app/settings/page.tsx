@@ -7,7 +7,7 @@ import ProfileSection from "./_component/setting-profile-section";
 
 export default function SettingsPage() {
   return (
-    <div className='p-8 max-w-4xl mx-auto'>
+    <div>
       <div className='mb-8'>
         <h1 className='text-4xl mb-2'>Settings ⚙️</h1>
         <p className='text-muted-foreground'>

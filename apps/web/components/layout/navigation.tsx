@@ -12,58 +12,61 @@ import {
 import { useRouter, usePathname } from "next/navigation";
 import React, { ReactNode } from "react";
 import { Skeleton } from "../ui/skeleton";
+import { useWindowSize } from "@/lib/hooks/useWindowSize";
+const navigation = [
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    path: ROUTES_CLIENT.PRIVATE.HOME,
+  },
+  {
+    id: "tasks",
+    label: "Tasks",
+    icon: SquareCheck,
+    path: ROUTES_CLIENT.PRIVATE.TASKS,
+  },
+  {
+    id: "timer",
+    label: "Since Timer",
+    icon: Timer,
+    path: ROUTES_CLIENT.PRIVATE.TIMER,
+  },
+  {
+    id: "habits",
+    label: "Habit Tracker",
+    icon: Target,
+    path: ROUTES_CLIENT.PRIVATE.HABITS,
+  },
+  {
+    id: "mood",
+    label: "Mood Journal",
+    icon: BookHeart,
+    path: ROUTES_CLIENT.PRIVATE.MOOD,
+  },
+  {
+    id: "settings",
+    label: "Settings",
+    icon: Settings,
+    path: ROUTES_CLIENT.PRIVATE.SETTINGS,
+  },
+];
 
 function Navigation({ children }: { children: ReactNode }) {
+  const { width } = useWindowSize();
+  const isDesktop = width >= 1024;
+
   const { data, isFetching } = useGetQoutes({
     categories: ["inspirational", "time"],
   });
   const router = useRouter();
   const pathname = usePathname();
 
-  const navigation = [
-    {
-      id: "dashboard",
-      label: "Dashboard",
-      icon: LayoutDashboard,
-      path: ROUTES_CLIENT.PRIVATE.HOME,
-    },
-    {
-      id: "tasks",
-      label: "Tasks",
-      icon: SquareCheck,
-      path: ROUTES_CLIENT.PRIVATE.TASKS,
-    },
-    {
-      id: "timer",
-      label: "Since Timer",
-      icon: Timer,
-      path: ROUTES_CLIENT.PRIVATE.TIMER,
-    },
-    {
-      id: "habits",
-      label: "Habit Tracker",
-      icon: Target,
-      path: ROUTES_CLIENT.PRIVATE.HABITS,
-    },
-    {
-      id: "mood",
-      label: "Mood Journal",
-      icon: BookHeart,
-      path: ROUTES_CLIENT.PRIVATE.MOOD,
-    },
-    {
-      id: "settings",
-      label: "Settings",
-      icon: Settings,
-      path: ROUTES_CLIENT.PRIVATE.SETTINGS,
-    },
-  ];
-
   const publicRoutes = Object.values(ROUTES_CLIENT.PUBLIC);
 
   return (
     <div className='flex h-screen bg-background overflow-hidden'>
-      {!publicRoutes.includes(pathname) && (
+      {!publicRoutes.includes(pathname) && isDesktop && (
         <aside className='w-64 bg-sidebar border-r border-sidebar-border flex flex-col'>
           <div className='p-6 border-b border-sidebar-border'>
             <h1 className='font-semibold text-2xl bg-linear-to-r from-primary via-secondary to-success bg-clip-text text-transparent'>
@@ -121,7 +124,7 @@ function Navigation({ children }: { children: ReactNode }) {
         </aside>
       )}
 
-      <div className='p-8 w-full max-w-9/12 mx-auto overflow-y-auto scrollbar-hide'>
+      <div className='p-8 w-full max-w-full md:max-w-9/12 mx-auto overflow-y-auto scrollbar-hide'>
         {children}
       </div>
     </div>
