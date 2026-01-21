@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Mood Journal",
   description: "Some called this Diary, I won't argue.",
   viewport: {
-    width: 500,
+    width: "device-width",
     initialScale: 1,
   },
 };

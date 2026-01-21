@@ -5,7 +5,7 @@ import { Geist } from "next/font/google";
 import CustomLayout from "./__layout__";
 export const metadata: Metadata = {
   viewport: {
-    width: 500,
+    width: "device-width",
     initialScale: 1,
   },
 };

@@ -104,7 +104,6 @@ function MoodNewEntry() {
           </CardHeader>
 
           <CardContent className='space-y-6'>
-            {/* Mood selector */}
             <FormField
               name='mood'
               control={form.control}
@@ -112,7 +111,7 @@ function MoodNewEntry() {
                 <FormItem>
                   <FormLabel>Select your mood</FormLabel>
                   <FormControl>
-                    <div className='flex gap-3'>
+                    <div className='grid grid-cols-1 sm:grid-cols-3 md:grid-cols-6 gap-3'>
                       {MOODS.map((mood) => {
                         const config = moodEmojis[mood];
                         const Icon = config.icon;
@@ -127,13 +126,13 @@ function MoodNewEntry() {
                               "flex-1 p-4 rounded-xl border transition cursor-pointer duration-200 hover:scale-105",
                               isSelected
                                 ? cn(config.bg, "border-2", config.color)
-                                : "border-border"
+                                : "border-border",
                             )}
                           >
                             <Icon
                               className={cn(
                                 "w-6 h-6 mx-auto",
-                                isSelected && config.color
+                                isSelected && config.color,
                               )}
                             />
                             <p className='text-xs mt-1'>{config.label}</p>
@@ -173,7 +172,7 @@ function MoodNewEntry() {
               disabled={!form.formState.isValid}
               className={cn(
                 "w-full cursor-pointer",
-                !form.formState.isValid && "opacity-50 cursor-not-allowed"
+                !form.formState.isValid && "opacity-50 cursor-not-allowed",
               )}
               type='submit'
             >

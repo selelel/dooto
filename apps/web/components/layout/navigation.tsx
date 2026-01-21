@@ -124,7 +124,7 @@ function Navigation({ children }: { children: ReactNode }) {
         </aside>
       )}
 
-      <div className='p-8 w-full max-w-full md:max-w-9/12 mx-auto overflow-y-auto scrollbar-hide'>
+      <div className='p-8 w-full max-w-7xl mx-auto overflow-y-auto scrollbar-hide'>
         {children}
       </div>
     </div>

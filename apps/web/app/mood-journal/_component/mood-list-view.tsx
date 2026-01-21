@@ -8,20 +8,17 @@ import MoodIndividual from "./mood-individual";
 
 function MoodListView() {
   const { data } = useMoodJournal();
-
   return (
     <>
       <MoodNewEntry />
+      <div className='flex flex-col gap-8'>
+        {data.map((entry, idx) => {
+          const Icon = moodEmojis[entry.mood]?.icon;
+          return <MoodIndividual key={idx} Icon={Icon} entry={entry} />;
+        })}
+      </div>
 
-      {data.length > 0 ? (
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
-          {data.map((entry) => {
-            const Icon = moodEmojis[entry.mood]?.icon;
-
-            return <MoodIndividual key={entry.id} Icon={Icon} entry={entry} />;
-          })}
-        </div>
-      ) : (
+      {data.length === 0 && (
         <Card>
           <CardContent className='py-16 text-center'>
             <BookHeart className='mx-auto w-16 h-16 opacity-30' />

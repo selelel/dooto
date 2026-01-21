@@ -2,19 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Calendar, List } from "lucide-react";
 import React from "react";
 import { useMoodJournal } from "../_context/mood-journal-context";
-import { useWindowSize } from "@/lib/hooks/useWindowSize";
 import { cn } from "@/lib/utils";
 
 function MoodHeader() {
-  const { width } = useWindowSize();
-  const isDesktop = width >= 1024;
   const { view, setView } = useMoodJournal();
 
   return (
     <div
       className={cn(
-        "w-full mb-8 space-y-6 flex flex-col",
-        isDesktop && "flex-row justify-between items-center space-y-0",
+        "w-full mb-8 space-y-6 flex flex-col md:flex-row md:justify-between md:items-center md:space-y-0",
       )}
     >
       <div>
