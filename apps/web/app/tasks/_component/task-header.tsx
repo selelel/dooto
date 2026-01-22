@@ -46,9 +46,9 @@ export default function TaskHeader({
   }, [data?.tasksId, data?.updated]);
 
   return (
-    <div className='mb-6 flex items-start gap-3'>
+    <div className='mb-6 flex flex-col-reverse items-end md:flex-row md:items-start gap-3'>
       <Form {...form}>
-        <form className='flex-1 space-y-1'>
+        <form className='flex-1 space-y-1 w-full '>
           <FormField
             control={form.control}
             name='taskName'
@@ -57,13 +57,19 @@ export default function TaskHeader({
                 {isTaskCollectionLoading ? (
                   <Skeleton className='h-8 w-2/3' />
                 ) : (
-                  <input
+                  <textarea
                     {...field}
                     value={field.value ?? ""}
-                    className='w-full text-2xl font-semibold outline-none'
+                    rows={1}
+                    className='w-full resize-none overflow-hidden text-2xl font-semibold outline-none'
+                    onInput={(e) => {
+                      const target = e.currentTarget;
+                      target.style.height = "auto";
+                      target.style.height = `${target.scrollHeight}px`;
+                    }}
                     onBlur={() => {
                       if (
-                        field.value.trim() &&
+                        field.value?.trim() &&
                         field.value !== data?.tasksName
                       ) {
                         handlePatchTaskCollection({

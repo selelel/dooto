@@ -11,7 +11,7 @@ import HabitCreate from "./_component/habit-create";
 
 function HabitTracker() {
   return (
-    <div className='p-8 max-w-5xl mx-auto'>
+    <div>
       <HabitHeader />
       <HabitCreate />
       <HabitStatus />

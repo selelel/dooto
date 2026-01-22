@@ -11,7 +11,7 @@ import TimerCreate from "./_component/timer-create";
 
 function TimerPage() {
   return (
-    <div className='p-8 max-w-5xl mx-auto'>
+    <div>
       <div className='mb-8'>
         <h1 className='text-4xl mb-2'>Since Timer ⏱️</h1>
         <p className='text-muted-foreground'>

@@ -7,6 +7,10 @@ import CustomLayout from "../__layout__";
 export const metadata: Metadata = {
   title: "Habits",
   description: "Drink water bud",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+  },
 };
 
 const geist = Geist({

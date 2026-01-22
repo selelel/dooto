@@ -128,54 +128,54 @@ function TasksList({ id }: { id: string }) {
           </form>
         </DialogContent>
       </Dialog>
+      <div>
+        <TaskHeader id={id} onOpenDialog={() => setOpenDialog(true)} />
 
-      <TaskHeader id={id} onOpenDialog={() => setOpenDialog(true)} />
+        <StatsGrid
+          inProgress={inProgress.length}
+          pendingTasks={pending.length}
+          completedTasks={completed.length}
+          total={tasks.length}
+        />
+        {inProgress.length > 0 && (
+          <TaskSection id={TaskStatus.IN_PROGRESS} title='In Progress'>
+            {inProgress.map((task) => (
+              <TaskRow key={task.taskId} task={task} />
+            ))}
+          </TaskSection>
+        )}
 
-      <StatsGrid
-        inProgress={inProgress.length}
-        pendingTasks={pending.length}
-        completedTasks={completed.length}
-        total={tasks.length}
-      />
+        {(pending.length > 0 || isCreatingTaskLoading) && (
+          <TaskSection id={TaskStatus.PENDING} title='Pending'>
+            {pending.map((task) => (
+              <TaskRow key={task.taskId} task={task} />
+            ))}
+            {isCreatingTaskLoading && (
+              <Skeleton className='h-14 w-full rounded-xl' />
+            )}
+          </TaskSection>
+        )}
 
-      {inProgress.length > 0 && (
-        <TaskSection id={TaskStatus.IN_PROGRESS} title='In Progress'>
-          {inProgress.map((task) => (
-            <TaskRow key={task.taskId} task={task} />
-          ))}
-        </TaskSection>
-      )}
+        {completed.length > 0 && (
+          <TaskSection id={TaskStatus.DONE} title='Completed'>
+            {completed.map((task) => (
+              <TaskRow key={task.taskId} task={task} faded />
+            ))}
+          </TaskSection>
+        )}
 
-      {(pending.length > 0 || isCreatingTaskLoading) && (
-        <TaskSection id={TaskStatus.PENDING} title='Pending'>
-          {pending.map((task) => (
-            <TaskRow key={task.taskId} task={task} />
-          ))}
-          {isCreatingTaskLoading && (
-            <Skeleton className='h-14 w-full rounded-xl' />
-          )}
-        </TaskSection>
-      )}
-
-      {completed.length > 0 && (
-        <TaskSection id={TaskStatus.DONE} title='Completed'>
-          {completed.map((task) => (
-            <TaskRow key={task.taskId} task={task} faded />
-          ))}
-        </TaskSection>
-      )}
-
-      {tasks.length === 0 && !isCreatingTaskLoading && (
-        <Card>
-          <CardContent className='py-16 text-center'>
-            <Circle className='w-16 h-16 text-muted-foreground/30 mx-auto mb-4' />
-            <h3 className='text-xl mb-2'>No tasks</h3>
-            <p className='text-muted-foreground'>
-              Start adding tasks to stay organized
-            </p>
-          </CardContent>
-        </Card>
-      )}
+        {tasks.length === 0 && !isCreatingTaskLoading && (
+          <Card>
+            <CardContent className='py-16 text-center'>
+              <Circle className='w-16 h-16 text-muted-foreground/30 mx-auto mb-4' />
+              <h3 className='text-xl mb-2'>No tasks</h3>
+              <p className='text-muted-foreground'>
+                Start adding tasks to stay organized
+              </p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </>
   );
 }
