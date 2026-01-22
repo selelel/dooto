@@ -21,15 +21,15 @@ import { TimerProvider, useTimer } from "./timer/_context/timer-context";
 const today = new Date();
 const dateRange = {
   from: normalizeDate(
-    new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1),
   ),
   to: normalizeDate(
-    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1),
   ),
 };
 
 function Dashboard() {
-  const { tasksCollection, isTaskCollectionLoading } = useTasks();
+  const { tasksCollection } = useTasks();
   const { habitsData, isHabitsFetching } = useHabits();
   const { data: timerData, isFetching: isFetchingTimerData } = useTimer();
   const { data: todayMoodJournal, isFetching: isFetchingMoodJournal } =
@@ -45,7 +45,7 @@ function Dashboard() {
     .flat();
 
   const completedTasks = overAllTaskCount.filter(
-    (d) => d.status === TaskStatus.DONE
+    (d) => d.status === TaskStatus.DONE,
   ).length;
 
   const totalHoursData = (timerData || [])
@@ -132,7 +132,7 @@ function Dashboard() {
               className={cn(
                 "w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center",
                 moodConfig?.color,
-                moodConfig?.bg
+                moodConfig?.bg,
               )}
             >
               {Icon ? <Icon /> : <CircleQuestionMark />}
