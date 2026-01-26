@@ -80,7 +80,7 @@ function HabitItem({ id }: { id: string }) {
                     "flex-1 text-center",
                     i === todayIndex
                       ? "text-red-500 font-semibold"
-                      : "text-muted-foreground"
+                      : "text-muted-foreground",
                   )}
                 >
                   {day}
@@ -100,7 +100,7 @@ function HabitItem({ id }: { id: string }) {
                   disabled={index >= new Date().getDay()}
                   className={cn(
                     index >= todayIndex + 1 ? "bg-muted-foreground/10" : "",
-                    todayIndex === index ? "border-2 border-red-300" : ""
+                    todayIndex === index ? "border-2 border-red-300" : "",
                   )}
                   onClick={() =>
                     handleToggleHabit({

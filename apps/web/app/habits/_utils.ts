@@ -120,3 +120,105 @@ export interface WeeklyCompletionResult {
   completed: number;
   percentage: number;
 }
+
+export const annualDates = (() => {
+  const dates: string[] = []
+  const now = new Date()
+  const start = new Date(now.getFullYear(), 0, 1)
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+
+  const cursor = new Date(start)
+
+  while (cursor <= end) {
+    dates.push(normalizeDate(cursor))
+    cursor.setDate(cursor.getDate() + 1)
+  }
+
+  return dates
+})()
+
+export const annualCompleted = (d: POSTHabitResponse) =>
+  annualDates.map(
+    (date) =>
+      d.contributions?.some(
+        (c) => normalizeDate(c.date) === date && c.completed
+      ) || false
+  )
+
+export const annualCompletedCount = (d: POSTHabitResponse) => {
+  const dateSet = new Set(annualDates)
+  let count = 0
+
+  for (const c of d.contributions || []) {
+    const normalized = normalizeDate(c.date)
+
+    if (dateSet.has(normalized) && c.completed) {
+      count++
+    }
+  }
+
+  return count
+}
+
+export const annualCompletionRate = (d: POSTHabitResponse) => {
+  const completed = annualCompletedCount(d)
+  const total = annualDates.length
+
+  return total === 0 ? 0 : Math.round((completed / total) * 100)
+}
+
+export const annualCompletionMap = (d: POSTHabitResponse) =>
+  annualDates.map((date) => ({
+    date,
+    completed:
+      d.contributions?.some(
+        (c) => normalizeDate(c.date) === date && c.completed
+      ) || false,
+  }))
+
+export const annualWeeks = (() => {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 1); // Jan 1
+  const end = new Date(now.getFullYear(), 11, 31); // Dec 31
+
+  const dates: string[] = [];
+  const cursor = new Date(start);
+
+  while (cursor <= end) {
+    dates.push(normalizeDate(cursor));
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  const dayOfWeek = dates[0] ? new Date(dates[0]).getDay() : 0;
+  const paddingStart = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+  for (let i = 0; i < paddingStart; i++) {
+    dates.unshift(""); 
+  }
+
+  while (dates.length % 7 !== 0) {
+    dates.push(""); 
+  }
+
+  const weeks: string[][] = [];
+  for (let i = 0; i < dates.length; i += 7) {
+    weeks.push(dates.slice(i, i + 7));
+  }
+
+  return weeks;
+})();
+
+export interface AnnualCompletionResult {
+  total: number
+  completed: number
+  percentage: number
+}
+
+export const annualSummary = (
+  d: POSTHabitResponse
+): AnnualCompletionResult => ({
+  total: annualDates.length,
+  completed: annualCompletedCount(d),
+  percentage: annualCompletionRate(d),
+})
+

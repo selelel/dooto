@@ -7,23 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { useGetCategory } from "@/modules/user/hooks";
+import { Form, FormField } from "@/components/ui/form";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -43,14 +27,14 @@ import {
   completedToday as completedTodayFn,
   computeStreak,
   weekCompleted,
-  weekCompletedCount,
   weekCompletionRate,
   weekDates,
 } from "../_utils";
-import { Label } from "@/components/ui/label";
-import { Calendar } from "@/components/ui/calendar";
 import Habit from "./habit-day";
 import { cn } from "@/lib/utils";
+import { ContributionGrid } from "./habit-annual-contribution";
+import { Popover, PopoverContent } from "@/components/ui/popover";
+import { PopoverTrigger } from "@radix-ui/react-popover";
 
 export const HabitCreateSchema = z.object({
   habitName: z.string().min(1, "Habit name is required").max(100),
@@ -72,7 +56,6 @@ function HabitEditDialog({
   habitData: POSTHabitResponse;
 }) {
   const { today, handleToggleHabit, handleDelete, handleUpdate } = useHabits();
-  // const { data } = useGetCategory();
   const completedToday = completedTodayFn(habitData);
   const streak = computeStreak(habitData.contributions);
   const jsDay = new Date().getDay();
@@ -91,7 +74,7 @@ function HabitEditDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <Form {...form}>
         <form>
-          <DialogContent className='sm:max-w-lg'>
+          <DialogContent>
             <DialogHeader>
               <div className='flex items-start justify-between'>
                 <div className='flex items-start gap-3 flex-1'>
@@ -177,8 +160,19 @@ function HabitEditDialog({
                 </div>
               </div>
 
-              {/* Week Progress */}
-              <div className='flex gap-2'>
+              <div className='justify-end hidden md:flex'>
+                <Popover>
+                  <div className='flex justify-between'>
+                    <PopoverTrigger asChild>
+                      <Button>View Annual</Button>
+                    </PopoverTrigger>
+                  </div>
+                  <PopoverContent className='hidden md:flex w-fit p-0 rounded-xl border-none'>
+                    <ContributionGrid id={habitData.id} />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className='flex gap-2 pointer-events-none'>
                 {weekCompleted(habitData).map((d, index) => {
                   const todayIndex = jsDay === 0 ? 6 : jsDay - 1;
                   return (
@@ -191,7 +185,7 @@ function HabitEditDialog({
                       }}
                       className={cn(
                         index >= todayIndex + 1 ? "bg-muted-foreground/10" : "",
-                        todayIndex === index ? "border-2 border-red-300" : ""
+                        todayIndex === index ? "border-2 border-red-300" : "",
                       )}
                       key={index}
                       completed={d}
@@ -202,36 +196,32 @@ function HabitEditDialog({
                 })}
               </div>
 
-              {/* Description */}
-              {habitData.details && (
-                <div className='p-4 rounded-lg bg-muted/50 border border-border'>
-                  <p className='text-sm text-muted-foreground mb-2'>
-                    Description
-                  </p>
-                  <p className='text-sm leading-relaxed'>
-                    <FormField
-                      control={form.control}
-                      name='details'
-                      render={({ field }) => (
-                        <textarea
-                          className='w-full h-20 resize-none'
-                          {...field}
-                          onBlur={() => {
-                            if (field.value !== habitData.details) {
-                              handleUpdate({
-                                habitId: habitData.id,
-                                details: field.value,
-                              });
-                            }
-                          }}
-                        />
-                      )}
-                    />
-                  </p>
-                </div>
-              )}
+              <div className='p-4 rounded-lg bg-muted/50 border border-border'>
+                <p className='text-sm text-muted-foreground mb-2'>
+                  Description
+                </p>
+                <p className='text-sm leading-relaxed'>
+                  <FormField
+                    control={form.control}
+                    name='details'
+                    render={({ field }) => (
+                      <textarea
+                        className='w-full h-20 resize-none'
+                        {...field}
+                        onBlur={() => {
+                          if (field.value !== habitData.details) {
+                            handleUpdate({
+                              habitId: habitData.id,
+                              details: field.value,
+                            });
+                          }
+                        }}
+                      />
+                    )}
+                  />
+                </p>
+              </div>
 
-              {/* Created Date */}
               {habitData.createdAt && (
                 <div className='text-sm text-muted-foreground flex items-center gap-2'>
                   <Award className='w-4 h-4' />

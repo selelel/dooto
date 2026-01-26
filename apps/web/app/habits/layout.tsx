@@ -13,10 +13,6 @@ export const metadata: Metadata = {
   },
 };
 
-const geist = Geist({
-  subsets: ["latin", "cyrillic"],
-});
-
 export default function RootLayout({
   children,
 }: Readonly<{
